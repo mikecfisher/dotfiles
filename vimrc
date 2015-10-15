@@ -1,4 +1,4 @@
-"
+set nocompatible
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
@@ -23,6 +23,7 @@ Plugin 'easymotion/vim-easymotion'
 Plugin 'mattn/emmet-vim'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'Raimondi/delimitMate'
+Plugin 'rking/ag.vim'
 Plugin 'tpope/vim-fugitive'
 Plugin 'moll/vim-node' 
 Plugin 'isRuslan/vim-es6'
@@ -64,6 +65,9 @@ let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 
 let g:syntastic_javascript_checkers = ['eslint']
+
+" --- delimitMate ---
+let delimitMate_expand_cr = 1
 "
 "------------------------------------------------------------
 " Features {{{1
@@ -192,10 +196,19 @@ set pastetoggle=<F11>
 set shiftwidth=2
 set softtabstop=2
 set expandtab
+set tabstop=2
  
 let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git\|bower_components'
 
-let delimitMate_expand_cr = 1
+if executable('ag')
+  " Use ag over grep
+  set grepprg=ag\ --nogroup\ --nocolor
+  " Use ag in CtrlP for listing files.
+  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+
+  "ag is fast enough that CtrlP doesn't need to cache
+  let g:ctrlp_use_caching = 0
+endif
  
 "------------------------------------------------------------
 "
@@ -211,6 +224,13 @@ map Y y$
 " next search
 nnoremap <C-L> :nohl<CR><C-L>
 
-map <C-N><C-T> :NERDTree <CR>
+nmap <C-N><C-N> :NERDTreeToggle <CR> " toggles viewing of NerdTree"
  
+if filereadable(glob("~/.vimrc.local")) "allows for machine specific vim settings
+  source ~/.vimrc.local
+endif 
+
+set exrc "allows for vim to pull project spefic vimrc
+set secure "prevents vimrc from running shell scrips which could be dangerous
+
 "------------------------------------------------------------
