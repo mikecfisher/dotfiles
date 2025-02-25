@@ -43,18 +43,30 @@ function copyfile() {
   echo "Contents of $1 copied to clipboard"
 }
 
+# 1Password session management
+function op_signin() {
+  # Check if we have a valid session
+  if ! op account get --format=json >/dev/null 2>&1; then
+    echo "Signing in to 1Password..."
+    eval $(op signin)
+  fi
+}
+
 # Function to get OpenAI API key from 1Password
 function get_openai_api_key() {
+  op_signin
   # Using 1Password CLI to fetch the key
   op item get "OpenAI API Key" --fields credential --reveal
 }
 
-# Set the OPENAI_API_KEY environment variable
-export OPENAI_API_KEY=$(get_openai_api_key) 
-
+# Function to get Home Assistant token from 1Password
 function get_homeassistant_token() {
+  op_signin
   op item get "Home Assistant Token" --fields credential --reveal
 }
+
+# Set the OPENAI_API_KEY environment variable
+export OPENAI_API_KEY=$(get_openai_api_key) 
 
 # Home Assistant CLI
 export HASS_SERVER=http://homeassistant.local:8123
@@ -107,40 +119,160 @@ SAVEHIST=10000
 
 # Plugins
 plugins=(
-    # git: Adds many Git aliases and functions for faster workflow
-    git 
+
+    # Link to all oh-my-zsh plugins
+    # https://github.com/ohmyzsh/ohmyzsh/wiki/Plugins
+
+    # 1password: this plugin adds 1Password functionality to oh-my-zsh.
+    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/1password
+    1password
     
-    # zsh-autosuggestions: Suggests commands as you type based on history
-    zsh-autosuggestions 
+    # brew: the plugin adds several aliases for common brew commands.
+    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/brew
+    brew
     
-    # web-search: Adds aliases for searching Google, DuckDuckGo, etc. from terminal
-    # Example: google "how to exit vim"
-    web-search 
+    # bun: this plugin sets up completion for Bun.
+    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/bun
+    bun
     
-    # pod: Provides completion and aliases for CocoaPods (iOS development)
-    # Example: pod install, pod update
-    pod 
+    # chezmoi: This plugin adds completion for chezmoi.
+    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/chezmoi
+    chezmoi
     
-    # xcode: Adds aliases for Xcode commands and iOS development
-    # Example: simulator, xc (opens Xcode)
-    xcode 
+    # colored-man-pages: this plugin adds colors to man pages.
+    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/colored-man-pages
+    colored-man-pages
     
-    # jump: Allows quick directory navigation using 'j' command
-    # Example: j Downloads (jumps to Downloads folder)
-    jump
+    # colorize: with this plugin you can syntax-highlight file contents of over 300 supported languages and other text formats.
+    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/colorize
+    colorize
     
-    # docker: Adds completion and aliases for Docker commands
-    # Example: dps (docker ps), dex (docker exec)
+    # copyfile: functionality part of the copypath plugin.
+    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/copyfile
+    copyfile
+    
+    # copypath: provides functions for copying the path to the current directory.
+    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/copypath
+    copypath
+    
+    # deno: no official plugin, but likely adds completions for Deno CLI.
+    # [No official plugin in Oh My Zsh]
+    deno
+    
+    # docker: this plugin adds completions and aliases for Docker commands.
+    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/docker
     docker
     
-    # npm: Adds completion for npm commands and package names
-    # Also adds useful npm aliases
+    # gh: no official plugin, but likely adds completions for GitHub CLI.
+    # [No official plugin in Oh My Zsh]
+    gh
+    
+    # git: this plugin provides many aliases and functions for Git.
+    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/git
+    git
+    
+    # git-auto-fetch: no official plugin, possibly custom for Git auto-fetch functionality.
+    # [No official plugin in Oh My Zsh]
+    git-auto-fetch
+    
+    # git-commit: no official plugin, possibly custom for Git commit enhancements.
+    # [No official plugin in Oh My Zsh]
+    git-commit
+    
+    # gitfast: provides faster git completions than the standard git plugin.
+    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/gitfast
+    gitfast
+    
+    # history-substring-search: this plugin provides better history searching with arrow keys.
+    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/history-substring-search
+    history-substring-search
+    
+    # jump: this plugin allows you to easily navigate your filesystem using the "jump" command.
+    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/jump
+    jump
+    
+    # macos: this plugin adds completions and aliases for macOS commands (renamed from osx).
+    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/macos
+    macos
+    
+    # node: this plugin adds node version management and npm completion.
+    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/node
+    node
+    
+    # npm: this plugin provides completion for npm and adds useful npm aliases.
+    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/npm
     npm
     
-    # node: Adds node version management and npm completion
-    # Includes 'node-docs' command to open documentation
-    node
+    # nvm: no specific description in the wiki, but provides NVM (Node Version Manager) functionality.
+    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/nvm
+    nvm
+    
+    # pod: this plugin provides completion for CocoaPods.
+    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/pod
+    pod
+    
+    # pod: this plugin provides completion for CocoaPods.
+    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/pod
+    pod
+    
+    # postgres: no official plugin, possibly custom for PostgreSQL functionality.
+    # [No official plugin in Oh My Zsh]
+    postgres
+    
+    # python: no official plugin with this name, possibly custom for Python functionality.
+    # [No official plugin in Oh My Zsh]
+    python
+    
+    # ssh: no official plugin, possibly custom for SSH functionality.
+    # [No official plugin in Oh My Zsh]
+    ssh
+    
+    # sudo: easily prefix your current or previous commands with sudo by pressing esc twice.
+    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/sudo
+    sudo
+    
+    # tldr: this plugin adds a shortcut to insert tldr before the previous command. Heavily inspired from Man plugin.
+    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/tldr
+    tldr
+    
+    # vscode: this plugin provides useful aliases to simplify the interaction between the command line and VS Code or VSCodium editor.
+    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/vscode
+    vscode
+    
+    # web-search: this plugin adds aliases for searching with Google, Wiki, Bing, YouTube and other popular services.
+    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/web-search
+    web-search
+    
+    # web-search: this plugin adds aliases for searching with Google, Wiki, Bing, YouTube and other popular services.
+    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/web-search
+    web-search
+    
+    # xcode: this plugin provides a few utilities that can help you on your daily use of Xcode and iOS development.
+    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/xcode
+    xcode
+    
+    # yarn: this plugin adds completion for the Yarn package manager, as well as some aliases for common Yarn commands.
+    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/yarn
+    yarn
+    
+    # yarn: this plugin adds completion for the Yarn package manager, as well as some aliases for common Yarn commands.
+    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/yarn
+    yarn
+    
+    # zoxide: initializes zoxide, a smarter cd command for your terminal.
+    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/zoxide
+    zoxide
+    
+    # zoxide: initializes zoxide, a smarter cd command for your terminal.
+    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/zoxide
+    zoxide
+    
+    # zsh-autosuggestions: no official plugin in core Oh My Zsh, likely external plugin that suggests commands as you type.
+    # [External plugin: https://github.com/zsh-users/zsh-autosuggestions]
+    zsh-autosuggestions
 )
+
+
 
 source $ZSH/oh-my-zsh.sh
 
