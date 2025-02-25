@@ -5,10 +5,31 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
+### Zinit initialization - moved to top
+if [[ ! -f $HOME/.local/share/zinit/zinit.git/zinit.zsh ]]; then
+    print -P "%F{33} %F{220}Installing %F{33}ZDHARMA-CONTINUUM%F{220} Initiative Plugin Manager (%F{33}zdharma-continuum/zinit%F{220})…%f"
+    command mkdir -p "$HOME/.local/share/zinit" && command chmod g-rwX "$HOME/.local/share/zinit"
+    command git clone https://github.com/zdharma-continuum/zinit "$HOME/.local/share/zinit/zinit.git" && \
+        print -P "%F{33} %F{34}Installation successful.%f%b" || \
+        print -P "%F{160} The clone has failed.%f%b"
+fi
+
+source "$HOME/.local/share/zinit/zinit.git/zinit.zsh"
+autoload -Uz _zinit
+(( ${+_comps} )) && _comps[zinit]=_zinit
+
+[[ ! -d ~/.cache/zinit/completions ]] && mkdir -p ~/.cache/zinit/completions
+# Load a few important annexes, without Turbo
+# (this is currently required for annexes)
+zinit light-mode for \
+    zdharma-continuum/zinit-annex-as-monitor \
+    zdharma-continuum/zinit-annex-bin-gem-node \
+    zdharma-continuum/zinit-annex-patch-dl \
+    zdharma-continuum/zinit-annex-rust
+### End of Zinit's initialization
+
 # Add deno completions to search path
 if [[ ":$FPATH:" != *":/Users/mike/completions:"* ]]; then export FPATH="/Users/mike/completions:$FPATH"; fi
-# Path to your oh-my-zsh installation.
-export ZSH="/Users/mike/.oh-my-zsh"
 
 # Add custom completions directory to fpath
 fpath=(~/.zsh/completions $fpath)
@@ -17,28 +38,54 @@ fpath=(~/.zsh/completions $fpath)
 autoload -Uz compinit
 compinit
 
-# Aliases
+# --- ZINIT PLUGINS AND THEME ---
+# Load Powerlevel10k theme
+zinit ice depth=1
+zinit light romkatv/powerlevel10k
+
+# Zinit plugins
+zinit light zsh-users/zsh-autosuggestions
+zinit light zsh-users/zsh-history-substring-search
+zinit light zdharma-continuum/fast-syntax-highlighting
+
+# Git tools
+zinit light wfxr/forgit
+
+# Developer tools
+zinit light lukechilds/zsh-better-npm-completion
+zinit light g-plane/zsh-yarn-autocompletions
+
+# System utilities
+zinit light ael-code/zsh-colored-man-pages
+zinit light hcgraf/zsh-sudo
+
+# Keep essential OMZ plugins
+
+zinit ice as"completion"
+zinit snippet https://github.com/Homebrew/brew/blob/master/completions/zsh/_brew
+
+# --- ALIASES ---
 alias python=python3
 alias editor=vim
 alias venv="uv venv"
 alias pipx="uv tool run"
 alias pipi="uv tool install"
-
-# Environment variables
-export LDFLAGS="-L/opt/homebrew/opt/ruby/lib"
-export CPPFLAGS="-I/opt/homebrew/opt/ruby/include"
-
-# Base SDK path - tells Android tools where to find the SDK installation
-# Android Development Environment Setup
-export ANDROID_HOME=$HOME/Library/Android/sdk
-
-export ANDROID_SDK_ROOT=$HOME/Library/Android/sdk
-export BUN_INSTALL="$HOME/.bun"  
-export PNPM_HOME="$HOME/.local/share/pnpm"  
-
 # Copy current directory path to clipboard
 alias pwdc='pwd | tr -d "\n" | pbcopy && echo "Path copied to clipboard"'
+# expo tweaks
+alias expo='nocorrect expo'
 
+# --- ENVIRONMENT VARIABLES ---
+export LDFLAGS="-L/opt/homebrew/opt/ruby/lib"
+export CPPFLAGS="-I/opt/homebrew/opt/ruby/include"
+# Base SDK path - tells Android tools where to find the SDK installation
+export ANDROID_HOME=$HOME/Library/Android/sdk
+export ANDROID_SDK_ROOT=$HOME/Library/Android/sdk
+export BUN_INSTALL="$HOME/.bun"
+export PNPM_HOME="$HOME/.local/share/pnpm"
+export NODE_OPTIONS="--no-deprecation"
+
+# --- CUSTOM FUNCTIONS ---
 # Copy file contents to clipboard
 function copyfile() {
   cat "$1" | pbcopy
@@ -68,248 +115,74 @@ function get_homeassistant_token() {
 }
 
 # Set the OPENAI_API_KEY environment variable
-export OPENAI_API_KEY=$(get_openai_api_key) 
+export OPENAI_API_KEY=$(get_openai_api_key)
 
 # Home Assistant CLI
 export HASS_SERVER=http://homeassistant.local:8123
 export HASS_TOKEN=$(get_homeassistant_token)
 
-# Group PATH additions at the start
+# --- PATH SETUP ---
 path=(
     # User-specific binaries and scripts
     $HOME/.local/bin
     $HOME/bin
-    
+
     # Node.js and package managers
     $HOME/.nodenv/versions/18.11.0/bin
     $HOME/.yarn/bin
     $HOME/.config/yarn/global/node_modules/.bin
     $PNPM_HOME
     $BUN_INSTALL/bin
-   
+
     # Ruby and RubyGems executables from Homebrew
     /opt/homebrew/opt/ruby/bin
     /opt/homebrew/lib/ruby/gems/3.0.0/bin
-    
+
     # Python 3.12 system-level binaries
     /Library/Frameworks/Python.framework/Versions/3.12/bin
     # Python user-level binaries (pip installed packages)
     $HOME/Library/Python/3.12/bin
 
-
-    
     # Android SDK tools order matters
     $ANDROID_HOME/cmdline-tools/latest/bin
     $ANDROID_HOME/emulator
     $ANDROID_HOME/platform-tools
-    
+
     # LM Studio CLI
     $HOME/.lmstudio/bin
-    
+
     # Existing system PATH
     $path
 )
 typeset -U path  # Remove duplicates
 
-# Oh-my-zsh
-HYPHEN_INSENSITIVE="true"
-CASE_SENSITIVE="false"
-ENABLE_CORRECTION="true"
+# --- HISTORY SETTINGS ---
 HISTFILE=~/.histfile
 HISTSIZE=10000
 SAVEHIST=10000
+setopt SHARE_HISTORY
+setopt HIST_IGNORE_ALL_DUPS
 
-# Plugins
-plugins=(
-
-    # Link to all oh-my-zsh plugins
-    # https://github.com/ohmyzsh/ohmyzsh/wiki/Plugins
-
-    # 1password: this plugin adds 1Password functionality to oh-my-zsh.
-    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/1password
-    1password
-    
-    # brew: the plugin adds several aliases for common brew commands.
-    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/brew
-    brew
-    
-    # bun: this plugin sets up completion for Bun.
-    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/bun
-    bun
-    
-    # chezmoi: This plugin adds completion for chezmoi.
-    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/chezmoi
-    chezmoi
-    
-    # colored-man-pages: this plugin adds colors to man pages.
-    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/colored-man-pages
-    colored-man-pages
-    
-    # colorize: with this plugin you can syntax-highlight file contents of over 300 supported languages and other text formats.
-    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/colorize
-    colorize
-    
-    # copyfile: functionality part of the copypath plugin.
-    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/copyfile
-    copyfile
-    
-    # copypath: provides functions for copying the path to the current directory.
-    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/copypath
-    copypath
-    
-    # deno: no official plugin, but likely adds completions for Deno CLI.
-    # [No official plugin in Oh My Zsh]
-    deno
-    
-    # docker: this plugin adds completions and aliases for Docker commands.
-    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/docker
-    docker
-    
-    # gh: no official plugin, but likely adds completions for GitHub CLI.
-    # [No official plugin in Oh My Zsh]
-    gh
-    
-    # git: this plugin provides many aliases and functions for Git.
-    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/git
-    git
-    
-    # git-auto-fetch: no official plugin, possibly custom for Git auto-fetch functionality.
-    # [No official plugin in Oh My Zsh]
-    git-auto-fetch
-    
-    # git-commit: no official plugin, possibly custom for Git commit enhancements.
-    # [No official plugin in Oh My Zsh]
-    git-commit
-    
-    # gitfast: provides faster git completions than the standard git plugin.
-    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/gitfast
-    gitfast
-    
-    # history-substring-search: this plugin provides better history searching with arrow keys.
-    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/history-substring-search
-    history-substring-search
-    
-    # jump: this plugin allows you to easily navigate your filesystem using the "jump" command.
-    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/jump
-    jump
-    
-    # macos: this plugin adds completions and aliases for macOS commands (renamed from osx).
-    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/macos
-    macos
-    
-    # node: this plugin adds node version management and npm completion.
-    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/node
-    node
-    
-    # npm: this plugin provides completion for npm and adds useful npm aliases.
-    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/npm
-    npm
-    
-    # nvm: no specific description in the wiki, but provides NVM (Node Version Manager) functionality.
-    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/nvm
-    nvm
-    
-    # pod: this plugin provides completion for CocoaPods.
-    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/pod
-    pod
-    
-    # pod: this plugin provides completion for CocoaPods.
-    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/pod
-    pod
-    
-    # postgres: no official plugin, possibly custom for PostgreSQL functionality.
-    # [No official plugin in Oh My Zsh]
-    postgres
-    
-    # python: no official plugin with this name, possibly custom for Python functionality.
-    # [No official plugin in Oh My Zsh]
-    python
-    
-    # ssh: no official plugin, possibly custom for SSH functionality.
-    # [No official plugin in Oh My Zsh]
-    ssh
-    
-    # sudo: easily prefix your current or previous commands with sudo by pressing esc twice.
-    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/sudo
-    sudo
-    
-    # tldr: this plugin adds a shortcut to insert tldr before the previous command. Heavily inspired from Man plugin.
-    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/tldr
-    tldr
-    
-    # vscode: this plugin provides useful aliases to simplify the interaction between the command line and VS Code or VSCodium editor.
-    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/vscode
-    vscode
-    
-    # web-search: this plugin adds aliases for searching with Google, Wiki, Bing, YouTube and other popular services.
-    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/web-search
-    web-search
-    
-    # web-search: this plugin adds aliases for searching with Google, Wiki, Bing, YouTube and other popular services.
-    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/web-search
-    web-search
-    
-    # xcode: this plugin provides a few utilities that can help you on your daily use of Xcode and iOS development.
-    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/xcode
-    xcode
-    
-    # yarn: this plugin adds completion for the Yarn package manager, as well as some aliases for common Yarn commands.
-    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/yarn
-    yarn
-    
-    # yarn: this plugin adds completion for the Yarn package manager, as well as some aliases for common Yarn commands.
-    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/yarn
-    yarn
-    
-    # zoxide: initializes zoxide, a smarter cd command for your terminal.
-    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/zoxide
-    zoxide
-    
-    # zoxide: initializes zoxide, a smarter cd command for your terminal.
-    # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/zoxide
-    zoxide
-    
-    # zsh-autosuggestions: no official plugin in core Oh My Zsh, likely external plugin that suggests commands as you type.
-    # [External plugin: https://github.com/zsh-users/zsh-autosuggestions]
-    zsh-autosuggestions
-)
-
-
-
-source $ZSH/oh-my-zsh.sh
-
-# Autocompletions
+# --- AUTOCOMPLETIONS AND TOOL INITIALIZATION ---
+# EAS CLI autocompletion
 EAS_AC_ZSH_SETUP_PATH=/Users/mike/Library/Caches/eas-cli/autocomplete/zsh_setup && test -f $EAS_AC_ZSH_SETUP_PATH && source $EAS_AC_ZSH_SETUP_PATH;
+
+# Bun autocompletion
 [ -s "/Users/mike/.bun/_bun" ] && source "/Users/mike/.bun/_bun"
 
-# zsh-autosuggestions
-source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+# Zoxide initialization - removed the duplicate entry
 eval "$(zoxide init --cmd cd zsh)"
 
-# Set up fzf key bindings and fuzzy completion
+# 1Password autocompletion
+eval "$(op completion zsh)"; compdef _op op
+
+# FZF key bindings and fuzzy completion
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-
-
-
-#expo tweaks
-alias expo='nocorrect expo'
-
-
-
-
-
-# NODE_OPTIONS="--no-deprecation=DEP0040"
-export NODE_OPTIONS="--no-deprecation"
-
+# --- NVM SETUP ---
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-source /opt/homebrew/share/powerlevel10k/powerlevel10k.zsh-theme
-
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 # Autoload NVM per project
 autoload -U add-zsh-hook
@@ -333,11 +206,20 @@ load-nvmrc() {
   fi
 }
 
+
+
+
 add-zsh-hook chpwd load-nvmrc
 load-nvmrc
 
+# --- POWERLEVEL10K CONFIGURATION ---
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# --- LANGUAGE VERSION MANAGERS (ALWAYS AT END) ---
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
-. "/Users/mike/.deno/env"
 
+# Deno environment
+. "/Users/mike/.deno/env"
