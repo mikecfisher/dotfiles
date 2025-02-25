@@ -1,0 +1,294 @@
+{
+  // ===== Editor Core Settings =====
+  "editor.tabSize": 2,
+  "editor.smoothScrolling": true,
+  "editor.tabCompletion": "on",
+  "editor.fontSize": 16,
+  {{ if eq .chezmoi.app "vscode" }}
+  "editor.fontFamily": "FuraCode NF",
+  {{ else }}
+  "editor.fontFamily": "JetBrains Mono",
+  {{ end }}
+  "editor.fontLigatures": true,
+  "editor.lineNumbers": "relative",
+  "editor.fontWeight": "normal",
+  "editor.formatOnSave": true,
+  "editor.gotoLocation.multipleDefinitions": "goto",
+  "editor.renderControlCharacters": false,
+  "editor.suggestSelection": "first",
+  "editor.inlineSuggest.enabled": true,
+  "editor.minimap.enabled": false,
+  "editor.renderWhitespace": "all",
+  "editor.stickyScroll.enabled": true,
+  "editor.accessibilitySupport": "off",
+  "editor.guides.indentation": true,
+  "editor.guides.bracketPairs": "active",
+  "editor.guides.bracketPairsHorizontal": "active",
+  "editor.guides.highlightActiveIndentation": true,
+  "editor.bracketPairColorization.enabled": true,
+  "editor.linkedEditing": true,
+  "editor.wordWrap": "on",
+  "telemetry.telemetryLevel": "off",
+
+
+
+
+  // ===== Workbench Theme and Appearance =====
+  "workbench.colorTheme": {{ if eq .chezmoi.app "vscode" }}"GitHub Dark"{{ else }}"Palenight (Mild Contrast)"{{ end }},
+  "workbench.iconTheme": "material-icon-theme",
+  "workbench.colorCustomizations": {
+    "statusBar.background": {{ if eq .chezmoi.app "vscode" }}"#5f00af"{{ else }}"#005f5f"{{ end }},
+    "statusBar.noFolderBackground": {{ if eq .chezmoi.app "vscode" }}"#5f00af"{{ else }}"#005f5f"{{ end }},
+    "statusBar.debuggingBackground": {{ if eq .chezmoi.app "vscode" }}"#5f00af"{{ else }}"#005f5f"{{ end }},
+    "statusBar.foreground": "#ffffff",
+    "statusBar.debuggingForeground": "#ffffff"
+  },
+
+  // ===== Terminal Configuration =====
+  "terminal.integrated.fontSize": 14,
+  "terminal.integrated.fontFamily": {{ if eq .chezmoi.app "vscode" }}"FuraCode NF"{{ else }}"Hack, 'JetBrains Mono', Menlo, Monaco, 'Courier New', monospace"{{ end }},
+  "terminal.integrated.scrollback": 5000,
+  "terminal.integrated.enableMultiLinePasteWarning": "never",
+  "terminal.external.osxExec": "Ghostty.app",
+
+  // ===== Language Settings =====
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "typescript.suggest.autoImports": true,
+  "typescript.suggest.enabled": true,
+  "typescript.suggestionActions.enabled": true,
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "totalTypeScript.hideAllTips": false,
+  "totalTypeScript.hideBasicTips": true,
+
+  // ===== Python Configuration =====
+  "python.defaultInterpreterPath": "/Library/Frameworks/Python.framework/Versions/3.12/bin/python3",
+
+  // ===== Code Runner Configuration =====
+  "code-runner.runInTerminal": true,
+  "code-runner.executorMap": {
+    "typescript": "bun $fullFileName",
+    "python": "python3"
+  },
+
+  // ===== Language-Specific Formatting =====
+  "emmet.includeLanguages": {
+    "javascript": "javascriptreact",
+    "typescript": "typescriptreact"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "typescript.suggest.enabled": true
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "typescript.suggest.enabled": true
+  },
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "typescript.suggest.enabled": true
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "typescript.suggest.enabled": true
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[mjml]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[html]": {
+    "editor.defaultFormatter": "vscode.html-language-features"
+  },
+  "[css]": {
+    "editor.defaultFormatter": "vscode.css-language-features"
+  },
+  "[python]": {
+    "editor.tabSize": 4,
+    "editor.formatOnType": true
+  },
+  "[java]": {
+    "editor.suggest.snippetsPreventQuickSuggestions": false
+  },
+
+  // ===== Git Configuration =====
+  "git.autofetch": true,
+  "git.confirmSync": false,
+  "githubPullRequests.pushBranch": "always",
+  "githubPullRequests.fileListLayout": "flat",
+  "githubPullRequests.pullBranch": "never",
+
+  // ===== Explorer Configuration =====
+  "explorer.autoReveal": false,
+  "explorer.confirmDragAndDrop": false,
+  "explorer.confirmDelete": false,
+  "explorer.fileNesting.patterns": {
+    "*.ts": "${capture}.js",
+    "*.js": "${capture}.js.map, ${capture}.min.js, ${capture}.d.ts",
+    "*.jsx": "${capture}.js",
+    "*.tsx": "${capture}.ts",
+    "tsconfig.json": "tsconfig.*.json",
+    "package.json": "package-lock.json, yarn.lock, pnpm-lock.yaml"
+  },
+
+  // ===== File Management =====
+  "files.trimTrailingWhitespace": true,
+  "files.exclude": {
+    "yarn.lock": true
+  },
+  "files.associations": {
+    "*.json.tmpl": "jsonc"
+  },
+
+  // ===== Search Configuration =====
+  "search.useParentIgnoreFiles": true,
+  "search.useGlobalIgnoreFiles": true,
+  "search.exclude": {
+    "**/.expo": true,
+    "**/.git": true,
+    "**/**/node_modules": true,
+    "**/coverage": true,
+    "node_modules": true
+  },
+
+  // ===== ESLint Configuration =====
+  "eslint.workingDirectories": [
+    { "mode": "auto" }
+  ],
+  "eslint.format.enable": true,
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+  "eslint.debug": true,
+  "eslint.codeActionsOnSave.rules": null,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "always"
+  },
+
+  // ===== Prettier Configuration =====
+  "prettier.requireConfig": true,
+
+  // ===== Vim Configuration =====
+  "vim.statusBarColorControl": true,
+  "vim.leader": "<Space>",
+  "vim.normalModeKeyBindings": [
+    { "before": ["S-h"], "commands": [":bprevious"] },
+    { "before": ["S-l"], "commands": [":bnext"] },
+    { "before": ["leader", "v"], "commands": [":vsplit"] },
+    { "before": ["leader", "s"], "commands": [":split"] },
+    { "before": ["leader", "h"], "commands": ["workbench.action.focusLeftGroup"] },
+    { "before": ["leader", "j"], "commands": ["workbench.action.focusBelowGroup"] },
+    { "before": ["leader", "k"], "commands": ["workbench.action.focusAboveGroup"] },
+    { "before": ["leader", "l"], "commands": ["workbench.action.focusRightGroup"] }
+  ],
+  "vim.insertModeKeyBindings": [
+    { "before": ["j", "k"], "after": ["<Esc>"] }
+  ],
+
+  // ===== Material Icon Theme =====
+  "material-icon-theme.activeIconPack": "react_redux",
+  "material-icon-theme.folders.theme": "specific",
+
+  // ===== Home Assistant =====
+  "vscode-home-assistant.hostUrl": "http://homeassistant.local:8123",
+  "vscode-home-assistant.longLivedAccessToken": "{{ onepasswordRead "op://Private/Home Assistant Long Lived Access Key/credential" }}",
+
+  // ===== Common Miscellaneous Settings =====
+  "window.zoomLevel": 1,
+  "diffEditor.codeLens": true,
+  "extensions.ignoreRecommendations": false,
+  "zenMode.centerLayout": false,
+  "prisma.showPrismaDataPlatformNotification": false,
+  "security.workspace.trust.untrustedFiles": "open",
+  "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+  "lldb.suppressUpdateNotifications": true,
+  "vsicons.dontShowNewVersionMessage": true,
+  "react-native-tools.showUserTips": false,
+
+  {{ if eq .chezmoi.app "vscode" }}
+  // ===== VS Code Specific Settings =====
+  "github.copilot.enable": {
+    "*": true,
+    "plaintext": true,
+    "markdown": true,
+    "scminput": false,
+    "yaml": true
+  },
+  "github.copilot.editor.enableAutoCompletions": true,
+  "github.copilot.chat.scopeSelection": true,
+  "github.copilot.chat.generateTests.codeLens": true,
+  "githubPullRequests.experimental.chat": true,
+  "githubPullRequests.experimental.notificationsView": true,
+  "githubPullRequests.pullRequestDescription": "Copilot",
+  "chat.detectParticipant.enabled": true,
+  "github.copilot.chat.editor.temporalContext.enabled": true,
+  "graphql-config": {
+    "path": "./.graphqlrc"
+  },
+  "peacock.favoriteColors": [
+    { "name": "Angular Red", "value": "#b52e31" },
+    { "name": "Auth0 Orange", "value": "#eb5424" },
+    { "name": "Azure Blue", "value": "#007fff" },
+    { "name": "C# Purple", "value": "#68217A" },
+    { "name": "Gatsby Purple", "value": "#639" },
+    { "name": "Go Cyan", "value": "#5dc9e2" },
+    { "name": "Java Blue-Gray", "value": "#557c9b" },
+    { "name": "JavaScript Yellow", "value": "#f9e64f" },
+    { "name": "Mandalorian Blue", "value": "#1857a4" },
+    { "name": "Node Green", "value": "#215732" },
+    { "name": "React Blue", "value": "#00b3e6" },
+    { "name": "Something Different", "value": "#832561" },
+    { "name": "Vue Green", "value": "#42b883" }
+  ],
+  {{ end }}
+
+  {{ if eq .chezmoi.app "cursor" }}
+  // ===== Cursor Specific Settings =====
+  "cursor.cpp.disabledLanguages": [
+    "scminput",
+    "untitled"
+  ],
+  "cursor.cpp.enablePartialAccepts": true,
+  "cursor.general.gitGraphIndexing": "enabled",
+  "cursor.cmdk.useThemedDiffBackground": true,
+  "cursor.diffs.useCharacterLevelDiffs": true,
+  {{ end }}
+
+   // ===== Remote Development =====
+  "remote.SSH.remotePlatform": {
+    "homeassistant": "linux"
+  },
+  "remote.SSH.useLocalServer": false,
+  "remote.SSH.showLoginTerminal": true,
+  "remote.SSH.path": "/usr/bin/ssh",
+  "remote.SSH.enableRemoteCommand": true,
+  "remote.SSH.serverInstallPath": {
+    "homeassistant": "/root/.cursor-server"
+  },
+  "remote.SSH.localServerDownload": "off",
+  "remote.SSH.permitPtyAllocation": true,
+
+  "xml.server.binary.trustedHashes": [
+    "8080595d4aee6c70818be8c8c8f58db8e2214082492def527ac383970e75da4c"
+  ],
+
+  // ===== Code Coverage =====
+  "coverage-gutters.showLineCoverage": true,
+  "coverage-gutters.coverageBaseDir": "coverage",
+
+  "supermaven.enableFixWithSupermaven": true,
+  "supermaven.enable": {
+    "*": false
+  }
+}
