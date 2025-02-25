@@ -20,7 +20,9 @@ compinit
 # Aliases
 alias python=python3
 alias editor=vim
-alias pip=pip3
+alias venv="uv venv"
+alias pipx="uv tool run"
+alias pipi="uv tool install"
 
 # Environment variables
 export LDFLAGS="-L/opt/homebrew/opt/ruby/lib"

@@ -1,0 +1,38 @@
+# ============================================================================
+# PACKAGE MANAGERS
+# ============================================================================
+# Homebrew
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
+# Ruby version manager
+eval "$(rbenv init - --no-rehash zsh)"
+
+# Node version manager (NVM)
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" --no-use # This loads nvm
+
+# Python package manager (uv)
+export UV_SYSTEM_PYTHON=1  # Allow uv to find system Python installations
+export UV_CACHE_DIR="$HOME/.cache/uv"  # Set cache directory
+export PATH="$HOME/.local/bin:$PATH"  # Ensure uv-installed tools are in PATH
+
+# ============================================================================
+# DEVELOPMENT ENVIRONMENT
+# ============================================================================
+# Node.js SSL certificates
+export NODE_EXTRA_CA_CERTS="$HOME/Library/Application Support/mkcert/rootCA.pem"
+
+# ============================================================================
+# PATH MANAGEMENT
+# ============================================================================
+# Python managed by uv
+# Note: Consider removing this line and letting uv manage Python versions
+# PATH="/Library/Frameworks/Python.framework/Versions/3.12/bin:${PATH}"
+
+# Pipx binaries
+PATH="$PATH:/Users/mike/.local/bin"
+
+# Toolbox App
+PATH="$PATH:/usr/local/bin"
+
+export PATH
