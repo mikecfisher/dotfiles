@@ -1,0 +1,81 @@
+# ==== THEME ====
+# Base colors and opacity
+theme = catppuccin-macchiato
+background-opacity = 0.9
+background-blur = 10
+font-size = 18
+font-family = "Hack"
+
+# Visual refinements for split panes
+unfocused-split-opacity = 0.5
+alpha-blending = linear-corrected
+
+# ==== APPEARANCE ====
+# Disable system notifications from the terminal
+desktop-notifications = false
+
+# Inherit working directory when opening new windows/tabs
+window-inherit-working-directory = true
+
+# Remove window decorations (title bar, etc)
+# window-decoration = false
+
+# Swap foreground/background colors in selected text
+selection-invert-fg-bg = true
+
+# Window padding and persistence
+window-padding-x = 4
+window-padding-y = 4
+window-save-state = always
+window-vsync = true
+
+split-divider-color =#33008a
+
+# ==== SHELL INTEGRATION ====
+# Enable shell features (cursor shape changes, sudo detection, window titles)
+shell-integration = zsh
+shell-integration-features = cursor,sudo,title
+
+# ==== CLIPBOARD BEHAVIOR ====
+# Automatically trim trailing spaces when copying
+clipboard-trim-trailing-spaces = true
+# Prevent accidental paste execution
+clipboard-paste-protection = true
+# Copy selected text to clipboard
+copy-on-select = clipboard
+
+cursor-style = block
+
+# ==== MOUSE BEHAVIOR ====
+# Hide mouse cursor while typing
+mouse-hide-while-typing = true
+# Allow moving cursor with alt/option+click
+cursor-click-to-move = true
+
+# ==== PERFORMANCE ====
+# Increase scrollback buffer (default is smaller)
+scrollback-limit = 100000
+
+keybind = cmd+l=new_split:right
+keybind = cmd+j=new_split:down
+keybind = cmd+k=new_split:up
+
+keybind = global:shift+cmd+t=toggle_quick_terminal
+quick-terminal-animation-duration = 0.1
+
+
+# Navigate between splits (vim-style)
+
+focus-follows-mouse = true
+
+
+
+keybind = cmd+r=reload_config
+
+
+
+# ==== MACOS SPECIFIC ====
+# Make option key behave like alt
+macos-option-as-alt = true
+# Handle secure input automatically
+macos-auto-secure-input = true
