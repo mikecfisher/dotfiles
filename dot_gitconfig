@@ -1,0 +1,36 @@
+[user]
+	name = Mike Fisher
+	email = mikefisher84@gmail.com
+[advice]
+	detachedHead = false
+[init]
+	defaultBranch = main
+[rerere]
+	enabled = true
+[push]
+	default = current
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[core]
+	excludesfile = /Users/mike/.gitignore_global
+	pager = diff-so-fancy | less --tabs=4 -RFX
+[pull]
+	default = current
+	rebase = true
+[branch]
+	autoSetupMerge = always
+[color]
+	ui = true
+[alias]
+	dsf = diff --color
+[pager]
+	dsf = diff-so-fancy | less --tabs=4 -RFXS
+[interactive]
+	diffFilter = diff-so-fancy --patch
+[diff]
+	algorithm = histogram
+[http]
+	postBuffer = 524288000
