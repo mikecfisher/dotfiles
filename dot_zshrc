@@ -1,0 +1,209 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+# Add deno completions to search path
+if [[ ":$FPATH:" != *":/Users/mike/completions:"* ]]; then export FPATH="/Users/mike/completions:$FPATH"; fi
+# Path to your oh-my-zsh installation.
+export ZSH="/Users/mike/.oh-my-zsh"
+
+# Add custom completions directory to fpath
+fpath=(~/.zsh/completions $fpath)
+
+# Initialize completion system
+autoload -Uz compinit
+compinit
+
+# Aliases
+alias python=python3
+alias editor=vim
+alias pip=pip3
+
+# Environment variables
+export LDFLAGS="-L/opt/homebrew/opt/ruby/lib"
+export CPPFLAGS="-I/opt/homebrew/opt/ruby/include"
+
+# Base SDK path - tells Android tools where to find the SDK installation
+# Android Development Environment Setup
+export ANDROID_HOME=$HOME/Library/Android/sdk
+
+export ANDROID_SDK_ROOT=$HOME/Library/Android/sdk
+export BUN_INSTALL="$HOME/.bun"  
+export PNPM_HOME="$HOME/.local/share/pnpm"  
+
+# Copy current directory path to clipboard
+alias pwdc='pwd | tr -d "\n" | pbcopy && echo "Path copied to clipboard"'
+
+# Copy file contents to clipboard
+function copyfile() {
+  cat "$1" | pbcopy
+  echo "Contents of $1 copied to clipboard"
+}
+
+# Function to get OpenAI API key from 1Password
+function get_openai_api_key() {
+  # Using 1Password CLI to fetch the key
+  op item get "OpenAI API Key" --fields credential --reveal
+}
+
+# Set the OPENAI_API_KEY environment variable
+export OPENAI_API_KEY=$(get_openai_api_key) 
+
+function get_homeassistant_token() {
+  op item get "Home Assistant Token" --fields credential --reveal
+}
+
+# Home Assistant CLI
+export HASS_SERVER=http://homeassistant.local:8123
+export HASS_TOKEN=$(get_homeassistant_token)
+
+# Group PATH additions at the start
+path=(
+    # User-specific binaries and scripts
+    $HOME/.local/bin
+    $HOME/bin
+    
+    # Node.js and package managers
+    $HOME/.nodenv/versions/18.11.0/bin
+    $HOME/.yarn/bin
+    $HOME/.config/yarn/global/node_modules/.bin
+    $PNPM_HOME
+    $BUN_INSTALL/bin
+   
+    # Ruby and RubyGems executables from Homebrew
+    /opt/homebrew/opt/ruby/bin
+    /opt/homebrew/lib/ruby/gems/3.0.0/bin
+    
+    # Python 3.12 system-level binaries
+    /Library/Frameworks/Python.framework/Versions/3.12/bin
+    # Python user-level binaries (pip installed packages)
+    $HOME/Library/Python/3.12/bin
+
+
+    
+    # Android SDK tools order matters
+    $ANDROID_HOME/cmdline-tools/latest/bin
+    $ANDROID_HOME/emulator
+    $ANDROID_HOME/platform-tools
+    
+    # LM Studio CLI
+    $HOME/.lmstudio/bin
+    
+    # Existing system PATH
+    $path
+)
+typeset -U path  # Remove duplicates
+
+# Oh-my-zsh
+HYPHEN_INSENSITIVE="true"
+CASE_SENSITIVE="false"
+ENABLE_CORRECTION="true"
+HISTFILE=~/.histfile
+HISTSIZE=10000
+SAVEHIST=10000
+
+# Plugins
+plugins=(
+    # git: Adds many Git aliases and functions for faster workflow
+    git 
+    
+    # zsh-autosuggestions: Suggests commands as you type based on history
+    zsh-autosuggestions 
+    
+    # web-search: Adds aliases for searching Google, DuckDuckGo, etc. from terminal
+    # Example: google "how to exit vim"
+    web-search 
+    
+    # pod: Provides completion and aliases for CocoaPods (iOS development)
+    # Example: pod install, pod update
+    pod 
+    
+    # xcode: Adds aliases for Xcode commands and iOS development
+    # Example: simulator, xc (opens Xcode)
+    xcode 
+    
+    # jump: Allows quick directory navigation using 'j' command
+    # Example: j Downloads (jumps to Downloads folder)
+    jump
+    
+    # docker: Adds completion and aliases for Docker commands
+    # Example: dps (docker ps), dex (docker exec)
+    docker
+    
+    # npm: Adds completion for npm commands and package names
+    # Also adds useful npm aliases
+    npm
+    
+    # node: Adds node version management and npm completion
+    # Includes 'node-docs' command to open documentation
+    node
+)
+
+source $ZSH/oh-my-zsh.sh
+
+# Autocompletions
+EAS_AC_ZSH_SETUP_PATH=/Users/mike/Library/Caches/eas-cli/autocomplete/zsh_setup && test -f $EAS_AC_ZSH_SETUP_PATH && source $EAS_AC_ZSH_SETUP_PATH;
+[ -s "/Users/mike/.bun/_bun" ] && source "/Users/mike/.bun/_bun"
+
+# zsh-autosuggestions
+source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+eval "$(zoxide init --cmd cd zsh)"
+
+# Set up fzf key bindings and fuzzy completion
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+
+
+
+#expo tweaks
+alias expo='nocorrect expo'
+
+
+
+
+
+# NODE_OPTIONS="--no-deprecation=DEP0040"
+export NODE_OPTIONS="--no-deprecation"
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+source /opt/homebrew/share/powerlevel10k/powerlevel10k.zsh-theme
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# Autoload NVM per project
+autoload -U add-zsh-hook
+
+load-nvmrc() {
+  local nvmrc_path
+  nvmrc_path="$(nvm_find_nvmrc)"
+
+  if [ -n "$nvmrc_path" ]; then
+    local nvmrc_node_version
+    nvmrc_node_version=$(nvm version "$(cat "${nvmrc_path}")")
+
+    if [ "$nvmrc_node_version" = "N/A" ]; then
+      nvm install
+    elif [ "$nvmrc_node_version" != "$(nvm version)" ]; then
+      nvm use
+    fi
+  elif [ -n "$(PWD=$OLDPWD nvm_find_nvmrc)" ] && [ "$(nvm version)" != "$(nvm version default)" ]; then
+    echo "Reverting to nvm default version"
+    nvm use default
+  fi
+}
+
+add-zsh-hook chpwd load-nvmrc
+load-nvmrc
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+. "/Users/mike/.deno/env"
+
