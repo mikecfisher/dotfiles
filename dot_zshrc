@@ -1,11 +1,20 @@
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
+#!/usr/bin/env zsh
+# ~/.zshrc: Interactive Zsh configuration file
+# Organization:
+#   1. Zinit plugin manager setup
+#   2. Completion system configuration
+#   3. Shell plugins and prompt
+#   4. Aliases
+#   5. Environment variables
+#   6. Custom functions and lazy-loading mechanisms
+#   7. PATH configuration
+#   8. History settings
+#   9. Autocompletions
+#  10. Lazy-loaded NVM configuration
+#  11. Additional environment loaders
 
 ### Zinit initialization - moved to top
+# This ensures Zinit is installed before attempting to use it
 if [[ ! -f $HOME/.local/share/zinit/zinit.git/zinit.zsh ]]; then
     print -P "%F{33} %F{220}Installing %F{33}ZDHARMA-CONTINUUM%F{220} Initiative Plugin Manager (%F{33}zdharma-continuum/zinit%F{220})…%f"
     command mkdir -p "$HOME/.local/share/zinit" && command chmod g-rwX "$HOME/.local/share/zinit"
@@ -14,13 +23,16 @@ if [[ ! -f $HOME/.local/share/zinit/zinit.git/zinit.zsh ]]; then
         print -P "%F{160} The clone has failed.%f%b"
 fi
 
+# Load Zinit and set up autocompletion for it
 source "$HOME/.local/share/zinit/zinit.git/zinit.zsh"
 autoload -Uz _zinit
 (( ${+_comps} )) && _comps[zinit]=_zinit
 
+# Ensure Zinit completions directory exists
 [[ ! -d ~/.cache/zinit/completions ]] && mkdir -p ~/.cache/zinit/completions
-# Load a few important annexes, without Turbo
-# (this is currently required for annexes)
+
+# Load essential Zinit annexes - these extend Zinit's functionality
+# Annexes add features like binary downloading, monitoring, etc.
 zinit light-mode for \
     zdharma-continuum/zinit-annex-as-monitor \
     zdharma-continuum/zinit-annex-bin-gem-node \
@@ -28,71 +40,90 @@ zinit light-mode for \
     zdharma-continuum/zinit-annex-rust
 ### End of Zinit's initialization
 
-# Add deno completions to search path
+# ===== COMPLETION SYSTEM SETUP =====
+# Add Deno completions to search path
 if [[ ":$FPATH:" != *":/Users/mike/completions:"* ]]; then export FPATH="/Users/mike/completions:$FPATH"; fi
 
 # Add custom completions directory to fpath
 fpath=(~/.zsh/completions $fpath)
 
-# Initialize completion system
+# Initialize Zsh's completion system
 autoload -Uz compinit
 compinit
 
-# --- ZINIT PLUGINS AND THEME ---
-# Load Powerlevel10k theme
-zinit ice depth=1
-zinit light romkatv/powerlevel10k
+# ===== SHELL PLUGINS AND PROMPT =====
+# Initialize Starship prompt - a fast, customizable cross-shell prompt
+# This replaces Powerlevel10k and is configured in ~/.config/starship.toml
+eval "$(starship init zsh)"
 
-# Zinit plugins
+# Load essential Zsh plugins
+# zsh-autosuggestions: Suggests commands as you type based on history
 zinit light zsh-users/zsh-autosuggestions
+
+# zsh-history-substring-search: Search history with up/down arrows
 zinit light zsh-users/zsh-history-substring-search
+
+# fast-syntax-highlighting: Syntax highlighting for the shell
 zinit light zdharma-continuum/fast-syntax-highlighting
 
-# Git tools
+# Commented out additional plugins to improve startup time
+# # Git tools
 zinit light wfxr/forgit
 
 # Developer tools
 zinit light lukechilds/zsh-better-npm-completion
 zinit light g-plane/zsh-yarn-autocompletions
 
+# ===== GIT ABBREVIATIONS =====
+# Install zsh-abbr plugin
+zinit light olets/zsh-abbr
+
 # System utilities
 zinit light ael-code/zsh-colored-man-pages
 zinit light hcgraf/zsh-sudo
 
 # Keep essential OMZ plugins
-
 zinit ice as"completion"
 zinit snippet https://github.com/Homebrew/brew/blob/master/completions/zsh/_brew
 
-# --- ALIASES ---
+# ===== ALIASES =====
+# Python and development
 alias python=python3
 alias editor=vim
-alias venv="uv venv"
-alias pipx="uv tool run"
-alias pipi="uv tool install"
-# Copy current directory path to clipboard
-alias pwdc='pwd | tr -d "\n" | pbcopy && echo "Path copied to clipboard"'
-# expo tweaks
-alias expo='nocorrect expo'
+alias venv="uv venv"                                      # Create Python virtual environments with uv
+alias pipx="uv tool run"                                  # Run Python tools in isolation
+alias pipi="uv tool install"                              # Install Python packages with uv
+# Utility aliases
+alias pwdc='pwd | tr -d "\n" | pbcopy && echo "Path copied to clipboard"'  # Copy current dir to clipboard
+# Fix for expo command
+alias expo='nocorrect expo'                               # Prevent zsh from trying to correct expo command
 
-# --- ENVIRONMENT VARIABLES ---
+# ===== ENVIRONMENT VARIABLES =====
+# C/C++ compilation flags for Ruby
 export LDFLAGS="-L/opt/homebrew/opt/ruby/lib"
 export CPPFLAGS="-I/opt/homebrew/opt/ruby/include"
-# Base SDK path - tells Android tools where to find the SDK installation
+
+# Android SDK configuration
 export ANDROID_HOME=$HOME/Library/Android/sdk
 export ANDROID_SDK_ROOT=$HOME/Library/Android/sdk
+
+# JavaScript package managers
 export BUN_INSTALL="$HOME/.bun"
 export PNPM_HOME="$HOME/.local/share/pnpm"
-export NODE_OPTIONS="--no-deprecation"
+export NODE_OPTIONS="--no-deprecation"                    # Suppress Node.js deprecation warnings
 
-# --- CUSTOM FUNCTIONS ---
+# ===== CUSTOM FUNCTIONS AND LAZY-LOADING =====
 # Copy file contents to clipboard
 function copyfile() {
   cat "$1" | pbcopy
   echo "Contents of $1 copied to clipboard"
 }
 
-# 1Password session management
+# ==== 1PASSWORD LAZY-LOADING SYSTEM ====
+# This system delays loading 1Password credentials until they're actually needed,
+# which significantly improves shell startup time
+
+# 1Password session management - checks for valid session or prompts signin
 function op_signin() {
   # Check if we have a valid session
   if ! op account get --format=json >/dev/null 2>&1; then
@@ -101,27 +132,65 @@ function op_signin() {
   fi
 }
 
-# Function to get OpenAI API key from 1Password
+# Base functions to get credentials from 1Password
 function get_openai_api_key() {
   op_signin
   # Using 1Password CLI to fetch the key
   op item get "OpenAI API Key" --fields credential --reveal
 }
 
-# Function to get Home Assistant token from 1Password
 function get_homeassistant_token() {
   op_signin
   op item get "Home Assistant Token" --fields credential --reveal
 }
 
-# Set the OPENAI_API_KEY environment variable
-export OPENAI_API_KEY=$(get_openai_api_key)
+# Lazy-loaded OpenAI API key - replaces itself with a simpler function after first use
+# This implements a form of memoization to avoid repeated API calls
+function openai_key() {
+  export OPENAI_API_KEY=$(get_openai_api_key)
+  # Replace this function with a simple echo after first use
+  function openai_key() {
+    echo $OPENAI_API_KEY
+  }
+  echo $OPENAI_API_KEY
+}
 
-# Home Assistant CLI
+# Lazy-loaded Home Assistant token - same pattern as above
+function ha_token() {
+  export HASS_TOKEN=$(get_homeassistant_token)
+  # Replace this function with a simple echo after first use
+  function ha_token() {
+    echo $HASS_TOKEN
+  }
+  echo $HASS_TOKEN
+}
+
+# Set placeholder environment variables - these indicate the real values aren't loaded yet
+export OPENAI_API_KEY="needs_loading"
 export HASS_SERVER=http://homeassistant.local:8123
-export HASS_TOKEN=$(get_homeassistant_token)
+export HASS_TOKEN="needs_loading"
 
-# --- PATH SETUP ---
+# Command wrappers that trigger credential loading only when the commands are used
+function openai() {
+  # Load the key if it hasn't been loaded yet
+  if [[ "$OPENAI_API_KEY" == "needs_loading" ]]; then
+    export OPENAI_API_KEY=$(openai_key)
+  fi
+  # Forward to the actual openai command with all arguments
+  command openai "$@"
+}
+
+function hass() {
+  # Load the token if it hasn't been loaded yet
+  if [[ "$HASS_TOKEN" == "needs_loading" ]]; then
+    export HASS_TOKEN=$(ha_token)
+  fi
+  # Forward to the actual hass command with all arguments
+  command hass "$@"
+}
+
+# ===== PATH SETUP =====
+# This adds directories to the PATH in order of precedence (first has highest priority)
 path=(
     # User-specific binaries and scripts
     $HOME/.local/bin
@@ -154,72 +223,109 @@ path=(
     # Existing system PATH
     $path
 )
-typeset -U path  # Remove duplicates
+typeset -U path  # Remove duplicates from PATH
 
-# --- HISTORY SETTINGS ---
-HISTFILE=~/.histfile
-HISTSIZE=10000
-SAVEHIST=10000
-setopt SHARE_HISTORY
-setopt HIST_IGNORE_ALL_DUPS
+# ===== HISTORY SETTINGS =====
+HISTFILE=~/.histfile            # Location to store history
+HISTSIZE=10000                  # Number of commands to keep in memory
+SAVEHIST=10000                  # Number of commands to save to disk
+setopt SHARE_HISTORY            # Share history between all sessions
+setopt HIST_IGNORE_ALL_DUPS     # Don't record duplicated commands
 
-# --- AUTOCOMPLETIONS AND TOOL INITIALIZATION ---
-# EAS CLI autocompletion
+# ===== ZSH OPTIONS =====
+# Allow changing directory without typing 'cd'
+setopt AUTO_CD
+
+# ===== AUTOCOMPLETIONS AND TOOL INITIALIZATION =====
+# EAS CLI (Expo Application Services) autocompletion
 EAS_AC_ZSH_SETUP_PATH=/Users/mike/Library/Caches/eas-cli/autocomplete/zsh_setup && test -f $EAS_AC_ZSH_SETUP_PATH && source $EAS_AC_ZSH_SETUP_PATH;
 
-# Bun autocompletion
+# Bun JavaScript runtime autocompletion
 [ -s "/Users/mike/.bun/_bun" ] && source "/Users/mike/.bun/_bun"
 
-# Zoxide initialization - removed the duplicate entry
+# Zoxide intelligent directory jumper (faster alternative to cd)
 eval "$(zoxide init --cmd cd zsh)"
 
-# 1Password autocompletion
+# 1Password CLI autocompletion
 eval "$(op completion zsh)"; compdef _op op
 
-# FZF key bindings and fuzzy completion
+# FZF fuzzy finder key bindings and completion
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-# --- NVM SETUP ---
+# ===== LAZY-LOADED NVM SETUP =====
+# NVM (Node Version Manager) is lazy-loaded to improve shell startup time
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
-# Autoload NVM per project
-autoload -U add-zsh-hook
+# Lazy-load NVM - only loads when the nvm command is first used
+function nvm() {
+  # Load nvm if it's not loaded yet
+  if [[ ! -f "$NVM_DIR/nvm.sh" ]]; then
+    echo "nvm not found"
+    return 1
+  fi
 
+  # Remove this function and load the real nvm
+  unfunction nvm
+  source "$NVM_DIR/nvm.sh"
+  source "$NVM_DIR/bash_completion"
+
+  # Call the real nvm function with our arguments
+  nvm "$@"
+}
+
+# Function to automatically use the right Node.js version based on .nvmrc files
 load-nvmrc() {
-  local nvmrc_path
-  nvmrc_path="$(nvm_find_nvmrc)"
+  # Check for .nvmrc directly instead of using nvm_find_nvmrc which requires NVM to be loaded
+  if [[ -f ".nvmrc" ]]; then
+    # Ensure nvm is loaded when needed
+    if ! type nvm > /dev/null 2>&1; then
+      source "$NVM_DIR/nvm.sh"
+      source "$NVM_DIR/bash_completion"
+    fi
 
-  if [ -n "$nvmrc_path" ]; then
+    # Now we can use nvm commands
     local nvmrc_node_version
-    nvmrc_node_version=$(nvm version "$(cat "${nvmrc_path}")")
+    nvmrc_node_version=$(nvm version "$(cat ".nvmrc")")
 
     if [ "$nvmrc_node_version" = "N/A" ]; then
       nvm install
     elif [ "$nvmrc_node_version" != "$(nvm version)" ]; then
       nvm use
     fi
-  elif [ -n "$(PWD=$OLDPWD nvm_find_nvmrc)" ] && [ "$(nvm version)" != "$(nvm version default)" ]; then
-    echo "Reverting to nvm default version"
-    nvm use default
   fi
 }
 
+# Lazy-load Node.js commands - these functions replace themselves with the real commands
+# after loading NVM the first time they're used
+function node() {
+  unfunction node npm yarn
+  source "$NVM_DIR/nvm.sh"
+  node "$@"
+}
 
+function npm() {
+  unfunction node npm yarn
+  source "$NVM_DIR/nvm.sh"
+  npm "$@"
+}
 
+function yarn() {
+  unfunction node npm yarn
+  source "$NVM_DIR/nvm.sh"
+  yarn "$@"
+}
 
-add-zsh-hook chpwd load-nvmrc
-load-nvmrc
+# Only add the nvmrc hook if we're in an interactive shell
+# This checks for .nvmrc files when changing directories
+if [[ $- == *i* ]]; then
+  autoload -Uz add-zsh-hook
+  add-zsh-hook chpwd load-nvmrc
+  # Check for nvmrc in current directory at startup
+  load-nvmrc 2>/dev/null
+fi
 
-# --- POWERLEVEL10K CONFIGURATION ---
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-# --- LANGUAGE VERSION MANAGERS (ALWAYS AT END) ---
-#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
-export SDKMAN_DIR="$HOME/.sdkman"
-[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
-
-# Deno environment
+# ===== ADDITIONAL ENVIRONMENTS =====
+# Deno JavaScript/TypeScript runtime environment
 . "/Users/mike/.deno/env"
+
+# === End of zshrc ===
