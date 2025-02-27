@@ -77,6 +77,7 @@ brew jpeg-xl
 brew jq
 brew krb5
 brew lame
+brew lazygit
 brew leptonica
 brew libarchive
 brew libass
@@ -233,6 +234,8 @@ brew idb-companion
 tap goodeggs/devops
 brew goodeggs
 brew sslayer
+
+tap jesseduffield/lazygit
 
 tap nodenv/nodenv
 
