@@ -7,6 +7,7 @@ This repository contains my dotfiles and configurations managed with chezmoi. It
 - VS Code and Cursor editor settings (shared configuration with editor-specific customizations)
 - Terminal settings and shell configurations (ZSH with high-performance Zinit setup)
 - Various development tools and preferences
+- Git abbreviations using zsh-abbr for faster git workflows
 
 ## Features
 
@@ -17,6 +18,7 @@ This repository contains my dotfiles and configurations managed with chezmoi. It
 - Vim keybindings for editors
 - Development environment configurations for multiple languages
 - Optimized ZSH configuration with Zinit (faster than Oh-My-Zsh)
+- Git abbreviations for common commands using zsh-abbr
 
 ## Prerequisites
 
@@ -26,6 +28,7 @@ This repository contains my dotfiles and configurations managed with chezmoi. It
 - [Ghostty](https://github.com/mitchellh/ghostty) terminal (optional)
 - Git
 - Zsh with [Zinit](https://github.com/zdharma-continuum/zinit) plugin manager
+- [zsh-abbr](https://github.com/olets/zsh-abbr) for command abbreviations
 
 ## Quick Start
 
@@ -38,7 +41,7 @@ This repository contains my dotfiles and configurations managed with chezmoi. It
 
 2. Initialize with this repo:
    ```bash
-   chezmoi init https://github.com/YOUR_USERNAME/dotfiles.git
+   chezmoi init https://github.com/mikecfisher/dotfiles.git
    ```
 
 3. Preview changes:
@@ -88,28 +91,92 @@ The shell configuration uses Zinit for fast, efficient plugin management:
 
 ### Key Features
 
-- **Performance-focused**: Loads plugins in parallel and on-demand
-- **No SVN dependencies**: Uses standalone plugins with direct installation
-- **Proper completion management**: Correctly configured completions for each tool
-- **Modular organization**: Organized by categories (core, git, developer tools, etc.)
+- **Performance Optimization**:
+  - Lazy-loading for slow-starting components (NVM, 1Password credentials)
+  - Parallel plugin loading with Zinit
+  - Standalone plugin installations without SVN dependencies
 
-### Completions Management
+- **Advanced Plugin Setup**:
+  ```zsh
+  # Core utilities
+  zinit light zsh-users/zsh-autosuggestions       # Intelligent suggestions
+  zinit light zdharma-continuum/fast-syntax-highlighting  # Syntax highlighting
+  zinit light wfxr/forgit                         # Git workflow improvements
+  zinit light ael-code/zsh-colored-man-pages      # Colored manual pages
+  zinit light hcgraf/zsh-sudo                     # Easy sudo prefixing
+  ```
 
-Zinit offers several ways to handle completions:
+- **Custom Functions & Aliases**:
+  ```zsh
+  # Python/Node.js utilities
+  alias venv="uv venv"                            # Fast virtual environments
+  alias pipx="uv tool run"                        # Isolated tool execution
 
-1. **Automatic management**: The `completions` ice modifier
-2. **Manual installation**: Via `zinit ice as"completion"` for specific completion files
-3. **Direct installation**: Through custom completion directories in `fpath`
+  # System utilities
+  alias pwdc='pwd | pbcopy && echo "📋 Path copied"'  # Directory path copying
+  function copyfile() { cat $1 | pbcopy }         # File content to clipboard
+  ```
 
-Example:
-```zsh
-# Using raw GitHub URLs for completions
-zinit ice as"completion"
-zinit snippet https://raw.githubusercontent.com/Homebrew/brew/master/completions/zsh/_brew
+- **Intelligent Path Management**:
+  ```zsh
+  # Structured PATH configuration with deduplication
+  path=(
+    $HOME/.local/bin               # User scripts
+    $PNPM_HOME                     # PNPM packages
+    $BUN_INSTALL/bin               # Bun runtime
+    /opt/homebrew/opt/ruby/bin     # Homebrew Ruby
+    $ANDROID_HOME/platform-tools  # Android tools
+    $path                          # Existing paths
+  )
+  typeset -U path  # Ensure unique entries
+  ```
 
-# 1Password completion with direct evaluation
-eval "$(op completion zsh)"
-```
+- **1Password Integration**:
+  ```zsh
+  # Lazy-loaded credential system
+  function openai() {
+    # Loads API key only when first used
+    [[ "$OPENAI_API_KEY" == "needs_loading" ]] && \
+      export OPENAI_API_KEY=$(get_openai_api_key)
+    command openai "$@"
+  }
+  ```
+
+- **Node.js Management**:
+  ```zsh
+  # Lazy-loaded NVM with automatic .nvmrc detection
+  function nvm() {
+    unfunction nvm                # Remove placeholder
+    source "$NVM_DIR/nvm.sh"      # Load actual nvm
+    nvm "$@"                      # Execute command
+  }
+  ```
+
+- **Tool Integrations**:
+  ```zsh
+  # Zoxide - smarter directory navigation
+  eval "$(zoxide init --cmd cd zsh)"
+
+  # FZF fuzzy finder
+  [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+  # Starship prompt
+  eval "$(starship init zsh)"
+  ```
+
+### Performance Characteristics
+- Startup time optimized through:
+  - Deferred loading of heavy components (NVM, 1Password)
+  - Standalone plugin installations
+  - Compiled completion cache
+- Typical startup time: 150-200ms (vs 800ms+ with OMZ)
+
+### Unique Features
+- Automatic Brewfile updates via `brew-wrap`
+- Hybrid completion system (Zinit + traditional fpath)
+- Security-focused credential handling
+- Cross-platform Android development setup
+- Python/Node.js version management coexistence
 
 ## Customization
 
@@ -135,7 +202,26 @@ chezmoi automatically detects the current machine and OS, allowing for condition
 │   └── vscode-cursor-settings.tmpl
 ├── private_Library/              # macOS Library folder (private)
 │   └── private_Application Support/
-│       ├── private_Cursor/User/  # Cursor settings
+│       ├── private_Curso#!/bin/bash
+
+# Only run on macOS
+{{ if eq .chezmoi.os "darwin" -}}
+
+# Install Homebrew if not installed
+if ! command -v brew &> /dev/null; then
+  echo "Installing Homebrew..."
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+fi
+
+# Update Homebrew
+echo "Updating Homebrew..."
+brew update
+
+# Install from Brewfile in Chezmoi config
+echo "Installing packages from Brewfile..."
+brew bundle --no-lock --file="{{ .chezmoi.sourceDir }}/dot_config/brewfile/Brewfile"
+
+{{ end -}}r/User/  # Cursor settings
 │       └── private_Code/User/    # VS Code settings
 ├── .zshrc                        # ZSH configuration with Zinit
 └── .chezmoi.toml.tmpl           # chezmoi configuration
@@ -147,12 +233,6 @@ chezmoi automatically detects the current machine and OS, allowing for condition
 
 ```bash
 chezmoi add ~/.some_config_file
-```
-
-### Making a File a Template
-
-```bash
-chezmoi add --template ~/.some_config_file
 ```
 
 ### Editing a Managed File
@@ -167,44 +247,22 @@ chezmoi edit ~/.some_config_file
 chezmoi apply
 ```
 
-### Adding a New ZSH Completion
-
-```bash
-# Generate completion file
-your_command completion zsh > ~/.zsh/completions/_your_command
-
-# Or add via Zinit
-zinit ice as"completion"
-zinit snippet https://raw.githubusercontent.com/author/repo/master/completions/_your_command
-```
-
-## Troubleshooting
-
-If editor settings aren't applying correctly:
-1. Check the target paths with `chezmoi managed`
-2. Verify template syntax with `chezmoi execute-template`
-3. Force application with `chezmoi apply --verbose`
-
-For ZSH completion issues:
-1. Run `compinit -d` to regenerate the completion dump file
-2. Check completion paths with `echo $fpath`
-3. Verify URL paths for snippet-based completions
-
 ## Security
 
 - Sensitive information is handled through 1Password integration
 - Use `onepasswordRead` template function to access secrets
 
-## License
 
-MIT (or specify your preferred license)
+## Brewfile Management
 
----
+This setup uses a Brewfile to manage Homebrew packages, ensuring consistency across installations. The Brewfile is located in the Chezmoi source directory at `dot_config/brewfile/Brewfile`.
 
-## About This Setup
+### How It Works
 
-This dotfiles repository is designed to maintain consistent settings across multiple machines, with special attention to sharing configurations between VS Code and Cursor editors. The power of chezmoi's templating allows for both shared and editor-specific settings while keeping everything in sync.
+- **Location**: The Brewfile is stored in `dot_config/brewfile/Brewfile` within the Chezmoi source directory.
+- **Installation Script**: The `run_onchange_install-packages-homebrew.sh.tmpl` script installs packages from the Brewfile. It checks if Homebrew is installed, updates it, and then installs packages using the Brewfile.
+- **Automatic Updates**: With `brew-wrap` enabled, the Brewfile is automatically updated when packages are installed or removed.
 
-The ZSH configuration prioritizes performance and maintainability, using Zinit's advanced features to load plugins efficiently and manage completions properly.
+### Updating the Brewfile
 
-For questions or issues, please open an issue on the repository.
+With `brew-wrap` enabled, the Brewfile is automatically updated whenever you install or uninstall packages using `brew`, `mas`, `whalebrew`, or `code`. This means you don't need to manually run `brew bundle dump` to update the Brewfile.
