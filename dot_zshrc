@@ -56,6 +56,26 @@ compinit
 # This replaces Powerlevel10k and is configured in ~/.config/starship.toml
 eval "$(starship init zsh)"
 
+# Reload Starship prompt when config file changes
+function starship_reload() {
+  # Check if config file changed
+  local config_file="$HOME/.config/starship.toml"
+  if [[ -n "$STARSHIP_CONFIG" ]]; then
+    config_file="$STARSHIP_CONFIG"
+  fi
+
+  # Use fswatch to monitor changes
+  if ! command -v fswatch >/dev/null; then
+    echo "Install fswatch first: brew install fswatch"
+    return 1
+  fi
+
+  ( fswatch -o "$config_file" | while read; do
+    exec < /dev/tty  # Reattach to terminal
+    starship refresh
+  done ) &>/dev/null &
+}
+
 # Load essential Zsh plugins
 # zsh-autosuggestions: Suggests commands as you type based on history
 zinit light zsh-users/zsh-autosuggestions
