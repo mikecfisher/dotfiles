@@ -106,6 +106,7 @@ alias pipi="uv tool install"                              # Install Python packa
 alias pwdc='pwd | tr -d "\n" | pbcopy && echo "Path copied to clipboard"'  # Copy current dir to clipboard
 # Fix for expo command
 alias expo='nocorrect expo'                               # Prevent zsh from trying to correct expo command
+alias gcam='git commit -am'
 
 # ===== ENVIRONMENT VARIABLES =====
 # C/C++ compilation flags for Ruby
@@ -113,8 +114,8 @@ export LDFLAGS="-L/opt/homebrew/opt/ruby/lib"
 export CPPFLAGS="-I/opt/homebrew/opt/ruby/include"
 
 # Cursor as default editor
-export EDITOR="cursor"
-export VISUAL="cursor"
+export EDITOR="vim"
+export VISUAL="vim"
 
 # Android SDK configuration
 export ANDROID_HOME=$HOME/Library/Android/sdk
