@@ -265,4 +265,6 @@ This setup uses a Brewfile to manage Homebrew packages, ensuring consistency acr
 
 ### Updating the Brewfile
 
+
+
 With `brew-wrap` enabled, the Brewfile is automatically updated whenever you install or uninstall packages using `brew`, `mas`, `whalebrew`, or `code`. This means you don't need to manually run `brew bundle dump` to update the Brewfile.

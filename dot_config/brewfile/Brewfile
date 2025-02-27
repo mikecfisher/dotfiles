@@ -236,6 +236,9 @@ brew sslayer
 
 tap nodenv/nodenv
 
+tap olets/tap
+brew zsh-abbr
+
 tap qovery/replibyte
 brew replibyte
 
@@ -275,7 +278,7 @@ appstore 634148309 Logic Pro (11.1.2)
 appstore 441258766 Magnet (3.0.6)
 appstore 1480068668 Messenger (226.0)
 appstore 1629209970 Metronome (1.4)
-appstore 985367838 Microsoft Outlook (16.94.1)
+appstore 985367838 Microsoft Outlook (16.94.2)
 appstore 1339418001 Model D (1.5.1)
 appstore 419330170 Moom Classic (3.2.28)
 appstore 1527105121 Neural Mix Pro (2.0.2)
@@ -286,7 +289,7 @@ appstore 1006401965 Samplism Lite (1.3.10)
 appstore 442168834 SiteSucker (5.6.1)
 appstore 1376402589 StopTheMadness (41.2)
 appstore 1087079310 Switch Sound File Converter (13.00)
-appstore 1475387142 Tailscale (1.78.1)
+appstore 1475387142 Tailscale (1.80.2)
 appstore 1533078079 Teleprompter (3.9.25)
 appstore 899247664 TestFlight (3.7.1)
 appstore 1528890965 TextSniper (1.11.0)
@@ -298,6 +301,6 @@ appstore 1278508951 Trello (2.15.7)
 appstore 1480933944 Vimari (2.1.1)
 appstore 1598483936 Virtual Teleprompter Lite (1.0.14)
 appstore 1591588588 Virtual Teleprompter Pro (1.0.32)
-appstore 310633997 WhatsApp (25.2.79)
+appstore 310633997 WhatsApp (25.4.75)
 appstore 497799835 Xcode (16.2)
 appstore 889428659 xScope (4.7.1)
