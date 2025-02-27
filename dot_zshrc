@@ -107,6 +107,7 @@ alias pwdc='pwd | tr -d "\n" | pbcopy && echo "Path copied to clipboard"'  # Cop
 # Fix for expo command
 alias expo='nocorrect expo'                               # Prevent zsh from trying to correct expo command
 alias gcam='git commit -am'
+alias grbm='git rebase $(git_default_branch)'
 
 # ===== ENVIRONMENT VARIABLES =====
 # C/C++ compilation flags for Ruby
