@@ -74,6 +74,10 @@ zinit light wfxr/forgit
 zinit light lukechilds/zsh-better-npm-completion
 zinit light g-plane/zsh-yarn-autocompletions
 
+# ZVM - vi mode
+zinit ice depth=1
+zinit light jeffreytse/zsh-vi-mode
+
 # ===== GIT ABBREVIATIONS =====
 # Install zsh-abbr plugin
 zinit light olets/zsh-abbr
@@ -85,6 +89,11 @@ zinit light hcgraf/zsh-sudo
 # Keep essential OMZ plugins
 zinit ice as"completion"
 zinit snippet https://github.com/Homebrew/brew/blob/master/completions/zsh/_brew
+
+# Brew Wrap https://homebrew-file.readthedocs.io/en/latest/brew-wrap.html
+if [ -f $(brew --prefix)/etc/brew-wrap ];then
+  source $(brew --prefix)/etc/brew-wrap
+fi
 
 # ===== ALIASES =====
 # Python and development
@@ -102,6 +111,10 @@ alias expo='nocorrect expo'                               # Prevent zsh from try
 # C/C++ compilation flags for Ruby
 export LDFLAGS="-L/opt/homebrew/opt/ruby/lib"
 export CPPFLAGS="-I/opt/homebrew/opt/ruby/include"
+
+# Cursor as default editor
+export EDITOR="cursor"
+export VISUAL="cursor"
 
 # Android SDK configuration
 export ANDROID_HOME=$HOME/Library/Android/sdk
