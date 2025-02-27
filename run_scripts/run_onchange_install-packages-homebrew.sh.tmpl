@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# Only run on macOS
+{{ if eq .chezmoi.os "darwin" -}}
+
+# Install Homebrew if not installed
+if ! command -v brew &> /dev/null; then
+  echo "Installing Homebrew..."
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+fi
+
+# Update Homebrew
+echo "Updating Homebrew..."
+brew update
+
+# Install from Brewfile in Chezmoi config
+echo "Installing packages from Brewfile..."
+brew bundle --no-lock --file="{{ .chezmoi.sourceDir }}/dot_config/brewfile/Brewfile"
+
+{{ end -}}
