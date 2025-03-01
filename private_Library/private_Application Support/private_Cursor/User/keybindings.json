@@ -1,0 +1,268 @@
+// Place your key bindings in this file to override the defaults
+[
+  //==============================================================================
+  // WINDOW/EDITOR NAVIGATION - Vim-style hjkl movement between UI elements
+  //==============================================================================
+
+  // Window/Editor Navigation - Refined approach
+  //==============================================================================
+
+  // Navigate left between editor groups (primary action)
+  // This should take precedence and try to navigate left between editors first
+  {
+    "key": "ctrl+h",
+    "command": "workbench.action.navigateLeft",
+  },
+
+  // Navigate right between editor groups or from sidebar to editor
+  {
+    "key": "ctrl+l",
+    "command": "workbench.action.navigateRight",
+  },
+
+
+  // Navigate down between editor groups
+  {
+    "key": "ctrl+j",
+    "command": "workbench.action.navigateDown",
+  },
+  // Navigate up between editor groups
+  {
+    "key": "ctrl+k",
+    "command": "workbench.action.navigateUp",
+  },
+
+   // Menu navigation with j/k (Vim-style)
+  {
+    "key": "j",
+    "command": "list.focusDown",
+    "when": "listFocus && !inputFocus"
+  },
+  {
+    "key": "k",
+    "command": "list.focusUp",
+    "when": "listFocus && !inputFocus"
+  },
+  {
+    "key": "j",
+    "command": "selectNextSuggestion",
+    "when": "suggestWidgetMultipleSuggestions && suggestWidgetVisible && textInputFocus"
+  },
+  {
+    "key": "k",
+    "command": "selectPrevSuggestion",
+    "when": "suggestWidgetMultipleSuggestions && suggestWidgetVisible && textInputFocus"
+  },
+  {
+    "key": "j",
+    "command": "workbench.action.quickOpenSelectNext",
+    "when": "inQuickOpen"
+  },
+  {
+    "key": "k",
+    "command": "workbench.action.quickOpenSelectPrevious",
+    "when": "inQuickOpen"
+  },
+
+  //==============================================================================
+  // TAB NAVIGATION - Quick movement between open files
+  //==============================================================================
+
+  // Next editor in group (like gt in Vim)
+  {
+    "key": "tab",
+    "command": "workbench.action.nextEditorInGroup",
+    "when": "(vim.mode === 'Normal' || vim.mode === 'Visual') && (editorTextFocus || !inputFocus)"
+  },
+  // Previous editor in group (like gT in Vim)
+  {
+    "key": "shift+tab",
+    "command": "workbench.action.previousEditorInGroup",
+    "when": "(vim.mode === 'Normal' || vim.mode === 'Visual') && (editorTextFocus || !inputFocus)"
+  },
+
+  //==============================================================================
+  // CODE EDITING - Text manipulation shortcuts
+  //==============================================================================
+
+  // Move current line(s) down (similar to :m+ in Vim)
+  {
+    "key": "shift+j",
+    "command": "editor.action.moveLinesDownAction",
+    "when": "vim.mode !== 'Insert' && editorFocus"
+  },
+  // Move current line(s) up (similar to :m- in Vim)
+  {
+    "key": "shift+k",
+    "command": "editor.action.moveLinesUpAction",
+    "when": "vim.mode !== 'Insert' && editorFocus"
+  },
+  // Show hover information (like K in Vim)
+  {
+    "key": "shift+k",
+    "command": "editor.action.showHover",
+    "when": "vim.mode === 'Normal' && editorFocus"
+  },
+  // Show code actions menu (similar to Vim plugins like coc.nvim)
+  {
+    "key": "space c a",
+    "command": "editor.action.codeAction",
+    "when": "vim.mode === 'Normal' && editorFocus"
+  },
+  // Rename symbol (refactoring)
+  {
+    "key": "space c r",
+    "command": "editor.action.rename",
+    "when": "vim.mode === 'Normal' && editorFocus"
+  },
+  // Add cursor to next occurrence (similar to multiple cursors in modern editors)
+  {
+    "key": "ctrl+n",
+    "command": "editor.action.addSelectionToNextFindMatch",
+    "when": "(vim.mode === 'Normal' || vim.mode === 'Visual') && (editorFocus || !inputFocus)"
+  },
+
+  //==============================================================================
+  // CODE NAVIGATION - Jump to definitions and references
+  //==============================================================================
+
+  // Go to symbol in current file (similar to Vim plugin ctags)
+  {
+    "key": "space c s",
+    "command": "workbench.action.gotoSymbol",
+    "when": "vim.mode === 'Normal' && editorFocus"
+  },
+  // Go to definition (like gd in Vim)
+  {
+    "key": "space g d",
+    "command": "editor.action.revealDefinition",
+    "when": "vim.mode === 'Normal' && editorFocus"
+  },
+  // Find all references (like gr in Vim)
+  {
+    "key": "space g r",
+    "command": "editor.action.goToReferences",
+    "when": "vim.mode === 'Normal' && editorFocus"
+  },
+
+  //==============================================================================
+  // UI TOGGLING & WORKSPACE NAVIGATION - Quick access to views and panels
+  //==============================================================================
+
+  // Close current editor (buffer delete in Vim terms)
+  {
+    "key": "space b d",
+    "command": "workbench.action.closeActiveEditor",
+    "when": "vim.mode === 'Normal' && editorFocus"
+  },
+  // Quick open file picker (similar to Vim's CtrlP plugin)
+  {
+    "key": "space space",
+    "command": "workbench.action.quickOpen",
+    "when": "vim.mode === 'Normal' && (editorFocus || !inputFocus)"
+  },
+  // Global search (similar to Vim's Ag/Ack plugins)
+  {
+    "key": "space s g",
+    "command": "workbench.action.findInFiles",
+    "when": "vim.mode === 'Normal' && (editorFocus || !inputFocus)"
+  },
+  // Focus on source control panel (git)
+  {
+    "key": "space g g",
+    "command": "workbench.view.scm",
+    "when": "vim.mode === 'Normal' && (editorFocus || !inputFocus)"
+  },
+  // Focus on explorer view
+  {
+    "key": "space g e",
+    "command": "workbench.view.explorer",
+    "when": "vim.mode === 'Normal' && (editorFocus || !inputFocus)"
+  },
+
+  //==============================================================================
+  // FILE EXPLORER ACTIONS - Vim-like commands for file management
+  //==============================================================================
+
+  // Rename file (similar to Vim plugin NERDTree's rename)
+  {
+    "key": "r",
+    "command": "renameFile",
+    "when": "filesExplorerFocus && foldersViewVisible && !explorerResourceIsRoot && !explorerResourceReadonly && !inputFocus"
+  },
+  // Copy file
+  {
+    "key": "c",
+    "command": "filesExplorer.copy",
+    "when": "filesExplorerFocus && foldersViewVisible && !explorerResourceIsRoot && !explorerResourceReadonly && !inputFocus"
+  },
+  // Paste file
+  {
+    "key": "p",
+    "command": "filesExplorer.paste",
+    "when": "filesExplorerFocus && foldersViewVisible && !explorerResourceIsRoot && !explorerResourceReadonly && !inputFocus"
+  },
+  // Cut file
+  {
+    "key": "x",
+    "command": "filesExplorer.cut",
+    "when": "filesExplorerFocus && foldersViewVisible && !explorerResourceIsRoot && !explorerResourceReadonly && !inputFocus"
+  },
+  // Delete file
+  {
+    "key": "d",
+    "command": "deleteFile",
+    "when": "filesExplorerFocus && foldersViewVisible && !explorerResourceIsRoot && !explorerResourceReadonly && !inputFocus"
+  },
+  // Create new file (like NERDTree's 'a')
+  {
+    "key": "a",
+    "command": "explorer.newFile",
+    "when": "filesExplorerFocus && foldersViewVisible && !explorerResourceIsRoot && !explorerResourceReadonly && !inputFocus"
+  },
+  // Create new folder
+  {
+    "key": "shift+a",
+    "command": "explorer.newFolder",
+    "when": "filesExplorerFocus && foldersViewVisible && !explorerResourceIsRoot && !explorerResourceReadonly && !inputFocus"
+  },
+  // Open file to the side
+  {
+    "key": "s",
+    "command": "explorer.openToSide",
+    "when": "filesExplorerFocus && foldersViewVisible && !explorerResourceIsRoot && !explorerResourceReadonly && !inputFocus"
+  },
+  // Open file in split below and focus on it
+  {
+    "key": "shift+s",
+    "command": "runCommands",
+    "when": "filesExplorerFocus && foldersViewVisible && !explorerResourceIsRoot && !explorerResourceReadonly && !inputFocus",
+    "args": {
+      "commands": [
+        "workbench.action.splitEditorDown",
+        "explorer.openAndPassFocus",
+        "workbench.action.closeOtherEditors"
+      ]
+    }
+  },
+  // Open file and focus on it
+  {
+    "key": "enter",
+    "command": "explorer.openAndPassFocus",
+    "when": "filesExplorerFocus && foldersViewVisible && !explorerResourceIsRoot && !explorerResourceReadonly && !inputFocus",
+  },
+
+  // Show all open editors
+  {
+    "key": "space ,",
+    "command": "workbench.action.showAllEditors",
+    "when": "vim.mode === 'Normal' && editorTextFocus"
+  },
+  // Toggle sidebar visibility
+  {
+    "key": "space e",
+    "command": "workbench.action.toggleSidebarVisibility",
+    "when": "vim.mode === 'Normal' && (editorTextFocus || !inputFocus"
+  },
+
+]
