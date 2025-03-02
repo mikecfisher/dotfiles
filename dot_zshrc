@@ -118,7 +118,7 @@ fi
 # ===== ALIASES =====
 # Python and development
 alias python=python3
-alias editor=vim
+alias editor=nvim
 alias venv="uv venv"                                      # Create Python virtual environments with uv
 alias pipx="uv tool run"                                  # Run Python tools in isolation
 alias pipi="uv tool install"                              # Install Python packages with uv
@@ -135,8 +135,8 @@ export LDFLAGS="-L/opt/homebrew/opt/ruby/lib"
 export CPPFLAGS="-I/opt/homebrew/opt/ruby/include"
 
 # Cursor as default editor
-export EDITOR="vim"
-export VISUAL="vim"
+export EDITOR="nvim"
+export VISUAL="nvim"
 
 # Android SDK configuration
 export ANDROID_HOME=$HOME/Library/Android/sdk

@@ -1,0 +1,24 @@
+# pack-refs with: peeled fully-peeled sorted 
+ad6dc3d23531fbad3745cd9d0942be035f8388ee refs/remotes/origin/cleanup
+30c86aca7e6ea740d035ff89f0ab14e63481f22d refs/remotes/origin/d-flag
+cc7f7520f22ef289f3ecfe2a44ec1093360de26c refs/remotes/origin/error-handling
+8fc0690d1c0bf2cc79e96a6eacb3b4fe828ce68e refs/remotes/origin/ffi
+cd7d38545e32ed951ce701dbfe86ef33f932dff4 refs/remotes/origin/fix-matchAll
+95c4114e974c9565460ddb51bd56ab586811e0dc refs/remotes/origin/gcc
+8f22a231c361fe105b2dff2aa2dc5621839f6f32 refs/remotes/origin/inclusive-index
+81fb586899d45ce8037acd5697f91025af2d7150 refs/remotes/origin/master
+8e239dc2a15feae23b11ac8ed773a3e8598a8ebb refs/remotes/origin/match+unicode
+294c0a19ad117020d9f7b69b18d2b35f403dc32e refs/remotes/origin/more-tests
+f492645a036d328da69ab8cdb679993b873e1c13 refs/remotes/origin/parser
+c9cda026eddf529f82234faf15eb06406c4e4c29 refs/remotes/origin/readme
+897f2aa2df409cb4572ad8dfd27c8c40bf55a37d refs/remotes/origin/regexp-exec
+5626fdcd5cd8b7357fad8a256be00cd46d863dc0 refs/remotes/origin/test-windows
+6c1ea6ba1a781e2931e70ad45dbaffd7bde6b052 refs/remotes/origin/trafo
+ba9bee46ab3d03264f11acc8a0134bdf30f6e53e refs/remotes/origin/unicode
+7a8d7b6c8494b71ccf6fe70951baf5250a6e48ee refs/remotes/origin/update-unicode
+ac52135338949c6184deb0f54b951fc9238a4235 refs/tags/v0.0.2
+5431f623973f31e3dadaf8689659166eb0640e4b refs/tags/v0.0.3
+d9c4e7221ea34d08cbfb322651b73fecb18129aa refs/tags/v0.0.4
+dd65498ae2c29b882d6c02c0a30577b08d660b94 refs/tags/v0.0.5
+b5a81e21d0875667ba2458ac8ae903afd5568698 refs/tags/v0.0.6
+d76a7d656a122de38789f4b4a345de6290ed83cc refs/tags/v0.0.7
