@@ -1,0 +1,143 @@
+{
+  "language_models": {
+    "anthropic": {
+      "version": "1"
+    }
+  },
+  "assistant": {
+    "default_model": {
+      "provider": "zed.dev",
+      "model": "claude-3-5-sonnet-20240620"
+    },
+    "version": "2",
+    "provider": null
+  },
+  "telemetry": {
+    // Enable metrics for telemetry.
+    "metrics": true
+  },
+  "features": {
+    // Inline completion provider configuration.
+    "inline_completion_provider": "supermaven"
+  },
+
+
+  // List of language servers to use.
+  "language_servers": ["vtsls", "eslint"],
+  "language_server_options": {
+    // Configuration for vtsls server.
+    "vtsls": {
+      "language_ids": [
+        // Supported language IDs.
+        "typescript",
+        "javascript",
+        "typescriptreact",
+        "javascriptreact"
+      ]
+    },
+    // Configuration for typescript-language-server.
+    "typescript-language-server": {
+      "language_ids": [
+        "typescript",
+        "javascript",
+        "typescriptreact",
+        "javascriptreact"
+      ],
+      "initialization_options": {
+        "preferences": {
+          // Typescript language server preferences.
+          "includeInlayParameterNameHints": "all",
+          "includeInlayParameterNameHintsWhenArgumentMatchesName": true,
+          "includeInlayFunctionParameterTypeHints": true,
+          "includeInlayVariableTypeHints": true,
+          "includeInlayVariableTypeHintsWhenTypeMatchesName": false,
+          "includeInlayPropertyDeclarationTypeHints": true,
+          "includeInlayFunctionLikeReturnTypeHints": true,
+          "includeInlayEnumMemberValueHints": true
+        }
+      }
+    },
+    // Configuration for ESLint server.
+    "eslint": {
+      "language_ids": [
+        "typescript",
+        "javascript",
+        "typescriptreact",
+        "javascriptreact"
+      ],
+      "initialization_options": {
+        // Enable ESLint formatter.
+        "run_formatter": true
+      }
+    }
+  },
+  "languages": {
+    "TypeScript": {
+      "formatter": "prettier",
+      "code_actions_on_format": {
+        "source.fixAll.eslint": true
+      },
+      "format_on_save": "on"
+    },
+    "TSX": {
+      "formatter": "prettier",
+      "code_actions_on_format": {
+        "source.fixAll.eslint": true
+      },
+      "format_on_save": "on"
+    },
+    "JavaScript": {
+      "formatter": "prettier",
+      "code_actions_on_format": {
+        "source.fixAll.eslint": true
+      },
+      "format_on_save": "on"
+    }
+  },
+  "formatter": {
+    "code_actions": {
+      // ESLint fix code actions.
+      "source.fixAll.eslint": true
+    }
+  },
+  "tabs": { "file_icons": true },
+  "relative_line_numbers": true,
+  "theme": "Catppuccin Macchiato",
+  "buffer_font_size": 15,
+  "buffer_font_family": "FuraCode NF",
+  "vim_mode": true,
+  "format_on_save": "on",
+  "indent_guides": {
+    // Render indent guides.
+    "render": true,
+    // Character used for indent guides.
+    "character": "│",
+    // Include the first level of indentation.
+    "skip_first_level": false
+  },
+  "project_panel": {
+    // Show file icons in project panel.
+    "git_status": true,
+    "indent_size": 10,
+    "file_icons": true
+  },
+  "terminal": {
+    "font_family": "FuraCode NF",
+    "font_size": 15
+  },
+  "git": {
+    "git_gutter": "tracked_files",
+    "inline_blame": {
+      "enabled": true
+    }
+  },
+  "vim": {
+    // Use multiline registers in Vim mode.
+    "use_multiline_registers": true,
+    // Enable surround plugin for Vim mode.
+    "surround": true,
+    // Enable sneak plugin for Vim mode.
+    "sneak": true
+  },
+  "line_numbers": true
+}
