@@ -13,6 +13,11 @@
 #  10. Lazy-loaded NVM configuration
 #  11. Additional environment loaders
 
+
+export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
+export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
+
 ### Zinit initialization - moved to top
 # This ensures Zinit is installed before attempting to use it
 if [[ ! -f "$XDG_DATA_HOME/zinit/zinit.git/zinit.zsh" ]]; then
@@ -23,9 +28,6 @@ if [[ ! -f "$XDG_DATA_HOME/zinit/zinit.git/zinit.zsh" ]]; then
         print -P "%F{160} The clone has failed.%f%b"
 fi
 
-export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
-export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
-export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
 
 # Load Zinit and set up autocompletion for it
 source "$XDG_DATA_HOME/zinit/zinit.git/zinit.zsh"
@@ -109,6 +111,8 @@ zinit light olets/zsh-abbr
 # System utilities
 zinit light ael-code/zsh-colored-man-pages
 zinit light hcgraf/zsh-sudo
+
+# zinit snippet OMZ::plugins/dots/dots.plugin.zsh
 
 # Keep essential OMZ plugins
 zinit ice as"completion"
