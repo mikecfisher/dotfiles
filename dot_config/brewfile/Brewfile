@@ -55,6 +55,7 @@ brew git-filter-repo
 brew git-lfs
 brew glib
 brew glog
+brew glow
 brew gmp
 brew gnutls
 brew gradle
@@ -204,6 +205,7 @@ brew webp
 brew wget
 brew x264
 brew x265
+brew xdg-ninja --HEAD
 brew xorgproto
 brew xvid
 brew xxhash
