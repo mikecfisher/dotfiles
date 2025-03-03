@@ -181,21 +181,166 @@
   "prettier.requireConfig": true,
 
   // ===== Vim Configuration =====
-  "vim.statusBarColorControl": true,
-  "vim.leader": "<Space>",
+  "vim.autoindent": true,
+  "vim.leader": "<Space>", // Sets the leader key to Space
+  "vim.hlsearch": true,    // Highlghts search results
+  "vim.easymotion": true,  // Enables EasyMotion plugin for quick navigation
+  "vim.camelCaseMotion.enable": true, // Enables navigation within camelCase words
+  "vim.normalModeKeyBindingsNonRecursive": [
+    // Disable ctrl+O as it conflicts with karabiner
+    {
+      "before": ["<C-o>"],
+      "after": [] // Disables Ctrl+O in normal mode
+    },
+    {
+      "before": ["<C-t>"],
+      "after": [] // Disables Ctrl+T in normal mode
+    },
+    {
+      "before": ["<C-b>"],
+      "after": [] // Disables Ctrl+B in normal mode
+    },
+  ],
   "vim.normalModeKeyBindings": [
-    { "before": ["S-h"], "commands": [":bprevious"] },
-    { "before": ["S-l"], "commands": [":bnext"] },
-    { "before": ["leader", "v"], "commands": [":vsplit"] },
-    { "before": ["leader", "s"], "commands": [":split"] },
-    { "before": ["leader", "h"], "commands": ["workbench.action.focusLeftGroup"] },
-    { "before": ["leader", "j"], "commands": ["workbench.action.focusBelowGroup"] },
-    { "before": ["leader", "k"], "commands": ["workbench.action.focusAboveGroup"] },
-    { "before": ["leader", "l"], "commands": ["workbench.action.focusRightGroup"] }
+    { "before": ["S-h"], "commands": [":bprevious"] }, // Shift+H to go to previous buffer
+    { "before": ["S-l"], "commands": [":bnext"] },     // Shift+L to go to next buffer
+    { "before": ["<Leader>", "t", "t"], "commands": [":tabnew"] },  // Space+t+t to create new tab
+    { "before": ["<Leader>", "t", "n"], "commands": [":tabnext"] }, // Space+t+n to go to next tab
+    { "before": ["<Leader>", "t", "p"], "commands": [":tabprev"] }, // Space+t+p to go to previous tab
+    { "before": ["<Leader>", "t", "o"], "commands": [":tabo"] },    // Space+t+o to close all other tabs
+
+    // Quick file navigation (inspired by CtrlP/FZF plugins in Vim)
+    {
+      "before": ["leader", "leader"],
+      "commands": ["workbench.action.quickOpen"] // Space+Space to open quick file finder
+    },
+    // Search across all files (similar to Ag/Ack/Ripgrep in Vim)
+    {
+      "before": ["leader", "g", "s"],
+      "commands": ["workbench.action.findInFiles"] // Space+g+s to search in all files
+    },
+    // Quick access to source control view
+    {
+      "before": ["leader", "g", "g"],
+      "commands": ["workbench.view.scm"] // Space+g+g to open source control view
+    },
+    // Quick access to file explorer
+    {
+      "before": ["leader", "g", "e"],
+      "commands": ["workbench.view.explorer"] // Space+g+e to open file explorer
+    },
+    {
+      "before": [":"],
+      "commands": [
+          "workbench.action.showCommands", // : to open command palette
+      ],
+      "silent": true
+    },
+    { "before": ["leader", "v"], "commands": [":vsplit"] }, // Space+v to create vertical split
+    { "before": ["leader", "s"], "commands": [":split"] },  // Space+s to create horizontal split
+    // { "before": ["leader", "h"], "commands": ["workbench.action.focusLeftGroup"] },
+    // { "before": ["leader", "j"], "commands": ["workbench.action.focusBelowGroup"] },
+    // { "before": ["leader", "k"], "commands": ["workbench.action.focusAboveGroup"] },
+    // { "before": ["leader", "l"], "commands": ["workbench.action.focusRightGroup"] },
+    {
+      "before": ["leader", "c", "a"],
+      "commands": ["editor.action.codeAction"], // Space+c+a to show code actions
+    },
+    {
+      "before": ["leader", "c", "s"],
+      "commands": ["workbench.action.gotoSymbol"] // Space+c+s to go to symbol in file
+    },
+    // Jump to definition (emulates gd in Vim)
+    {
+      "before": ["leader", "g", "d"],
+      "commands": ["editor.action.revealDefinition"] // Space+g+d to go to definition
+    },
+    // View all references to current symbol (equivalent to gr in Vim with LSP)
+    {
+      "before": ["leader", "g", "r"],
+      "commands": ["editor.action.goToReferences"] // Space+g+r to find all references
+    },
+    // Quick access to file explorer
+    {
+      "before": ["leader", "e"],
+      "commands": ["workbench.view.explorer"] // Space+e to open file explorer
+    },
+
+    // Close current editor (buffer delete in Vim terminology)
+    {
+      "before": ["<Leader>", "b", "d"],
+      "commands": ["workbench.action.closeActiveEditor"] // Space+b+d to close current editor
+    },
+    // Quick file navigation (inspired by CtrlP/FZF plugins in Vim)
+    {
+      "before": ["<Leader>", "<Leader>"],
+      "commands": ["workbench.action.showAllEditors"] // Space+Space to show all open editors
+    },
+    // Show all open editors
+    {
+      "before": ["leader", "leader"],
+      "commands": ["workbench.action.quickOpen"] // space space to open quick file finder
+    },
+
+    {
+      "before": ["leader", "c", "s"],
+      "commands": ["workbench.action.gotoSymbol"] // Space+c+s to go to symbol in file (duplicate)
+        },
+    // Quick access to source control view
+    {
+      "before": ["leader", "g", "g"],
+      "commands": ["workbench.view.scm"] // Space+g+g to open source control view (duplicate)
+    },
+    // Quick access to file explorer
+    {
+      "before": ["leader", "g", "e"],
+      "commands": ["workbench.view.explorer"] // Space+g+e to open file explorer (duplicate)
+    },
+
+    {
+      "before": ["leader", "j"],
+      "after": ["J"] // Space+j to join lines (equivalent to J in vim)
+    },
+    {
+      "before": ["<C-h>"],
+      "after": ["<C-w>", "h"] // Ctrl+h to navigate to the left split
+    },
+    {
+      "before": ["<C-j>"],
+      "after": ["<C-w>", "j"] // Ctrl+j to navigate to the split below
+    },
+    {
+      "before": ["<C-k>"],
+      "after": ["<C-w>", "k"] // Ctrl+k to navigate to the split above
+    },
+    {
+      "before": ["<C-l>"],
+      "after": ["<C-w>", "l"] // Ctrl+l to navigate to the right split
+    }
+
   ],
   "vim.insertModeKeyBindings": [
-    { "before": ["j", "k"], "after": ["<Esc>"] }
+    { "before": ["j", "j"], "after": ["<Esc>"] } // jj in insert mode to escape to normal mode
   ],
+  "vim.visualModeKeyBindings": [
+    {
+        "before": [
+            ">"
+        ],
+        "commands": [
+            "editor.action.indentLines" // > in visual mode to indent selected lines
+        ]
+    },
+    {
+        "before": [
+            "<"
+        ],
+        "commands": [
+            "editor.action.outdentLines" // < in visual mode to outdent selected lines
+        ]
+    },
+  ],
+
 
   // ===== Material Icon Theme =====
   "material-icon-theme.activeIconPack": "react_redux",

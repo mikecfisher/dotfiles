@@ -8,6 +8,7 @@ This repository contains my dotfiles and configurations managed with chezmoi. It
 - Terminal settings and shell configurations (ZSH with high-performance Zinit setup)
 - Various development tools and preferences
 - Git abbreviations using zsh-abbr for faster git workflows
+- [Custom keyboard shortcuts](keyboard-shortcuts.md) for Vim-style navigation and productivity
 
 ## Features
 
