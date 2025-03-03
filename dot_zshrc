@@ -134,6 +134,9 @@ alias grbm='git rebase $(git_default_branch)'
 export LDFLAGS="-L/opt/homebrew/opt/ruby/lib"
 export CPPFLAGS="-I/opt/homebrew/opt/ruby/include"
 
+# Use full path for Homebrew Brewfile
+export HOMEBREW_BREWFILE_FULL_NAME=1
+
 # Cursor as default editor
 export EDITOR="nvim"
 export VISUAL="nvim"

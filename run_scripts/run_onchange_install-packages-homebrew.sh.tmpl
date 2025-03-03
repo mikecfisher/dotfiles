@@ -13,8 +13,46 @@ fi
 echo "Updating Homebrew..."
 brew update
 
-# Install from Brewfile in Chezmoi config
-echo "Installing packages from Brewfile..."
-brew bundle --no-lock --file="{{ .chezmoi.sourceDir }}/dot_config/brewfile/Brewfile"
+# Make sure brew-file is installed
+if ! command -v brew-file &> /dev/null; then
+  echo "Installing brew-file..."
+  brew install rcmdnk/file/brew-file
+fi
+
+# Set Brewfile location for brew-file
+export HOMEBREW_BREWFILE="{{ .chezmoi.sourceDir }}/dot_config/brewfile/Brewfile"
+
+# Set up brew-wrap if not already configured
+BREW_WRAP_PATH="$(brew --prefix)/etc/brew-wrap"
+SHELL_CONFIG="${HOME}/.zshrc"  # Adjust if using a different shell
+
+if [ -f "$BREW_WRAP_PATH" ]; then
+  echo "Setting up brew-wrap..."
+
+  # Check if brew-wrap is already in shell config
+  if ! grep -q "source.*brew-wrap" "$SHELL_CONFIG"; then
+    echo "Adding brew-wrap to shell config..."
+    echo "" >> "$SHELL_CONFIG"
+    echo "# Set up brew-wrap for automatic Brewfile updates" >> "$SHELL_CONFIG"
+    echo "if [ -f \$(brew --prefix)/etc/brew-wrap ]; then" >> "$SHELL_CONFIG"
+    echo "  source \$(brew --prefix)/etc/brew-wrap" >> "$SHELL_CONFIG"
+    echo "" >> "$SHELL_CONFIG"
+    echo "  # Fix @ symbols in Brewfile after updates" >> "$SHELL_CONFIG"
+    echo "  _post_brewfile_update() {" >> "$SHELL_CONFIG"
+    echo "    sed -i '' 's/brew \([a-zA-Z0-9_-]*@[0-9.]*\)/brew \"\1\"/g' \"\$HOMEBREW_BREWFILE\"" >> "$SHELL_CONFIG"
+    echo "    echo \"Brewfile updated and @ symbols fixed!\"" >> "$SHELL_CONFIG"
+    echo "  }" >> "$SHELL_CONFIG"
+    echo "fi" >> "$SHELL_CONFIG"
+
+    echo "brew-wrap has been added to $SHELL_CONFIG"
+    echo "Please restart your shell or run 'source $SHELL_CONFIG' to activate it"
+  else
+    echo "brew-wrap is already configured in $SHELL_CONFIG"
+  fi
+fi
+
+# Install packages using brew-file
+echo "Installing packages using brew-file..."
+brew file install
 
 {{ end -}}
