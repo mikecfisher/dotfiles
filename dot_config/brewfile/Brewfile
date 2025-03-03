@@ -41,6 +41,7 @@ brew fontconfig
 brew freetype
 brew frei0r
 brew fribidi
+brew fswatch
 brew fzf
 brew gdk-pixbuf
 brew geckodriver
@@ -117,6 +118,7 @@ brew libvidstab
 brew libvmaf
 brew libvorbis
 brew libvpx
+brew libvterm
 brew libx11
 brew libxau
 brew libxcb
@@ -126,6 +128,9 @@ brew libxrender
 brew libyaml
 brew little-cms2
 brew llvm
+brew lpeg
+brew luajit
+brew luv
 brew lz4
 brew lzo
 brew m4
@@ -134,7 +139,9 @@ brew mbedtls
 brew mkcert
 brew mpdecimal
 brew mpg123
+brew msgpack
 brew mvfst
+brew neovim
 brew nettle
 brew node
 brew node-build
@@ -156,6 +163,7 @@ brew pcre2
 brew pipx
 brew pixman
 brew pkgconf
+brew pnpm
 brew portaudio
 brew postgresql@14
 brew powerlevel10k
@@ -186,7 +194,9 @@ brew svt-av1
 brew terminal-notifier
 brew tesseract
 brew theora
+brew tree-sitter
 brew unbound
+brew unibilium
 brew uv
 brew wangle
 brew watchman
