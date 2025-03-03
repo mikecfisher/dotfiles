@@ -1,7 +1,7 @@
 # ==== THEME ====
 # Base colors and opacity
 theme = catppuccin-macchiato
-background-opacity = 0.9
+background-opacity = 0.98
 background-blur = 10
 font-size = 18
 font-family = "Hack"
