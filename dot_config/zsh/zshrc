@@ -18,6 +18,11 @@ export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
 export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
 export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
 
+export ANTHROPIC_API_KEY=$(security find-generic-password -a ${USER} -s "anthropic_api_key" -w 2>/dev/null)
+export HASS_TOKEN=$(security find-generic-password -a ${USER} -s "homeassistant_token_api_key" -w 2>/dev/null)
+export OPENAI_API_KEY=$(security find-generic-password -a ${USER} -s "openai_api_key" -w 2>/dev/null)
+
+
 ### Zinit initialization - moved to top
 # This ensures Zinit is installed before attempting to use it
 if [[ ! -f "$XDG_DATA_HOME/zinit/zinit.git/zinit.zsh" ]]; then
@@ -169,71 +174,8 @@ function copyfile() {
 # This system delays loading 1Password credentials until they're actually needed,
 # which significantly improves shell startup time
 
-# 1Password session management - checks for valid session or prompts signin
-function op_signin() {
-  # Check if we have a valid session
-  if ! op account get --format=json >/dev/null 2>&1; then
-    echo "Signing in to 1Password..."
-    eval $(op signin)
-  fi
-}
-
-# Base functions to get credentials from 1Password
-function get_openai_api_key() {
-  op_signin
-  # Using 1Password CLI to fetch the key
-  op item get "OpenAI API Key" --fields credential --reveal
-}
-
-function get_homeassistant_token() {
-  op_signin
-  op item get "Home Assistant Token" --fields credential --reveal
-}
-
-# Lazy-loaded OpenAI API key - replaces itself with a simpler function after first use
-# This implements a form of memoization to avoid repeated API calls
-function openai_key() {
-  export OPENAI_API_KEY=$(get_openai_api_key)
-  # Replace this function with a simple echo after first use
-  function openai_key() {
-    echo $OPENAI_API_KEY
-  }
-  echo $OPENAI_API_KEY
-}
-
-# Lazy-loaded Home Assistant token - same pattern as above
-function ha_token() {
-  export HASS_TOKEN=$(get_homeassistant_token)
-  # Replace this function with a simple echo after first use
-  function ha_token() {
-    echo $HASS_TOKEN
-  }
-  echo $HASS_TOKEN
-}
-
 # Set placeholder environment variables - these indicate the real values aren't loaded yet
-export OPENAI_API_KEY="needs_loading"
 export HASS_SERVER=http://homeassistant.local:8123
-export HASS_TOKEN="needs_loading"
-
-# Command wrappers that trigger credential loading only when the commands are used
-function openai() {
-  # Load the key if it hasn't been loaded yet
-  if [[ "$OPENAI_API_KEY" == "needs_loading" ]]; then
-    export OPENAI_API_KEY=$(openai_key)
-  fi
-  # Forward to the actual openai command with all arguments
-  command openai "$@"
-}
-
-function hass() {
-  # Load the token if it hasn't been loaded yet
-  if [[ "$HASS_TOKEN" == "needs_loading" ]]; then
-    export HASS_TOKEN=$(ha_token)
-  fi
-  # Forward to the actual hass command with all arguments
-  command hass "$@"
-}
 
 # ===== PATH SETUP =====
 # This adds directories to the PATH in order of precedence (first has highest priority)
@@ -296,82 +238,38 @@ eval "$(zoxide init --cmd cd zsh)"
 eval "$(op completion zsh)"; compdef _op op
 
 # FZF fuzzy finder key bindings and completion
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+source <(fzf --zsh)
 
-# ===== LAZY-LOADED NVM SETUP =====
-# NVM (Node Version Manager) is lazy-loaded to improve shell startup time
-export NVM_DIR="$HOME/.nvm"
+# NVM Plugin Variables
+export NVM_LAZY_LOAD=true      # 70x faster shell startup
+export NVM_AUTO_USE=true       # Auto use Node version specified in .nvmrc
+export NVM_COMPLETION=true     # Enable completion
 
-# Lazy-load NVM - only loads when the nvm command is first used
-function nvm() {
-  # Load nvm if it's not loaded yet
-  if [[ ! -f "$NVM_DIR/nvm.sh" ]]; then
-    echo "nvm not found"
-    return 1
-  fi
-
-  # Remove this function and load the real nvm
-  unfunction nvm
-  source "$NVM_DIR/nvm.sh"
-  source "$NVM_DIR/bash_completion"
-
-  # Call the real nvm function with our arguments
-  nvm "$@"
-}
-
-# Function to automatically use the right Node.js version based on .nvmrc files
-load-nvmrc() {
-  # Check for .nvmrc directly instead of using nvm_find_nvmrc which requires NVM to be loaded
-  if [[ -f ".nvmrc" ]]; then
-    # Ensure nvm is loaded when needed
-    if ! type nvm > /dev/null 2>&1; then
-      source "$NVM_DIR/nvm.sh"
-      source "$NVM_DIR/bash_completion"
-    fi
-
-    # Now we can use nvm commands
-    local nvmrc_node_version
-    nvmrc_node_version=$(nvm version "$(cat ".nvmrc")")
-
-    if [ "$nvmrc_node_version" = "N/A" ]; then
-      nvm install
-    elif [ "$nvmrc_node_version" != "$(nvm version)" ]; then
-      nvm use
-    fi
-  fi
-}
-
-# Lazy-load Node.js commands - these functions replace themselves with the real commands
-# after loading NVM the first time they're used
-function node() {
-  unfunction node npm yarn
-  source "$NVM_DIR/nvm.sh"
-  node "$@"
-}
-
-function npm() {
-  unfunction node npm yarn
-  source "$NVM_DIR/nvm.sh"
-  npm "$@"
-}
-
-function yarn() {
-  unfunction node npm yarn
-  source "$NVM_DIR/nvm.sh"
-  yarn "$@"
-}
-
-# Only add the nvmrc hook if we're in an interactive shell
-# This checks for .nvmrc files when changing directories
-if [[ $- == *i* ]]; then
-  autoload -Uz add-zsh-hook
-  add-zsh-hook chpwd load-nvmrc
-  # Check for nvmrc in current directory at startup
-  load-nvmrc 2>/dev/null
-fi
+# NVM ZSH Plugin
+zinit light lukechilds/zsh-nvm
 
 # ===== ADDITIONAL ENVIRONMENTS =====
 # Deno JavaScript/TypeScript runtime environment
 . "/Users/mike/.deno/env"
 
 # === End of zshrc ===
+#compdef gt
+###-begin-gt-completions-###
+#
+# yargs command completion script
+#
+# Installation: gt completion >> ~/.zshrc
+#    or gt completion >> ~/.zprofile on OSX.
+#
+_gt_yargs_completions()
+{
+  local reply
+  local si=$IFS
+  IFS=$'
+' reply=($(COMP_CWORD="$((CURRENT-1))" COMP_LINE="$BUFFER" COMP_POINT="$CURSOR" gt --get-yargs-completions "${words[@]}"))
+  IFS=$si
+  _describe 'values' reply
+}
+compdef _gt_yargs_completions gt
+###-end-gt-completions-###
+
