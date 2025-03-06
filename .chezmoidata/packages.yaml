@@ -1,0 +1,166 @@
+packages:
+  taps:
+    - "homebrew/autoupdate"
+    - "homebrew/bundle"
+    - "homebrew/cask-fonts"
+    - "homebrew/cask"
+    - "homebrew/core"
+    - "homebrew/services"
+    - "olets/tap"
+    - "qovery/replibyte"
+    - "rcmdnk/file"
+    - "withgraphite/tap"
+
+  common:
+    brews:
+      - "bat"
+      - "chezmoi"
+      - "diff-so-fancy"
+      - "dnsmasq"
+      - "fd"
+      - "flac"
+      - "fswatch"
+      - "fzf"
+      - "geckodriver"
+      - "gh"
+      - "git-delta"
+      - "git-filter-repo"
+      - "git-lfs"
+      - "git"
+      - "glances"
+      - "glow"
+      - "homeassistant-cli"
+      - "htop"
+      - "hub"
+      - "imagemagick"
+      - "jq"
+      - "lazygit"
+      - "mas"
+      - "mcfly"
+      - "mkcert"
+      - "neovim"
+      - "olets/tap/zsh-abbr"
+      - "rcmdnk/file/brew-file"
+      - "readline"
+      - "ripgrep"
+      - "starship"
+      - "tesseract"
+      - "tree-sitter"
+      - "wget"
+      - "withgraphite/tap/graphite"
+      - "xdg-ninja"
+      - "yq"
+      - "zsh-autosuggestions"
+      - "zsh"
+    casks:
+      - "1password"
+      - "1password-cli"
+      - "alt-tab"
+      - "firefox"
+      - "font-cascadia-code"
+      - "font-fira-code"
+      - "font-jetbrains-mono"
+      - "font-meslo-lg-nerd-font"
+      - "homerow"
+      - "karabiner-elements"
+      - "macupdater"
+    mas:
+      - { id: 1278508951, name: "Trello" }
+      - { id: 1319778037, name: "iStat Menus" }
+      - { id: 1402042596, name: "AdBlock" }
+      - { id: 1436522307, name: "Transmit" }
+      - { id: 1475387142, name: "Tailscale" }
+      - { id: 1480068668, name: "Messenger" }
+      - { id: 1480933944, name: "Vimari" }
+      - { id: 1528890965, name: "TextSniper" }
+      - { id: 1569813296, name: "1Password for Safari" }
+      - { id: 302584613, name: "Amazon Kindle" }
+      - { id: 310633997, name: "WhatsApp" }
+      - { id: 409183694, name: "Keynote" }
+      - { id: 409201541, name: "Pages" }
+      - { id: 409203825, name: "Numbers" }
+      - { id: 442168834, name: "SiteSucker" }
+      - { id: 470158793, name: "Keka" }
+      - { id: 6714467650, name: "Perplexity" }
+      - { id: 889428659, name: "xScope" }
+
+  coding:
+    brews:
+      - "act"
+      - "ansible"
+      - "autoconf"
+      - "awscli"
+      - "boost"
+      - "cocoapods"
+      - "doctl"
+      - "fastlane"
+      - "gh"
+      - "ghostscript"
+      - "golang"
+      - "gradle"
+      - "ios-deploy"
+      - "libgit2"
+      - "llvm"
+      - "luajit"
+      - "node-build"
+      - "openjdk"
+      - "pipx"
+      - "pnpm"
+      - "postgresql@14"
+      - "pyenv"
+      - "python@3.12"
+      - "python@3.13"
+      - "qovery/replibyte/replibyte"
+      - "ruby"
+      - "sqlite"
+      - "uv"
+      - "watchman"
+    casks:
+      - "expo-orbit"
+      - "postman"
+      - "react-native-debugger"
+      - "zulu@17"
+    mas:
+      - { id: 1037126344, name: "Apple Configurator" }
+      - { id: 497799835, name: "Xcode" }
+      - { id: 640199958, name: "Developer" }
+      - { id: 899247664, name: "TestFlight" }
+
+  personal:
+    brews:
+      - "ffmpeg"
+      - "lame"
+      - "liblo"
+      - "libmonome"
+      - "libsndfile"
+      - "portaudio"
+      - "rubberband"
+      - "serialosc"
+      - "terminal-notifier"
+    mas:
+      - { id: 1006401965, name: "Samplism Lite" }
+      - { id: 1087079310, name: "Switch Sound File Converter" }
+      - { id: 1099568401, name: "Home Assistant" }
+      - { id: 1263858588, name: "Tonebridge Guitar Effects" }
+      - { id: 1320450034, name: "DaftCloud" }
+      - { id: 1339418001, name: "Model D" }
+      - { id: 1500678169, name: "Hue Menu" }
+      - { id: 1500855883, name: "CapCut" }
+      - { id: 1527105121, name: "Neural Mix Pro" }
+      - { id: 1533078079, name: "Teleprompter" }
+      - { id: 1586841361, name: "Animoog Z" }
+      - { id: 1591588588, name: "Virtual Teleprompter Pro" }
+      - { id: 1598483936, name: "Virtual Teleprompter Lite" }
+      - { id: 1616822987, name: "Affinity Photo 2" }
+      - { id: 1629209970, name: "Metronome" }
+      - { id: 363738376, name: "forScore" }
+      - { id: 408981434, name: "iMovie" }
+      - { id: 414030210, name: "LimeChat" }
+      - { id: 424389933, name: "Final Cut Pro" }
+      - { id: 424390742, name: "Compressor" }
+      - { id: 425264550, name: "Blackmagic Disk Speed Test" }
+      - { id: 450527929, name: "djay Pro" }
+      - { id: 634148309, name: "Logic Pro" }
+      - { id: 682658836, name: "GarageBand" }
+      - { id: 696977615, name: "Capo" }
+      - { id: 967004861, name: "HP Easy Scan" }

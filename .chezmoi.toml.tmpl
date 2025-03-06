@@ -5,7 +5,15 @@ app = "vscode"
 [data.cursor]
 app = "cursor"
 
+[data]
+# Use a prompt during initialization:
+{{- $machine_type := promptString "Machine type (personal/coding)" -}}
+{{- if eq $machine_type "personal" "coding" -}}
+machine_type = {{ $machine_type | quote }}
+{{- else -}}
+machine_type = "personal"  # Default if invalid input
+{{- end }}
+
 [git]
 autoCommit = true
 commitMessageTemplateFile = ".commit_message.tmpl"
-

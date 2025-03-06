@@ -18,7 +18,7 @@ desktop-notifications = false
 window-inherit-working-directory = true
 
 # Remove window decorations (title bar, etc)
-# window-decoration = false
+# window-decoration = true
 
 # Swap foreground/background colors in selected text
 selection-invert-fg-bg = true
