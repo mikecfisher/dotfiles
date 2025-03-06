@@ -180,7 +180,7 @@
   // ===== Prettier Configuration =====
   "prettier.requireConfig": true,
 
-  // ===== Vim Configuration =====
+ // ===== Vim Configuration =====
   "vim.autoindent": true,
   "vim.leader": "<Space>", // Sets the leader key to Space
   "vim.hlsearch": true,    // Highlghts search results
@@ -249,6 +249,10 @@
     {
       "before": ["leader", "c", "s"],
       "commands": ["workbench.action.gotoSymbol"] // Space+c+s to go to symbol in file
+    },
+    {
+      "before": ["leader", "c", "h"],
+      "commands": ["composer.showComposerChatHistory"]
     },
     // Jump to definition (emulates gd in Vim)
     {
@@ -340,7 +344,6 @@
         ]
     },
   ],
-
 
   // ===== Material Icon Theme =====
   "material-icon-theme.activeIconPack": "react_redux",
