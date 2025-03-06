@@ -4,9 +4,6 @@
 # Homebrew
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
-# Ruby version manager
-eval "$(rbenv init - --no-rehash zsh)"
-
 # Node version manager (NVM)
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" --no-use # This loads nvm
@@ -28,9 +25,6 @@ export NODE_EXTRA_CA_CERTS="$HOME/Library/Application Support/mkcert/rootCA.pem"
 # Python managed by uv
 # Note: Consider removing this line and letting uv manage Python versions
 # PATH="/Library/Frameworks/Python.framework/Versions/3.12/bin:${PATH}"
-
-# Pipx binaries
-PATH="$PATH:/Users/mike/.local/bin"
 
 # Toolbox App
 PATH="$PATH:/usr/local/bin"
