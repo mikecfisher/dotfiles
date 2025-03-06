@@ -1,5 +1,3 @@
-#!/usr/bin/env zsh
-# ~/.zshrc: Interactive Zsh configuration file
 # Organization:
 #   1. Zinit plugin manager setup
 #   2. Completion system configuration
@@ -122,11 +120,6 @@ zinit light hcgraf/zsh-sudo
 # Keep essential OMZ plugins
 zinit ice as"completion"
 zinit snippet https://github.com/Homebrew/brew/blob/master/completions/zsh/_brew
-
-# Brew Wrap https://homebrew-file.readthedocs.io/en/latest/brew-wrap.html
-if [ -f $(brew --prefix)/etc/brew-wrap ];then
-  source $(brew --prefix)/etc/brew-wrap
-fi
 
 # ===== ALIASES =====
 # Python and development

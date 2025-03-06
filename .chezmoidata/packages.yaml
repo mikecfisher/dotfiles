@@ -2,7 +2,6 @@ packages:
   taps:
     - "homebrew/autoupdate"
     - "homebrew/bundle"
-    - "homebrew/cask-fonts"
     - "homebrew/cask"
     - "homebrew/core"
     - "homebrew/services"

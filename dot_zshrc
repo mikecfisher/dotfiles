@@ -1,1 +1,12 @@
 [[ -f ~/.config/zsh/zshrc ]] && source ~/.config/zsh/zshrc
+# Set up brew-wrap for automatic Brewfile updates
+if [ -f $(brew --prefix)/etc/brew-wrap ]; then
+  source $(brew --prefix)/etc/brew-wrap
+
+  # Fix @ symbols in Brewfile after updates
+  _post_brewfile_update() {
+    sed -i '' 's/brew \([a-zA-Z0-9_-]*@[0-9.]*\)/brew "\1"/g' "$HOMEBREW_BREWFILE"
+    echo "Brewfile updated! To add new packages to your dotfiles:"
+    echo "chezmoi edit .chezmoidata/packages.yaml"
+  }
+fi

@@ -1,7 +1,5 @@
 {{- $machineType := promptStringOnce . "machine_type" "Machine type (personal/coding)" "personal" -}}
 
-
-
 [data.vscode]
    app = "vscode"
 
@@ -9,7 +7,7 @@
    app = "cursor"
 
 [data]
-    machine_type = {{ $machineType | quote }}
+    machine_type = "{{ $machineType }}"
 
 [git]
  autoCommit = true
