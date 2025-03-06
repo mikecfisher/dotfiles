@@ -60,6 +60,7 @@ packages:
       - "font-fira-code"
       - "font-jetbrains-mono"
       - "font-meslo-lg-nerd-font"
+      - "ghostty"
       - "homerow"
       - "karabiner-elements"
       - "macupdater"

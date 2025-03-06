@@ -1,3 +1,5 @@
+# Dotfiles
+
 A portable, templated dotfiles management system using [chezmoi](https://www.chezmoi.io/).
 
 ## Overview
@@ -26,14 +28,21 @@ This repository contains my dotfiles and configurations managed with chezmoi. It
 - [chezmoi](https://www.chezmoi.io/install/) (dotfile manager)
 - [1Password CLI](https://1password.com/downloads/command-line/) (optional, for secrets)
 - macOS (primary target platform)
-- [Ghostty](https://github.com/mitchellh/ghostty) terminal (optional)
 - Git
-- Zsh with [Zinit](https://github.com/zdharma-continuum/zinit) plugin manager
-- [zsh-abbr](https://github.com/olets/zsh-abbr) for command abbreviations
 
 ## Quick Start
 
-### First-time Setup
+### One-Line Setup (Recommended)
+
+This will install everything you need in one command:
+
+```bash
+sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply https://github.com/mikecfisher/dotfiles.git
+```
+
+### Manual Setup
+
+If you prefer a step-by-step approach:
 
 1. Install chezmoi:
    ```bash
@@ -60,14 +69,24 @@ This repository contains my dotfiles and configurations managed with chezmoi. It
 ```bash
 chezmoi update
 ```
+## Key Components
 
-## Editor Configuration
+
+### Editor Configuration
 
 This repo includes a shared configuration system for VS Code and Cursor. The magic happens through:
 
 - A shared template in `.chezmoitemplates/vscode-cursor-settings.tmpl`
 - Target detection that identifies which editor is being configured
 - Conditional settings based on the target editor
+
+### ZSH Configuration
+
+High-performance shell setup using Zinit with:
+- Lazy-loading for slow-starting components (NVM, 1Password)
+- Parallel plugin loading
+- Git abbreviations via zsh-abbr
+- Intelligent path management
 
 ### How It Works
 
