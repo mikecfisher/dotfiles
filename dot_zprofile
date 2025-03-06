@@ -4,9 +4,6 @@
 # Homebrew
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
-# Node version manager (NVM)
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" --no-use # This loads nvm
 
 # Python package manager (uv)
 export UV_SYSTEM_PYTHON=1  # Allow uv to find system Python installations
@@ -25,6 +22,7 @@ export NODE_EXTRA_CA_CERTS="$HOME/Library/Application Support/mkcert/rootCA.pem"
 # Python managed by uv
 # Note: Consider removing this line and letting uv manage Python versions
 # PATH="/Library/Frameworks/Python.framework/Versions/3.12/bin:${PATH}"
+
 
 # Toolbox App
 PATH="$PATH:/usr/local/bin"
