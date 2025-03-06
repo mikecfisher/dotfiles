@@ -1,19 +1,16 @@
-# Define app-specific settings
+{{- $machineType := promptStringOnce . "machine_type" "Machine type (personal/coding)" "personal" -}}
+
+
+
 [data.vscode]
-app = "vscode"
+   app = "vscode"
 
 [data.cursor]
-app = "cursor"
+   app = "cursor"
 
 [data]
-# Use a prompt during initialization:
-{{- $machine_type := promptString "Machine type (personal/coding)" -}}
-{{- if eq $machine_type "personal" "coding" -}}
-machine_type = {{ $machine_type | quote }}
-{{- else -}}
-machine_type = "personal"  # Default if invalid input
-{{- end }}
+    machine_type = {{ $machineType | quote }}
 
 [git]
-autoCommit = true
-commitMessageTemplateFile = ".commit_message.tmpl"
+ autoCommit = true
+ commitMessageTemplateFile = ".commit_message.tmpl"
