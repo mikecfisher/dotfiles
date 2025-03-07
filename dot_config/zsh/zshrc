@@ -8,7 +8,6 @@
 #   7. PATH configuration
 #   8. History settings
 #   9. Autocompletions
-#  10. Lazy-loaded NVM configuration
 #  11. Additional environment loaders
 
 
@@ -39,6 +38,16 @@ autoload -Uz _zinit
 
 # Ensure Zinit completions directory exists
 [[ ! -d ~/.cache/zinit/completions ]] && mkdir -p ~/.cache/zinit/completions
+
+# fnm - faster node version manager written in Rust
+FNM_PATH="/Users/mike/.local/share/fnm"
+if [ -d "$FNM_PATH" ]; then
+  export PATH="/Users/mike/.local/share/fnm:$PATH"
+  eval "`fnm env`"
+fi
+
+eval "$(fnm env --use-on-cd --shell zsh)"
+
 
 # Load essential Zinit annexes - these extend Zinit's functionality
 # Annexes add features like binary downloading, monitoring, etc.
@@ -233,14 +242,6 @@ eval "$(op completion zsh)"; compdef _op op
 
 # FZF fuzzy finder key bindings and completion
 source <(fzf --zsh)
-
-# NVM Plugin Variables
-export NVM_LAZY_LOAD=true      # 70x faster shell startup
-export NVM_AUTO_USE=true       # Auto use Node version specified in .nvmrc
-export NVM_COMPLETION=true     # Enable completion
-
-# NVM ZSH Plugin
-zinit light lukechilds/zsh-nvm
 
 # ===== ADDITIONAL ENVIRONMENTS =====
 # Deno JavaScript/TypeScript runtime environment

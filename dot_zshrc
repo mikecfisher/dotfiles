@@ -10,3 +10,4 @@ if [ -f $(brew --prefix)/etc/brew-wrap ]; then
     echo "chezmoi edit .chezmoidata/packages.yaml"
   }
 fi
+
