@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# Check if LazyVim is already installed
+if [ ! -d "$HOME/.config/nvim/.nvim" ]; then
+  echo "Setting up LazyVim..."
+
+  # Install dependencies
+  {{ if eq .chezmoi.os "darwin" }}
+  brew install ripgrep fd
+  {{ else if eq .chezmoi.os "linux" }}
+  sudo apt install -y ripgrep fd-find
+  {{ end }}
+
+  # Clone lazy.nvim
+  mkdir -p ~/.config/nvim/lazy
+  git clone https://github.com/LazyVim/starter ~/.config/nvim
+
+  rm -rf ~/.config/nvim/.git
+
+
+  # Initial Neovim run to install plugins
+  nvim --headless "+Lazy! sync" +qa
+
+  echo "LazyVim plugins installed successfully!"
+
+fi
