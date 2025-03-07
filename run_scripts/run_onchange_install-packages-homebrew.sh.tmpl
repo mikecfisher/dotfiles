@@ -59,33 +59,20 @@ echo "appstore {{ .id }} \"{{ .name }}\"" >> "${BREWFILE}"
 echo "" >> "${BREWFILE}"
 {{- end }}
 
-# Include machine-specific packages
-{{- if eq .machine_type "coding" }}
-echo "# Coding packages" >> "${BREWFILE}"
-{{- range .packages.coding.brews }}
-echo "brew \"{{ . }}\"" >> "${BREWFILE}"
-{{- end }}
-echo "" >> "${BREWFILE}"
-
-{{- if .packages.coding.casks }}
-{{- range .packages.coding.casks }}
-echo "cask \"{{ . }}\"" >> "${BREWFILE}"
-{{- end }}
-echo "" >> "${BREWFILE}"
-{{- end }}
-
-{{- if .packages.coding.mas }}
-{{- range .packages.coding.mas }}
-echo "appstore {{ .id }} \"{{ .name }}\"" >> "${BREWFILE}"
-{{- end }}
-echo "" >> "${BREWFILE}"
-{{- end }}
-{{- else }}
+# Include personal packages if this is a personal machine
+{{- if eq .machine_type "personal" }}
 echo "# Personal packages" >> "${BREWFILE}"
 {{- range .packages.personal.brews }}
 echo "brew \"{{ . }}\"" >> "${BREWFILE}"
 {{- end }}
 echo "" >> "${BREWFILE}"
+
+{{- if .packages.personal.casks }}
+{{- range .packages.personal.casks }}
+echo "cask \"{{ . }}\"" >> "${BREWFILE}"
+{{- end }}
+echo "" >> "${BREWFILE}"
+{{- end }}
 
 {{- if .packages.personal.mas }}
 {{- range .packages.personal.mas }}

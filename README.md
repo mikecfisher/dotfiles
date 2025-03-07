@@ -214,6 +214,25 @@ Edit `.chezmoi.toml.tmpl` to configure your personal information:
 
 chezmoi automatically detects the current machine and OS, allowing for conditional configuration.
 
+## Package Management
+
+This repository uses a simplified package management approach with two machine types:
+
+- **Default**: Includes common development tools and applications suitable for any machine
+- **Personal**: Includes everything in the default configuration plus additional tools for music production and personal use
+
+When initializing chezmoi, you'll be prompted to choose between these two machine types:
+
+```toml
+# .chezmoi.toml.tmpl
+{{- $machineType := promptStringOnce . "machine_type" "Machine type (personal/default)" "default" -}}
+
+[data]
+    machine_type = "{{ $machineType }}"
+```
+
+The package installation script (`run_onchange_install-packages-homebrew.sh.tmpl`) will then install the appropriate packages based on your machine type.
+
 ## Directory Structure
 
 ```
@@ -284,7 +303,5 @@ This setup uses a Brewfile to manage Homebrew packages, ensuring consistency acr
 - **Automatic Updates**: With `brew-wrap` enabled, the Brewfile is automatically updated when packages are installed or removed.
 
 ### Updating the Brewfile
-
-
 
 With `brew-wrap` enabled, the Brewfile is automatically updated whenever you install or uninstall packages using `brew`, `mas`, `whalebrew`, or `code`. This means you don't need to manually run `brew bundle dump` to update the Brewfile.
