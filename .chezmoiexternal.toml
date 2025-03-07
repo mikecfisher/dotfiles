@@ -4,3 +4,8 @@ url = "https://github.com/catppuccin/tmux.git"
 refreshPeriod = "168h"                         # Update weekly
 [".config/tmux/plugins/catppuccin".clone]
 args = ["--branch", "v2.1.2", "--depth", "1"]
+
+[".tmux/plugins/tpm"]
+type = "git-repo"
+url = "https://github.com/tmux-plugins/tpm"
+refreshPeriod = "168h"
