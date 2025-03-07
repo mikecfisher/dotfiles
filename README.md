@@ -11,6 +11,7 @@ This repository contains my dotfiles and configurations managed with chezmoi. It
 - Various development tools and preferences
 - Git abbreviations using zsh-abbr for faster git workflows
 - [Custom keyboard shortcuts](keyboard-shortcuts.md) for Vim-style navigation and productivity
+- [Comprehensive Vim keybindings](vim-mappings.md) for a powerful, LazyVim-inspired editing experience
 
 ## Features
 
@@ -79,6 +80,16 @@ This repo includes a shared configuration system for VS Code and Cursor. The mag
 - A shared template in `.chezmoitemplates/vscode-cursor-settings.tmpl`
 - Target detection that identifies which editor is being configured
 - Conditional settings based on the target editor
+
+### Vim Keybindings
+
+This repository includes a comprehensive set of Vim keybindings for VS Code and Cursor:
+
+- **LazyVim-inspired**: Keybindings follow LazyVim conventions for consistency
+- **Powerful navigation**: Buffer, window, and tab navigation with intuitive shortcuts
+- **IDE integration**: Combines Vim's editing efficiency with modern IDE features
+- **Customized for productivity**: Carefully tuned keybindings for development workflows
+- **Fully documented**: Complete reference available in [vim-mappings.md](vim-mappings.md)
 
 ### ZSH Configuration
 
