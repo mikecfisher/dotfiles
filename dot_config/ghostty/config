@@ -72,10 +72,15 @@ focus-follows-mouse = true
 
 keybind = cmd+r=reload_config
 
+window-subtitle = false
 
+
+title = " "
 
 # ==== MACOS SPECIFIC ====
 # Make option key behave like alt
 macos-option-as-alt = true
 # Handle secure input automatically
 macos-auto-secure-input = true
+
+macos-titlebar-style = tabs
