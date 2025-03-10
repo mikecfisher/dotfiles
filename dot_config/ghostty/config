@@ -10,6 +10,8 @@ font-family = "Hack"
 unfocused-split-opacity = 0.5
 alpha-blending = linear-corrected
 
+confirm-close-surface = false
+
 # ==== APPEARANCE ====
 # Disable system notifications from the terminal
 desktop-notifications = false
@@ -21,7 +23,7 @@ window-inherit-working-directory = true
 # window-decoration = true
 
 # Swap foreground/background colors in selected text
-selection-invert-fg-bg = true
+selection-invert-fg-bg = false
 
 # Window padding and persistence
 window-padding-x = 4
