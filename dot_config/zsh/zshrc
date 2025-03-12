@@ -19,6 +19,20 @@ export ANTHROPIC_API_KEY=$(security find-generic-password -a ${USER} -s "anthrop
 export HASS_TOKEN=$(security find-generic-password -a ${USER} -s "homeassistant_token_api_key" -w 2>/dev/null)
 export OPENAI_API_KEY=$(security find-generic-password -a ${USER} -s "openai_api_key" -w 2>/dev/null)
 
+alias reload-zsh="source ~/.zshrc"
+alias edit-zsh="nvim ~/."
+
+bindkey '^w' autosuggest-execute
+bindkey '^e' autosuggest-accept
+bindkey '^u' autosuggest-toggle
+bindkey '^L' vi-forward-word
+bindkey '^k' up-line-or-search
+bindkey '^j' down-line-or-search
+
+# completion using arrow keys (based on history)
+bindkey '^[[A' history-search-backward
+bindkey '^[[B' history-search-forward
+
 
 ### Zinit initialization - moved to top
 # This ensures Zinit is installed before attempting to use it
@@ -96,13 +110,11 @@ function starship_reload() {
 
 # Load essential Zsh plugins
 # zsh-autosuggestions: Suggests commands as you type based on history
-zinit light zsh-users/zsh-autosuggestions
+# zinit light zsh-users/zsh-autosuggestions
+
 
 # zsh-history-substring-search: Search history with up/down arrows
 zinit light zsh-users/zsh-history-substring-search
-
-# fast-syntax-highlighting: Syntax highlighting for the shell
-zinit light zdharma-continuum/fast-syntax-highlighting
 
 # Commented out additional plugins to improve startup time
 # # Git tools
@@ -219,9 +231,12 @@ typeset -U path  # Remove duplicates from PATH
 # ===== HISTORY SETTINGS =====
 HISTFILE="${XDG_DATA_HOME:-$HOME/.local/share}/zsh/history"  # XDG-compliant
 HISTSIZE=10000                  # Number of commands to keep in memory
-SAVEHIST=10000                  # Number of commands to save to disk
-setopt SHARE_HISTORY            # Share history between all sessions
-setopt HIST_IGNORE_ALL_DUPS     # Don't record duplicated commands
+SAVEHIST=9000                  # Number of commands to save to disk
+setopt share_history
+setopt hist_expire_dups_first
+setopt hist_ignore_dups
+setopt hist_verify
+
 
 # ===== ZSH OPTIONS =====
 # Allow changing directory without typing 'cd'
@@ -235,13 +250,107 @@ EAS_AC_ZSH_SETUP_PATH=/Users/mike/Library/Caches/eas-cli/autocomplete/zsh_setup 
 [ -s "/Users/mike/.bun/_bun" ] && source "/Users/mike/.bun/_bun"
 
 # Zoxide intelligent directory jumper (faster alternative to cd)
-eval "$(zoxide init --cmd cd zsh)"
+eval "$(zoxide init zsh)"
+
+alias cd="z"
 
 # 1Password CLI autocompletion
 eval "$(op completion zsh)"; compdef _op op
 
 # FZF fuzzy finder key bindings and completion
 source <(fzf --zsh)
+
+# --- setup fzf theme ---
+fg="#CBE0F0"
+bg="#011628"
+bg_highlight="#143652"
+purple="#B388FF"
+blue="#06BCE4"
+cyan="#2CF9ED"
+
+export FZF_DEFAULT_OPTS="--color=fg:${fg},bg:${bg},hl:${purple},fg+:${fg},bg+:${bg_highlight},hl+:${purple},info:${blue},prompt:${cyan},pointer:${cyan},marker:${cyan},spinner:${cyan},header:${cyan}"
+
+# -- Use fd instead of fzf --
+
+export FZF_DEFAULT_COMMAND="fd --hidden --strip-cwd-prefix --exclude .git"
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+export FZF_ALT_C_COMMAND="fd --type=d --hidden --strip-cwd-prefix --exclude .git"
+
+# Use fd (https://github.com/sharkdp/fd) for listing path candidates.
+# - The first argument to the function ($1) is the base path to start traversal
+# - See the source code (completion.{bash,zsh}) for the details.
+_fzf_compgen_path() {
+  fd --hidden --exclude .git . "$1"
+}
+
+# Use fd to generate the list for directory completion
+_fzf_compgen_dir() {
+  fd --type=d --hidden --exclude .git . "$1"
+}
+
+export FZF_DEFAULT_COMMAND="fd --hidden --strip-cwd-prefix --exclude .git"
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+export FZF_ALT_C_COMMAND="fd --type=d --hidden --strip-cwd-prefix --exclude .git"
+
+# Use fd (https://github.com/sharkdp/fd) for listing path candidates.
+# - The first argument to the function ($1) is the base path to start traversal
+# - See the source code (completion.{bash,zsh}) for the details.
+_fzf_compgen_path() {
+  fd --hidden --exclude .git . "$1"
+}
+
+# Use fd to generate the list for directory completion
+_fzf_compgen_dir() {
+  fd --type=d --hidden --exclude .git . "$1"
+}
+
+
+show_file_or_dir_preview="if [ -d {} ]; then eza --tree --color=always {} | head -200; else bat -n --color=always --line-range :500 {}; fi"
+
+export FZF_CTRL_T_OPTS="--preview '$show_file_or_dir_preview'"
+export FZF_ALT_C_OPTS="--preview 'eza --tree --color=always {} | head -200'"
+
+# Advanced customization of fzf options via _fzf_comprun function
+# - The first argument to the function is the name of the command.
+# - You should make sure to pass the rest of the arguments to fzf.
+_fzf_comprun() {
+  local command=$1
+  shift
+
+  case "$command" in
+    cd)           fzf --preview 'eza --tree --color=always {} | head -200' "$@" ;;
+    export|unset) fzf --preview "eval 'echo \${}'"         "$@" ;;
+    ssh)          fzf --preview 'dig {}'                   "$@" ;;
+    *)            fzf --preview "$show_file_or_dir_preview" "$@" ;;
+  esac
+}
+
+# ----- Bat (better cat) -----
+alias cat=bat
+
+
+export BAT_THEME=tokyonight_night
+
+# ---- Eza (better ls) -----
+# Eza
+alias l="eza -l --icons --git -a"
+alias lt="eza --tree --level=2 --long --icons --git"
+alias ltree="eza --tree --level=2  --icons --git"
+
+
+# ---- TheFuck -----
+
+# thefuck alias
+eval $(thefuck --alias)
+
+eval $(thefuck --alias fk)
+
+# Dirs
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+alias .....="cd ../../../.."
+alias ......="cd ../../../../.."
 
 # ===== ADDITIONAL ENVIRONMENTS =====
 # Deno JavaScript/TypeScript runtime environment
@@ -268,3 +377,6 @@ _gt_yargs_completions()
 compdef _gt_yargs_completions gt
 ###-end-gt-completions-###
 
+source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
