@@ -19,7 +19,7 @@ export HASS_TOKEN=$(security find-generic-password -a ${USER} -s "homeassistant_
 export OPENAI_API_KEY=$(security find-generic-password -a ${USER} -s "openai_api_key" -w 2>/dev/null)
 
 alias reload-zsh="source ~/.zshrc"
-alias edit-zsh="nvim ~/."
+alias edit-zsh="nvim ~/.zshrc"
 
 bindkey '^w' autosuggest-execute
 bindkey '^e' autosuggest-accept
