@@ -8,15 +8,7 @@
 #   7. PATH configuration
 #   8. History settings
 #   9. Autocompletions
-#  11. Additional environment loaders
-
-export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
-export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
-export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
-
-export ANTHROPIC_API_KEY=$(security find-generic-password -a ${USER} -s "anthropic_api_key" -w 2>/dev/null)
-export HASS_TOKEN=$(security find-generic-password -a ${USER} -s "homeassistant_token_api_key" -w 2>/dev/null)
-export OPENAI_API_KEY=$(security find-generic-password -a ${USER} -s "openai_api_key" -w 2>/dev/null)
+#  10. Additional environment loaders
 
 alias reload-zsh="source ~/.zshrc"
 alias edit-zsh="nvim ~/.zshrc"
@@ -124,8 +116,6 @@ zinit light olets/zsh-abbr
 zinit light ael-code/zsh-colored-man-pages
 zinit light hcgraf/zsh-sudo
 
-# zinit snippet OMZ::plugins/dots/dots.plugin.zsh
-
 # Keep essential OMZ plugins
 zinit ice as"completion"
 zinit snippet https://github.com/Homebrew/brew/blob/master/completions/zsh/_brew
@@ -144,27 +134,6 @@ alias expo='nocorrect expo' # Prevent zsh from trying to correct expo command
 alias gcam='git commit -am'
 alias grbm='git rebase $(git_default_branch)'
 alias v='nvim'
-
-# ===== ENVIRONMENT VARIABLES =====
-# C/C++ compilation flags for Ruby
-export LDFLAGS="-L/opt/homebrew/opt/ruby/lib"
-export CPPFLAGS="-I/opt/homebrew/opt/ruby/include"
-
-# Use full path for Homebrew Brewfile
-export HOMEBREW_BREWFILE_FULL_NAME=1
-
-# Cursor as default editor
-export EDITOR="nvim"
-export VISUAL="nvim"
-
-# Android SDK configuration
-export ANDROID_HOME=$HOME/Library/Android/sdk
-export ANDROID_SDK_ROOT=$HOME/Library/Android/sdk
-
-# JavaScript package managers
-export BUN_INSTALL="$HOME/.bun"
-export PNPM_HOME="$HOME/.local/share/pnpm"
-export NODE_OPTIONS="--no-deprecation" # Suppress Node.js deprecation warnings
 
 # ===== CUSTOM FUNCTIONS AND LAZY-LOADING =====
 # Copy file contents to clipboard
@@ -223,48 +192,10 @@ if [[ -f $(brew --prefix)/etc/brew-wrap ]]; then
   }
 fi
 
-# Set placeholder environment variables - these indicate the real values aren't loaded yet
-export HASS_SERVER=http://homeassistant.local:8123
-
-# ===== PATH SETUP =====
-# This adds directories to the PATH in order of precedence (first has highest priority)
-path=(
-  # User-specific binaries and scripts
-  $HOME/.local/bin
-  $HOME/bin
-
-  # Node.js and package managers
-  $HOME/.yarn/bin
-  $HOME/.config/yarn/global/node_modules/.bin
-  $PNPM_HOME
-  $BUN_INSTALL/bin
-
-  # Ruby and RubyGems executables from Homebrew
-  /opt/homebrew/opt/ruby/bin
-  /opt/homebrew/lib/ruby/gems/3.0.0/bin
-
-  # Python 3.12 system-level binaries
-  /Library/Frameworks/Python.framework/Versions/3.12/bin
-  # Python user-level binaries (pip installed packages)
-  $HOME/Library/Python/3.12/bin
-
-  # Android SDK tools order matters
-  $ANDROID_HOME/cmdline-tools/latest/bin
-  $ANDROID_HOME/emulator
-  $ANDROID_HOME/platform-tools
-
-  # LM Studio CLI
-  $HOME/.lmstudio/bin
-
-  # Existing system PATH
-  $path
-)
-typeset -U path # Remove duplicates from PATH
-
 # ===== HISTORY SETTINGS =====
-HISTFILE="${XDG_DATA_HOME:-$HOME/.local/share}/zsh/history" # XDG-compliant
-HISTSIZE=10000                                              # Number of commands to keep in memory
-SAVEHIST=9000                                               # Number of commands to save to disk
+HISTFILE="${XDG_DATA_HOME:-$HOME/.local/share}/zsh/history"
+HISTSIZE=10000
+SAVEHIST=9000
 setopt share_history
 setopt hist_expire_dups_first
 setopt hist_ignore_dups
@@ -352,11 +283,7 @@ alias lt="eza --tree --level=2 --long --icons --git"
 alias ltree="eza --tree --level=2  --icons --git"
 
 # ---- TheFuck -----
-
-# thefuck alias
 eval $(thefuck --alias)
-
-eval $(thefuck --alias fk)
 
 # Dirs
 alias ..="cd .."
@@ -389,8 +316,18 @@ _gt_yargs_completions() {
 compdef _gt_yargs_completions gt
 ###-end-gt-completions-###
 
-source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+#
+# yazi setup
+function y() {
+  local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+  yazi "$@" --cwd-file="$tmp"
+  if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+    builtin cd -- "$cwd"
+  fi
+  rm -f -- "$tmp"
+}
 
+source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 # fnm
 FNM_PATH="${HOME}/.local/share/fnm"
 if [ -d "$FNM_PATH" ]; then

@@ -1,7 +1,190 @@
+# Organization:
+#   1. Zinit plugin manager setup
+#   2. Completion system configuration
+#   3. Shell plugins and prompt
+#   4. Aliases
+#   5. Environment variables
+#   6. Custom functions and lazy-loading mechanisms
+#   7. PATH configuration
+#   8. History settings
+#   9. Autocompletions
+#  10. Additional environment loaders
+
+alias reload-zsh="source ~/.zshrc"
+alias edit-zsh="nvim ~/.zshrc"
+
+bindkey '^w' autosuggest-execute
+bindkey '^e' autosuggest-accept
+bindkey '^u' autosuggest-toggle
+bindkey '^L' vi-forward-word
+bindkey '^k' up-line-or-search
+bindkey '^j' down-line-or-search
+
+# completion using arrow keys (based on history)
+bindkey '^[[A' history-search-backward
+bindkey '^[[B' history-search-forward
+
+### Zinit initialization - moved to top
+# This ensures Zinit is installed before attempting to use it
+if [[ ! -f "$XDG_DATA_HOME/zinit/zinit.git/zinit.zsh" ]]; then
+  print -P "%F{33} %F{220}Installing %F{33}ZDHARMA-CONTINUUM%F{220} Initiative Plugin Manager (%F{33}zdharma-continuum/zinit%F{220})…%f"
+  command mkdir -p "$XDG_DATA_HOME/zinit" && command chmod g-rwX "$XDG_DATA_HOME/zinit"
+  command git clone https://github.com/zdharma-continuum/zinit "$XDG_DATA_HOME/zinit/zinit.git" &&
+    print -P "%F{33} %F{34}Installation successful.%f%b" ||
+    print -P "%F{160} The clone has failed.%f%b"
+fi
+
+# Load Zinit and set up autocompletion for it
+source "$XDG_DATA_HOME/zinit/zinit.git/zinit.zsh"
+autoload -Uz _zinit
+[[ -v _comps ]] && _comps[zinit]=_zinit
+
+# Ensure Zinit completions directory exists
+[[ ! -d ~/.cache/zinit/completions ]] && mkdir -p ~/.cache/zinit/completions
+
+# Load essential Zinit annexes - these extend Zinit's functionality
+# Annexes add features like binary downloading, monitoring, etc.
+zinit light-mode for \
+  zdharma-continuum/zinit-annex-as-monitor \
+  zdharma-continuum/zinit-annex-bin-gem-node \
+  zdharma-continuum/zinit-annex-patch-dl \
+  zdharma-continuum/zinit-annex-rust
+### End of Zinit's initialization
+
+# ===== COMPLETION SYSTEM SETUP =====
+# Add Deno completions to search path
+if [[ ":$FPATH:" != *":${XDG_DATA_HOME}/completions:"* ]]; then
+  export FPATH="${XDG_DATA_HOME}/completions:$FPATH"
+fi
+
+# Add custom completions directory to fpath
+fpath=("${XDG_CONFIG_HOME:-$HOME/.config}/zsh/completions" $fpath)
+
+# Initialize Zsh's completion system
+autoload -Uz compinit
+compinit
+
+# ===== SHELL PLUGINS AND PROMPT =====
+# Initialize Starship prompt - a fast, customizable cross-shell prompt
+# This replaces Powerlevel10k and is configured in ~/.config/starship.toml
+eval "$(starship init zsh)"
+
+# Reload Starship prompt when config file changes
+function starship_reload() {
+  # Check if config file changed
+  local config_file="$HOME/.config/starship.toml"
+  if [[ -n "$STARSHIP_CONFIG" ]]; then
+    config_file="$STARSHIP_CONFIG"
+  fi
+
+  # Use fswatch to monitor changes
+  if ! command -v fswatch >/dev/null; then
+    echo "Install fswatch first: brew install fswatch"
+    return 1
+  fi
+
+  (fswatch -o "$config_file" | while read; do
+    exec </dev/tty # Reattach to terminal
+    starship refresh
+  done) &>/dev/null &
+}
+
+# Load essential Zsh plugins
+# zsh-autosuggestions: Suggests commands as you type based on history
+zinit light zsh-users/zsh-autosuggestions
+
+# zsh-history-substring-search: Search history with up/down arrows
+zinit light zsh-users/zsh-history-substring-search
+
+# Commented out additional plugins to improve startup time
+# # Git tools
+zinit light wfxr/forgit
+
+# Developer tools
+zinit light lukechilds/zsh-better-npm-completion
+zinit light g-plane/zsh-yarn-autocompletions
+
+# ZVM - vi mode
+zinit ice depth=1
+zinit light jeffreytse/zsh-vi-mode
+
+# ===== GIT ABBREVIATIONS =====
+# Install zsh-abbr plugin
+zinit light olets/zsh-abbr
+
+# System utilities
+zinit light ael-code/zsh-colored-man-pages
+zinit light hcgraf/zsh-sudo
+
+# Keep essential OMZ plugins
+zinit ice as"completion"
+zinit snippet https://github.com/Homebrew/brew/blob/master/completions/zsh/_brew
+
+# ===== ALIASES =====
+# Python and development
+alias python=python3
+alias editor=nvim
+alias venv="uv venv"         # Create Python virtual environments with uv
+alias pipx="uv tool run"     # Run Python tools in isolation
+alias pipi="uv tool install" # Install Python packages with uv
+# Utility aliases
+alias pwdc='pwd | tr -d "\n" | pbcopy && echo "Path copied to clipboard"' # Copy current dir to clipboard
+# Fix for expo command
+alias expo='nocorrect expo' # Prevent zsh from trying to correct expo command
+alias gcam='git commit -am'
+alias grbm='git rebase $(git_default_branch)'
+alias v='nvim'
+
+# ===== CUSTOM FUNCTIONS AND LAZY-LOADING =====
+# Copy file contents to clipboard
+function copyfile() {
+  cat "$1" | pbcopy
+  echo "Contents of $1 copied to clipboard"
+}
+
+# Clean up local branches that are merged or tracking deleted remotes
+function cleanup-local-branches() {
+  local main_branch="main"
+  echo "Cleaning up local git branches..."
+
+  # Fetch latest changes and prune
+  git fetch -p
+
+  # Delete local branches that track deleted remote branches
+  git branch -vv | grep ': gone]' | awk '{print $1}' | xargs git branch -D 2>/dev/null || true
+
+  # Delete local branches that are fully merged into main
+  git branch --merged $main_branch | grep -v "^\*\|  $main_branch" | xargs git branch -d 2>/dev/null || true
+
+  echo "Local branches cleaned up!"
+}
+
+# Clean up remote branches that are associated with merged PRs
+function cleanup-remote-branches() {
+  local main_branch="main"
+  local username="${1:-mikecfisher}" # Default to mikecfisher if no arg provided
+  echo "Cleaning up remote git branches for user $username..."
+
+  # Use gh CLI to clean up remote branches from merged PRs
+  if command -v gh &>/dev/null; then
+    echo "Using GitHub CLI to clean up remote branches from merged PRs..."
+    # Filter PRs by author when using GitHub CLI
+    gh pr list --state merged --limit 100 --author "$username" --json headRefName --jq '.[]|.headRefName' |
+      xargs -I {} sh -c 'git push origin --delete {} 2>/dev/null || true'
+  else
+    # Fallback to git for remote branches - try to filter by branches that likely contain the username
+    echo "GitHub CLI not found, using git to clean up merged remote branches..."
+    git branch -r --merged $main_branch | grep -v "^\*\|  $main_branch" | grep origin |
+      grep -v "origin/$main_branch" | grep -i "$username" | sed 's/origin\///' |
+      xargs -I {} git push origin --delete {} 2>/dev/null || true
+  fi
+
+  echo "Remote branches for $username cleaned up!"
+}
+
 # Check if brew-wrap is installed
 if [[ -f $(brew --prefix)/etc/brew-wrap ]]; then
   source $(brew --prefix)/etc/brew-wrap
-
   # Call update script after Brewfile changes
   _post_brewfile_update() {
     echo "Updating packages.yaml..."
@@ -9,5 +192,139 @@ if [[ -f $(brew --prefix)/etc/brew-wrap ]]; then
   }
 fi
 
-# Set placeholder environment variables
-export HASS_SERVER=http://homeassistant.local:8123
+# ===== HISTORY SETTINGS =====
+HISTFILE="${XDG_DATA_HOME:-$HOME/.local/share}/zsh/history"
+HISTSIZE=10000
+SAVEHIST=9000
+setopt share_history
+setopt hist_expire_dups_first
+setopt hist_ignore_dups
+setopt hist_verify
+
+# ===== ZSH OPTIONS =====
+# Allow changing directory without typing 'cd'
+setopt AUTO_CD
+
+# ===== AUTOCOMPLETIONS AND TOOL INITIALIZATION =====
+# EAS CLI (Expo Application Services) autocompletion
+EAS_AC_ZSH_SETUP_PATH="${HOME}/Library/Caches/eas-cli/autocomplete/zsh_setup"
+test -f "$EAS_AC_ZSH_SETUP_PATH" && source "$EAS_AC_ZSH_SETUP_PATH"
+
+# Bun JavaScript runtime autocompletion
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
+
+# Zoxide intelligent directory jumper (faster alternative to cd)
+eval "$(zoxide init zsh)"
+
+alias cd="z"
+
+# 1Password CLI autocompletion
+eval "$(op completion zsh)"
+compdef _op op
+
+# FZF fuzzy finder key bindings and completion
+source <(fzf --zsh)
+
+# --- setup fzf theme ---
+fg="#CBE0F0"
+bg="#011628"
+bg_highlight="#143652"
+purple="#B388FF"
+blue="#06BCE4"
+cyan="#2CF9ED"
+
+export FZF_DEFAULT_OPTS="--color=fg:${fg},bg:${bg},hl:${purple},fg+:${fg},bg+:${bg_highlight},hl+:${purple},info:${blue},prompt:${cyan},pointer:${cyan},marker:${cyan},spinner:${cyan},header:${cyan}"
+
+# Use fd (https://github.com/sharkdp/fd) for listing path candidates.
+# - The first argument to the function ($1) is the base path to start traversal
+# - See the source code (completion.{bash,zsh}) for the details.
+_fzf_compgen_path() {
+  fd --hidden --exclude .git . "$1"
+}
+
+# Use fd to generate the list for directory completion
+_fzf_compgen_dir() {
+  fd --type=d --hidden --exclude .git . "$1"
+}
+
+export FZF_DEFAULT_COMMAND="fd --hidden --strip-cwd-prefix --exclude .git"
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+export FZF_ALT_C_COMMAND="fd --type=d --hidden --strip-cwd-prefix --exclude .git"
+
+show_file_or_dir_preview="if [ -d {} ]; then eza --tree --color=always {} | head -200; else bat -n --color=always --line-range :500 {}; fi"
+
+export FZF_CTRL_T_OPTS="--preview '$show_file_or_dir_preview'"
+export FZF_ALT_C_OPTS="--preview 'eza --tree --color=always {} | head -200'"
+
+# Advanced customization of fzf options via _fzf_comprun function
+# - The first argument to the function is the name of the command.
+# - You should make sure to pass the rest of the arguments to fzf.
+_fzf_comprun() {
+  local command=$1
+  shift
+
+  case "$command" in
+  cd) fzf --preview 'eza --tree --color=always {} | head -200' "$@" ;;
+  export | unset) fzf --preview "eval 'echo \${}'" "$@" ;;
+  ssh) fzf --preview 'dig {}' "$@" ;;
+  *) fzf --preview "$show_file_or_dir_preview" "$@" ;;
+  esac
+}
+
+# ----- Bat (better cat) -----
+alias cat=bat
+
+export BAT_THEME=tokyonight_night
+
+# ---- Eza (better ls) -----
+# Eza
+alias l="eza -l --icons --git -a"
+alias lt="eza --tree --level=2 --long --icons --git"
+alias ltree="eza --tree --level=2  --icons --git"
+
+# ---- TheFuck -----
+eval $(thefuck --alias)
+
+# Dirs
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+alias .....="cd ../../../.."
+alias ......="cd ../../../../.."
+
+# ===== ADDITIONAL ENVIRONMENTS =====
+# Deno JavaScript/TypeScript runtime environment
+. "$HOME/.deno/env"
+
+# === End of zshrc ===
+#compdef gt
+###-begin-gt-completions-###
+#
+# yargs command completion script
+#
+# Installation: gt completion >> ~/.zshrc
+#    or gt completion >> ~/.zprofile on OSX.
+#
+_gt_yargs_completions() {
+  local reply
+  local si=$IFS
+  IFS=$'
+' reply=($(COMP_CWORD="$((CURRENT - 1))" COMP_LINE="$BUFFER" COMP_POINT="$CURSOR" gt --get-yargs-completions "${words[@]}"))
+  IFS=$si
+  _describe 'values' reply
+}
+compdef _gt_yargs_completions gt
+###-end-gt-completions-###
+
+#
+# yazi setup
+function y() {
+  local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+  yazi "$@" --cwd-file="$tmp"
+  if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+    builtin cd -- "$cwd"
+  fi
+  rm -f -- "$tmp"
+}
+
+source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
