@@ -1,1 +1,0 @@
-/Users/mike/.config/sketchybar/sketchybar-aerospace-plugin/target/release/sbar-aerobar-plugin: /Users/mike/.config/sketchybar/sketchybar-aerospace-plugin/build.rs /Users/mike/.config/sketchybar/sketchybar-aerospace-plugin/src/mach.c /Users/mike/.config/sketchybar/sketchybar-aerospace-plugin/src/main.rs
