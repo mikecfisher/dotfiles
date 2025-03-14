@@ -27,6 +27,10 @@ autoSetupMerge = always
 ui = true
 [alias]
 dsf = diff --color
+[alias]
+cleanup-local = "!$SHELL -c 'source ~/.config/zsh/zshrc && cleanup-local-branches'"
+cleanup-remote = "!$SHELL -c 'source ~/.config/zsh/zshrc && cleanup-remote-branches'"
+cleanup-all = "!$SHELL -c 'source ~/.config/zsh/zshrc && cleanup-local-branches && cleanup-remote-branches'"
 
 pushup = push --set-upstream origin HEAD
 [pager]
@@ -37,17 +41,13 @@ diffFilter = delta --color-only
 algorithm = histogram
 [http]
 postBuffer = 524288000
-[oh-my-zsh]
-git-commit-alias = 6e7ac0544e71c7b777746cb50f70de68c6495b86
 [delta]
 navigate = true # use n and N to move between diff sections
 side-by-side = true
 true-color = always
-
 line-numbers = true
 hyperlinks = true
 hyperlinks-file-link-format = "cursor://file/{path}:{line}"
-
 syntax-theme = tokyonight_night
 [merge]
 conflictStyle = zdiff3
