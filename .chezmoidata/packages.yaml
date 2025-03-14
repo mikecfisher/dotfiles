@@ -293,6 +293,7 @@ packages:
       - "rubberband"
       - "serialosc"
       - "terminal-notifier"
+    casks: []
     mas:
       - { id: 1006401965, name: "Samplism Lite" }
       - { id: 1087079310, name: "Switch Sound File Converter" }

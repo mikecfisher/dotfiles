@@ -220,8 +220,6 @@ function cleanup-remote-branches() {
   echo "Remote branches for $username cleaned up!"
 }
 
-if [[ -f $(brew --prefix)/etc/brew-wrap ]]; then
-  source $(brew --prefix)/etc/brew-wrap
 
   # Call update script after Brewfile changes
   _post_brewfile_update() {

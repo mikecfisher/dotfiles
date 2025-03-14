@@ -4,7 +4,7 @@
 {{- if eq .chezmoi.os "darwin" -}}
 
 # Install Homebrew if not installed
-if ! command -v brew &> /dev/null; then
+if ! command -v brew &>/dev/null; then
   echo "Installing Homebrew..."
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
@@ -14,7 +14,7 @@ echo "Updating Homebrew..."
 brew update
 
 # Make sure brew-file is installed
-if ! command -v brew-file &> /dev/null; then
+if ! command -v brew-file &>/dev/null; then
   echo "Installing brew-file..."
   brew install rcmdnk/file/brew-file
 fi
@@ -26,59 +26,59 @@ BREWFILE="${HOME}/.config/brewfile/Brewfile"
 mkdir -p "${HOME}/.config/brewfile"
 
 # Generate Brewfile based on machine type
-echo "# Generated Brewfile - DO NOT EDIT DIRECTLY" > "${BREWFILE}"
-echo "# Source: {{ .chezmoi.sourceDir }}/.chezmoidata/packages.yaml" >> "${BREWFILE}"
-echo "# Machine type: {{ .machine_type }}" >> "${BREWFILE}"
-echo "" >> "${BREWFILE}"
+echo "# Generated Brewfile - DO NOT EDIT DIRECTLY" >"${BREWFILE}"
+echo "# Source: {{ .chezmoi.sourceDir }}/.chezmoidata/packages.yaml" >>"${BREWFILE}"
+echo "# Machine type: {{ .machine_type }}" >>"${BREWFILE}"
+echo "" >>"${BREWFILE}"
 
 # Add taps
-echo "# Taps" >> "${BREWFILE}"
+echo "# Taps" >>"${BREWFILE}"
 {{- range .packages.taps }}
-echo "tap \"{{ . }}\"" >> "${BREWFILE}"
+echo "tap \"{{ . }}\"" >>"${BREWFILE}"
 {{- end }}
-echo "" >> "${BREWFILE}"
+echo "" >>"${BREWFILE}"
 
 # Always include common packages
-echo "# Common packages" >> "${BREWFILE}"
+echo "# Common packages" >>"${BREWFILE}"
 {{- range .packages.common.brews }}
-echo "brew \"{{ . }}\"" >> "${BREWFILE}"
+echo "brew \"{{ . }}\"" >>"${BREWFILE}"
 {{- end }}
-echo "" >> "${BREWFILE}"
+echo "" >>"${BREWFILE}"
 
 {{- if .packages.common.casks }}
 {{- range .packages.common.casks }}
-echo "cask \"{{ . }}\"" >> "${BREWFILE}"
+echo "cask \"{{ . }}\"" >>"${BREWFILE}"
 {{- end }}
-echo "" >> "${BREWFILE}"
+echo "" >>"${BREWFILE}"
 {{- end }}
 
 {{- if .packages.common.mas }}
 {{- range .packages.common.mas }}
-echo "appstore {{ .id }} \"{{ .name }}\"" >> "${BREWFILE}"
+echo "appstore {{ .id }} \"{{ .name }}\"" >>"${BREWFILE}"
 {{- end }}
-echo "" >> "${BREWFILE}"
+echo "" >>"${BREWFILE}"
 {{- end }}
 
 # Include personal packages if this is a personal machine
 {{- if eq .machine_type "personal" }}
-echo "# Personal packages" >> "${BREWFILE}"
+echo "# Personal packages" >>"${BREWFILE}"
 {{- range .packages.personal.brews }}
-echo "brew \"{{ . }}\"" >> "${BREWFILE}"
+echo "brew \"{{ . }}\"" >>"${BREWFILE}"
 {{- end }}
-echo "" >> "${BREWFILE}"
+echo "" >>"${BREWFILE}"
 
 {{- if .packages.personal.casks }}
 {{- range .packages.personal.casks }}
-echo "cask \"{{ . }}\"" >> "${BREWFILE}"
+echo "cask \"{{ . }}\"" >>"${BREWFILE}"
 {{- end }}
-echo "" >> "${BREWFILE}"
+echo "" >>"${BREWFILE}"
 {{- end }}
 
 {{- if .packages.personal.mas }}
 {{- range .packages.personal.mas }}
-echo "appstore {{ .id }} \"{{ .name }}\"" >> "${BREWFILE}"
+echo "appstore {{ .id }} \"{{ .name }}\"" >>"${BREWFILE}"
 {{- end }}
-echo "" >> "${BREWFILE}"
+echo "" >>"${BREWFILE}"
 {{- end }}
 {{- end }}
 
@@ -86,14 +86,14 @@ echo "" >> "${BREWFILE}"
 export HOMEBREW_BREWFILE="${BREWFILE}"
 
 # Check if brew-wrap is already configured in either file
-CONFIG_ZSH="${HOME}/.config/zsh/zshrc"
+CONFIG_ZSH="${HOME}/.config/zsh/.zshrc"
 MAIN_ZSHRC="${HOME}/.zshrc"
 
 # Remove brew-wrap from ~/.config/zsh/zshrc if it exists
 if grep -q "brew-wrap" "$CONFIG_ZSH"; then
   echo "Removing brew-wrap from $CONFIG_ZSH (it should only be in main .zshrc)"
   # Use a different approach to avoid complex sed patterns with backslashes
-  grep -v "brew-wrap\|brew --prefix)/etc/brew-wrap" "$CONFIG_ZSH" > "$CONFIG_ZSH.tmp"
+  grep -v "brew-wrap\|brew --prefix)/etc/brew-wrap" "$CONFIG_ZSH" >"$CONFIG_ZSH.tmp"
   mv "$CONFIG_ZSH.tmp" "$CONFIG_ZSH"
 fi
 
