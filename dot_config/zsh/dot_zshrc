@@ -415,7 +415,6 @@ compdef _gt_yargs_completions gt
 ###-end-gt-completions-###
 
 source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 # bun completions

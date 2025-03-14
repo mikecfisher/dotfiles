@@ -1,0 +1,94 @@
+0000000000000000000000000000000000000000 4f14d1ee064ff320c700f3031e6e57e7ffbc2e12 Mike Fisher <mikefisher84@gmail.com> 1740487811 +0100	commit (initial): add zsh and powerlevel10k
+4f14d1ee064ff320c700f3031e6e57e7ffbc2e12 e6bd5782f90ee85274e181599f6fc64938a14c2b Mike Fisher <mikefisher84@gmail.com> 1740487922 +0100	commit: add ghosty
+e6bd5782f90ee85274e181599f6fc64938a14c2b 6d400be59a837587bb96b583e046edc04aa2f97b Mike Fisher <mikefisher84@gmail.com> 1740488169 +0100	commit: add git settings
+6d400be59a837587bb96b583e046edc04aa2f97b 0f2b154eacbd1590cc073aa4140812500fd1da49 Mike Fisher <mikefisher84@gmail.com> 1740489034 +0100	commit: add zsh completions
+0f2b154eacbd1590cc073aa4140812500fd1da49 02bde76d8405754c5a6af074c88711ed39bc103e Mike Fisher <mikefisher84@gmail.com> 1740491421 +0100	commit: update zshrc with plugins and remove unneeded completions
+02bde76d8405754c5a6af074c88711ed39bc103e 39da981b413cd32184704dc5a2b6a9d14f09a185 Mike Fisher <mikefisher84@gmail.com> 1740494144 +0100	commit: clean up zprofile and use uv for all python things
+39da981b413cd32184704dc5a2b6a9d14f09a185 f33bb78189c88b96c5a34d9da5c59e330c309071 Mike Fisher <mikefisher84@gmail.com> 1740495062 +0100	commit: update git config
+f33bb78189c88b96c5a34d9da5c59e330c309071 2597f2b8eef8b72ac59db0ea84a79a3532594f53 Mike Fisher <mikefisher84@gmail.com> 1740498450 +0100	commit: add shared cursor and vscode settings
+2597f2b8eef8b72ac59db0ea84a79a3532594f53 6dcd2daf923356ae32a9e8166632ae12ab014c84 Mike Fisher <mikefisher84@gmail.com> 1740502383 +0100	commit: add shared cursor and vscode settings properly
+6dcd2daf923356ae32a9e8166632ae12ab014c84 467e12f8c633e81d8de9271ebeeb7da281fa7612 Mike Fisher <mikefisher84@gmail.com> 1740514349 +0100	commit: add readme
+467e12f8c633e81d8de9271ebeeb7da281fa7612 14c70e5fff2ebd6df67d5df46df138e5c4feba29 Mike Fisher <mikefisher84@gmail.com> 1740514359 +0100	commit: add brewfile
+14c70e5fff2ebd6df67d5df46df138e5c4feba29 aa8b29f83c513909a5ce52219045a0007f6ef790 Mike Fisher <mikefisher84@gmail.com> 1740521404 +0100	commit: switch to zinit
+aa8b29f83c513909a5ce52219045a0007f6ef790 3a41f711cc7f85dc4b00122c8db286e7d952af3f Mike Fisher <mikefisher84@gmail.com> 1740618862 +0100	commit: powerlevel > starlight
+3a41f711cc7f85dc4b00122c8db286e7d952af3f 752cb581cb89e67ba307d711a2c413fc87d96245 Mike Fisher <mikefisher84@gmail.com> 1740620338 +0100	commit: properly manage brewfile with brew-wrap
+752cb581cb89e67ba307d711a2c413fc87d96245 7f0e2bb2617b015e14714ec5e9bbb1f72400f67d Mike Fisher <mikefisher84@gmail.com> 1740621162 +0100	commit: update readme
+7f0e2bb2617b015e14714ec5e9bbb1f72400f67d 06626cf2bf5cde4dc21958957340a4c617b94912 Mike Fisher <mikefisher84@gmail.com> 1740622209 +0100	commit: add zvm zsh vi mode
+06626cf2bf5cde4dc21958957340a4c617b94912 f2267d5e75ba3253514c7e532db22a08b1c3e5eb Mike Fisher <mikefisher84@gmail.com> 1740623208 +0100	commit: update brewfile
+f2267d5e75ba3253514c7e532db22a08b1c3e5eb e8a7144a135e117170bfc708b1158e8b84e58a46 Mike Fisher <mikefisher84@gmail.com> 1740650897 +0100	commit: Add Lazygit
+e8a7144a135e117170bfc708b1158e8b84e58a46 5748af60ebf6a28b4aea8098cdb880d054e74987 Mike Fisher <mikefisher84@gmail.com> 1740651442 +0100	commit: add gcam
+5748af60ebf6a28b4aea8098cdb880d054e74987 06f42c3172ce6bc5bf414c747cdba471091f2666 Mike Fisher <mikefisher84@gmail.com> 1740651751 +0100	commit: add rebase alias
+06f42c3172ce6bc5bf414c747cdba471091f2666 a84cf3ccbd15b20d374c5a945192c2d0bd99ceb7 Mike Fisher <mikefisher84@gmail.com> 1740678383 +0100	commit: tweak starship config
+a84cf3ccbd15b20d374c5a945192c2d0bd99ceb7 65aa027e3265d81fe1a8249c75e0988af6a547ef Mike Fisher <mikefisher84@gmail.com> 1740858151 +0100	commit: customize keybinds to be more vim like
+65aa027e3265d81fe1a8249c75e0988af6a547ef 0094e210f99fa561312938d1121acaecd4e1685e Mike Fisher <mikefisher84@gmail.com> 1740952381 +0100	commit: add neovim
+0094e210f99fa561312938d1121acaecd4e1685e 1d8062db533eca7acba909b6e1ba608c15d8878c Mike Fisher <mikefisher84@gmail.com> 1740953029 +0100	commit: use neovim
+1d8062db533eca7acba909b6e1ba608c15d8878c ca7f6264071a32a7a9940bfac944f17ad59ab9bc Mike Fisher <mikefisher84@gmail.com> 1740953088 +0100	commit: remove neovim plugs frim config
+ca7f6264071a32a7a9940bfac944f17ad59ab9bc 3b059a9919ae536a5b8e17610a99f9c3983b3420 Mike Fisher <mikefisher84@gmail.com> 1740953409 +0100	commit: add gh cli
+3b059a9919ae536a5b8e17610a99f9c3983b3420 16f0484e4307cdfaeab21394e4336b643f43417b Mike Fisher <mikefisher84@gmail.com> 1740953554 +0100	commit: add zed settings
+16f0484e4307cdfaeab21394e4336b643f43417b 1343f36cd9a708b063cf95b10de576671a5a0b3a Mike Fisher <mikefisher84@gmail.com> 1740955355 +0100	commit: update gh config
+1343f36cd9a708b063cf95b10de576671a5a0b3a d20be94007ef58a2683943588651ed1ea4718451 Mike Fisher <mikefisher84@gmail.com> 1740961385 +0100	commit: add keybinding template
+d20be94007ef58a2683943588651ed1ea4718451 f5d98153a8a6e23a0f6f18213f7f4652f09deba8 Mike Fisher <mikefisher84@gmail.com> 1740961477 +0100	commit: add vscode keybindings template
+f5d98153a8a6e23a0f6f18213f7f4652f09deba8 9c0fa690818a48086b313354e7c4ce97d0b06124 Mike Fisher <mikefisher84@gmail.com> 1740961528 +0100	commit: Update VSCode and Cursor keybindings templates to use base template
+9c0fa690818a48086b313354e7c4ce97d0b06124 2fff95462af62eaceeb0e528ebe5f15a6c64cb82 Mike Fisher <mikefisher84@gmail.com> 1740961720 +0100	commit: update brewfile
+2fff95462af62eaceeb0e528ebe5f15a6c64cb82 ea523b28494438c636b80f6261f5cfc15faa18a6 Mike Fisher <mikefisher84@gmail.com> 1740962534 +0100	commit: tweak brewfile
+ea523b28494438c636b80f6261f5cfc15faa18a6 3a60dbef53a1e15651612edcf37b7493a9277a93 Mike Fisher <mikefisher84@gmail.com> 1740962769 +0100	commit: add brewfile variable
+3a60dbef53a1e15651612edcf37b7493a9277a93 965058edb5fb9f44ac640bd157f8efc166ab1d6f Mike Fisher <mikefisher84@gmail.com> 1741019228 +0100	commit: tweak ghostty opacity
+965058edb5fb9f44ac640bd157f8efc166ab1d6f 374ffb62c04e14ae3324442b7853bea46f29c58d Mike Fisher <mikefisher84@gmail.com> 1741023278 +0100	commit: refactor zshrc
+374ffb62c04e14ae3324442b7853bea46f29c58d e27a37ae5f57b168cdd1aec68bbe6ca86ac6a940 Mike Fisher <mikefisher84@gmail.com> 1741023308 +0100	commit: refactor completions part 1
+e27a37ae5f57b168cdd1aec68bbe6ca86ac6a940 927a9babe76e926f69a0c5a83121cbcacfc18c2c Mike Fisher <mikefisher84@gmail.com> 1741023332 +0100	commit: refactor completions part 2
+927a9babe76e926f69a0c5a83121cbcacfc18c2c d2e4647c00cd9476d7b47499ae9d925e08a032d2 Mike Fisher <mikefisher84@gmail.com> 1741023657 +0100	commit: repo cleanup
+d2e4647c00cd9476d7b47499ae9d925e08a032d2 20c2e672b270d3818f694a37b2a426c959df62d2 Mike Fisher <mikefisher84@gmail.com> 1741024018 +0100	commit: fix xdg directory
+20c2e672b270d3818f694a37b2a426c959df62d2 147d4889d93b0ec528f447f3d62668235bd0dd28 Mike Fisher <mikefisher84@gmail.com> 1741272249 -0500	commit: tweak zprofile
+147d4889d93b0ec528f447f3d62668235bd0dd28 3c523fcb85ff0546ca7a47546efe846d13d751ee Mike Fisher <mikefisher84@gmail.com> 1741276903 -0500	commit: add weekly maintenence script
+3c523fcb85ff0546ca7a47546efe846d13d751ee ee62adf84d35e221075e33d423b7416d8ec6ba18 Mike Fisher <mikefisher84@gmail.com> 1741276918 -0500	commit: add zprofile
+ee62adf84d35e221075e33d423b7416d8ec6ba18 b94036c038dccb87150a0b2872996325518e4e8b Mike Fisher <mikefisher84@gmail.com> 1741276936 -0500	commit: switch to nvm plugin
+b94036c038dccb87150a0b2872996325518e4e8b d1ce2cdbc033131be6c840c78bbd527a07855769 Mike Fisher <mikefisher84@gmail.com> 1741276965 -0500	commit: update brewfile
+d1ce2cdbc033131be6c840c78bbd527a07855769 203f75e5d46dc18ca07b075ae09f5f4f08c18ded Mike Fisher <mikefisher84@gmail.com> 1741282927 -0500	commit: update ghostty config
+203f75e5d46dc18ca07b075ae09f5f4f08c18ded 7e509b5cad63ae43259807e07685d9b8e10b3027 Mike Fisher <mikefisher84@gmail.com> 1741282955 -0500	commit: switch to lazyvim
+7e509b5cad63ae43259807e07685d9b8e10b3027 261ae2cbfe883e0d9e4b10d29b816c183b47f2f0 Mike Fisher <mikefisher84@gmail.com> 1741285032 -0500	commit: reset nvim
+261ae2cbfe883e0d9e4b10d29b816c183b47f2f0 225b08dc40e42a28b3355ef5a6a3e09bbe227871 Mike Fisher <mikefisher84@gmail.com> 1741285045 -0500	commit: add lazyvim
+225b08dc40e42a28b3355ef5a6a3e09bbe227871 8603458ed5f4b0bf5d46bb34da0ce09803b87049 Mike Fisher <mikefisher84@gmail.com> 1741285330 -0500	commit: update vscode/cursor settings / bindings
+8603458ed5f4b0bf5d46bb34da0ce09803b87049 f5278e3f17cf12543f0125f522fa7f2ee6d24b55 Mike Fisher <mikefisher84@gmail.com> 1741286588 -0500	commit: add machine specific settings for chezmoi
+f5278e3f17cf12543f0125f522fa7f2ee6d24b55 fd76ecbcb6120673aa682583851de2ca3023a187 Mike Fisher <mikefisher84@gmail.com> 1741290598 -0500	commit: chezmoi working again
+fd76ecbcb6120673aa682583851de2ca3023a187 f634a69e092da09359eeac0c1c453682ac3bb02a Mike Fisher <mikefisher84@gmail.com> 1741290671 -0500	commit: switch to packages.yaml
+f634a69e092da09359eeac0c1c453682ac3bb02a e9452d3fa15b8e73f2687f6da9baa7e4dffb8787 Mike Fisher <mikefisher84@gmail.com> 1741292043 -0500	commit: update readme
+e9452d3fa15b8e73f2687f6da9baa7e4dffb8787 36f025f011d90ff1b613c3e5850d7cc0778324e2 Mike Fisher <mikefisher84@gmail.com> 1741309776 -0500	commit: add neovim config
+36f025f011d90ff1b613c3e5850d7cc0778324e2 3ae0d65e0817f909759e26442fe13aec2a58fe86 Mike Fisher <mikefisher84@gmail.com> 1741310224 -0500	commit: change starship to gruvbox
+3ae0d65e0817f909759e26442fe13aec2a58fe86 170d16b75253ff20e3a4b2e128e334afc44de425 Mike Fisher <mikefisher84@gmail.com> 1741316510 -0500	commit: update brew packages
+170d16b75253ff20e3a4b2e128e334afc44de425 dc21dfc384e6107391b306bf7cfd75ff99a97ecc Mike Fisher <mikefisher84@gmail.com> 1741316532 -0500	commit: add catppuccin tmux
+dc21dfc384e6107391b306bf7cfd75ff99a97ecc 8f45632700b8587995ff815dbd8be29da600c261 Mike Fisher <mikefisher84@gmail.com> 1741316547 -0500	commit: add base tmux config
+8f45632700b8587995ff815dbd8be29da600c261 8287d680878f3004a4b48303269528b530021dff Mike Fisher <mikefisher84@gmail.com> 1741319191 -0500	commit: move tmux config
+8287d680878f3004a4b48303269528b530021dff 6482e0f4afd537c5d44206fad9400dd6fe53a0cd Mike Fisher <mikefisher84@gmail.com> 1741319328 -0500	commit: add tmux config
+6482e0f4afd537c5d44206fad9400dd6fe53a0cd 05d13316b52af81822d2920dc13e5f23d14f2c5f Mike Fisher <mikefisher84@gmail.com> 1741321684 -0500	commit: update zsh config
+05d13316b52af81822d2920dc13e5f23d14f2c5f a63773aa1ac7977e71a34a701eec14276fec0c56 Mike Fisher <mikefisher84@gmail.com> 1741322503 -0500	commit: add more casks to homebrew
+a63773aa1ac7977e71a34a701eec14276fec0c56 d727a635227d59d1beb439c3ddd692dd04b4846a Mike Fisher <mikefisher84@gmail.com> 1741323302 -0500	commit: update packages.yaml for personal / default simplicity
+d727a635227d59d1beb439c3ddd692dd04b4846a 9b83c356a46d9ad510502f79f1036ed5f2852023 Mike Fisher <mikefisher84@gmail.com> 1741360229 -0500	commit: update cursor and vscode bindings for 1 to 1 nvim mapping
+9b83c356a46d9ad510502f79f1036ed5f2852023 7ebae73ddde2f04040c01eb2f7a2db8806d5dfde Mike Fisher <mikefisher84@gmail.com> 1741360781 -0500	commit: update readme with info on vim bindings
+7ebae73ddde2f04040c01eb2f7a2db8806d5dfde 49812f063c3972fd8a6b7ac2bf2787858896f38c Mike Fisher <mikefisher84@gmail.com> 1741372607 -0500	commit: change to use fnm
+49812f063c3972fd8a6b7ac2bf2787858896f38c 5250396901f29675aa860a00bdf527f2a74e3b1f Mike Fisher <mikefisher84@gmail.com> 1741374677 -0500	commit: change from nvm to fnm and setup install script
+5250396901f29675aa860a00bdf527f2a74e3b1f 4e4a3430bed7f1ddcc215a6d6fb80dde0bdaf8ce Mike Fisher <mikefisher84@gmail.com> 1741541203 -0400	commit: hide title in ghostty
+4e4a3430bed7f1ddcc215a6d6fb80dde0bdaf8ce 7b1e2bb400acda4a58bf504c84ed1c35c4a3c4de Mike Fisher <mikefisher84@gmail.com> 1741626543 -0400	commit: tweak ghostty more
+7b1e2bb400acda4a58bf504c84ed1c35c4a3c4de d58e3910fc8198cf238410cc86e0a101c463a8b4 Mike Fisher <mikefisher84@gmail.com> 1741639150 -0400	commit: add pushup alias
+d58e3910fc8198cf238410cc86e0a101c463a8b4 91256db9b59e9e8be591dbbbb4959de2b50bb976 Mike Fisher <mikefisher84@gmail.com> 1741731430 -0400	commit: add sketchybar
+91256db9b59e9e8be591dbbbb4959de2b50bb976 cc1c672b402570f62cbccfff714ecc80579811d6 Mike Fisher <mikefisher84@gmail.com> 1741749980 -0400	commit: fix zsh history completion
+cc1c672b402570f62cbccfff714ecc80579811d6 c8ab3fd935f1ee1cfc26ae8e62b9a26372a6a1c7 Mike Fisher <mikefisher84@gmail.com> 1741801003 -0400	commit: more robust aerospace config
+c8ab3fd935f1ee1cfc26ae8e62b9a26372a6a1c7 fa29e419d8341e75f29418ea24d93fc4d5f0242d Mike Fisher <mikefisher84@gmail.com> 1741896561 -0400	commit: tweak git delta settings
+fa29e419d8341e75f29418ea24d93fc4d5f0242d 43633b5936ecc2a63e7c1cf1449efddc53f0fc94 Mike Fisher <mikefisher84@gmail.com> 1741904266 -0400	commit: add cursor mcp config
+43633b5936ecc2a63e7c1cf1449efddc53f0fc94 99c82399a506375d55eb8dc9e1556c5be50ffda5 Mike Fisher <mikefisher84@gmail.com> 1741975533 -0400	commit: add scripts to chezmoi
+99c82399a506375d55eb8dc9e1556c5be50ffda5 3386b14c3ac887cbc9470239151a31e795ab37e7 Mike Fisher <mikefisher84@gmail.com> 1741976626 -0400	commit: yes
+3386b14c3ac887cbc9470239151a31e795ab37e7 f792efa19080675feb7607e8042519b6a213b4a8 Mike Fisher <mikefisher84@gmail.com> 1741976734 -0400	commit: yes
+f792efa19080675feb7607e8042519b6a213b4a8 65b9a5023f4a194b20ff174add6e43d159390152 Mike Fisher <mikefisher84@gmail.com> 1741977674 -0400	commit: reorganzie zshrc with synlinks
+65b9a5023f4a194b20ff174add6e43d159390152 4ee34abca13d0cddf9ffc7fc1de2642034b7750d Mike Fisher <mikefisher84@gmail.com> 1741977783 -0400	commit: yes
+4ee34abca13d0cddf9ffc7fc1de2642034b7750d 716fbf3daa142b399a31600e540cc63981f22449 Mike Fisher <mikefisher84@gmail.com> 1741977819 -0400	commit: update ghostty config
+716fbf3daa142b399a31600e540cc63981f22449 2200957c82dc47d9658bbab69bff4c2e1efb298e Mike Fisher <mikefisher84@gmail.com> 1741977881 -0400	commit: forget tmux
+2200957c82dc47d9658bbab69bff4c2e1efb298e e62bad60e9367d42f4ce87e9512f40602a858b0b Mike Fisher <mikefisher84@gmail.com> 1741977902 -0400	commit: forget nvim
+e62bad60e9367d42f4ce87e9512f40602a858b0b 4718ab70444fe25936bf3de335c6d9da0faf041c Mike Fisher <mikefisher84@gmail.com> 1741978101 -0400	commit: update cursor mcp
+4718ab70444fe25936bf3de335c6d9da0faf041c bde7ea4d47626c59285d76dea9f715251553e72a Mike Fisher <mikefisher84@gmail.com> 1741978118 -0400	commit: update gitconfig
+bde7ea4d47626c59285d76dea9f715251553e72a 2d47e7a56531f634c4c6da4bc46320ac1177e57b Mike Fisher <mikefisher84@gmail.com> 1741978654 -0400	commit: zshrc more synlinks
+2d47e7a56531f634c4c6da4bc46320ac1177e57b c31cec5cf73e1a85b8a8a41574824319e1b55c36 Mike Fisher <mikefisher84@gmail.com> 1741978666 -0400	commit: add zshrc synlink
+c31cec5cf73e1a85b8a8a41574824319e1b55c36 bdfc8387adf1b8070992df63b24adf97d4b996bf Mike Fisher <mikefisher84@gmail.com> 1741979086 -0400	commit: redo symlinks
+bdfc8387adf1b8070992df63b24adf97d4b996bf 30a04ba15f2d3919957a01bd7bf6f6934831a6b1 Mike Fisher <mikefisher84@gmail.com> 1741979108 -0400	commit: more symlinks
+30a04ba15f2d3919957a01bd7bf6f6934831a6b1 7256d6f96617006e5a971ed93529ef7e6981b72d Mike Fisher <mikefisher84@gmail.com> 1741979143 -0400	commit: template symlink
+7256d6f96617006e5a971ed93529ef7e6981b72d f48e159bc10242e024db1e97d5d6be75ff4bb805 Mike Fisher <mikefisher84@gmail.com> 1741979383 -0400	commit: fix brew wrap
+f48e159bc10242e024db1e97d5d6be75ff4bb805 ae1a8842c176fc5b4b819a77af1da818ea4b9298 Mike Fisher <mikefisher84@gmail.com> 1741979645 -0400	commit: redo mcp template
+ae1a8842c176fc5b4b819a77af1da818ea4b9298 a8a4e7f47bd23c2158901341e89c6853dc5cf943 Mike Fisher <mikefisher84@gmail.com> 1741980584 -0400	commit: properly manage api keys

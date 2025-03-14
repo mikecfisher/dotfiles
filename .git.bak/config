@@ -1,0 +1,17 @@
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+	ignorecase = true
+	precomposeunicode = true
+[remote "origin"]
+	url = https://github.com/mikecfisher/dotfiles.git
+	fetch = +refs/heads/*:refs/remotes/origin/*
+[branch "pizza-test"]
+	remote = .
+	merge = refs/heads/main
+	vscode-merge-base = origin/main
+[branch "main"]
+	vscode-merge-base = origin/main
+	gk-merge-base = origin/main
