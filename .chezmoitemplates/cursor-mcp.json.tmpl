@@ -7,7 +7,7 @@
         "@modelcontextprotocol/server-github"
       ],
       "env": {
-        "GITHUB_PERSONAL_ACCESS_TOKEN": "{{ onepasswordRead \"op://Private/GitHub Personal Access Token/credential\" }}"
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "{{ onepasswordRead "op://Private/GitHub CLI Personal Access Token/token" }}"
       }
     },
     "mcp-atlassian": {
@@ -18,7 +18,7 @@
       "env": {
         "JIRA_URL": "https://campingworld.atlassian.net",
         "JIRA_USERNAME": "m.fisher@campingworld.com",
-        "JIRA_API_TOKEN": "{{ onepasswordRead \"op://Private/Jira API Token/credential\" }}"
+        "JIRA_API_TOKEN": "{{ onepasswordRead "op://Private/Jira Personal Access Token/credential" }}"
       }
     },
     "figma-developer-mcp": {
@@ -29,7 +29,7 @@
         "--stdio"
       ],
       "env": {
-        "FIGMA_API_KEY": "{{ onepasswordRead \"op://Private/Figma API Key/credential\" }}"
+        "FIGMA_API_KEY": "{{ onepasswordRead "op://Private/Figma Personal Access Token/credential" }}"
       }
     },
     "sequential-thinking": {
@@ -54,7 +54,7 @@
         "run",
         "@smithery-ai/brave-search",
         "--config",
-        "{\"braveApiKey\":\"{{ onepasswordRead \"op://Private/Brave API Key/credential\" }}\"}"
+        "{\"braveApiKey\":\"{{ onepasswordRead "op://Private/Brave API Key/credential" }}\"}"
       ]
     },
     "@kazuph-mcp-taskmanager": {
