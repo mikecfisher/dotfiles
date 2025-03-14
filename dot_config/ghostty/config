@@ -62,8 +62,8 @@ keybind = cmd+l=new_split:right
 keybind = cmd+j=new_split:down
 keybind = cmd+k=new_split:up
 
-keybind = global:shift+cmd+t=toggle_quick_terminal
-quick-terminal-animation-duration = 0.1
+
+
 
 
 # Navigate between splits (vim-style)
