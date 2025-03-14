@@ -1,0 +1,212 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+ # Dotfiles Management Rules for Mike Fisher
+
+## General Principles
+
+- Maintain XDG Base Directory compliance
+- Prefer dynamic paths over hardcoded ones
+- Use `$HOME` or `~` consistently (not mixed)
+- Keep configurations modular and well-organized
+- Prioritize performance and startup time
+- Follow the principle of least surprise
+
+## Shell Configuration (ZSH)
+
+### Organization
+1. Follow the established section order:
+   ```text
+   1. Zinit plugin manager setup
+   2. Completion system configuration
+   3. Shell plugins and prompt
+   4. Aliases
+   5. Environment variables
+   6. Custom functions and lazy-loading
+   7. PATH configuration
+   8. History settings
+   9. Autocompletions
+   10. Additional environment loaders
+   ```
+
+### Path Management
+- Avoid hardcoded versions in PATH entries
+- Use XDG base directories when possible
+- Keep PATH entries organized by category
+- Remove duplicate PATH entries
+- Validate paths before adding them
+
+### Plugin Management
+- Use Zinit as the primary plugin manager
+- Lazy load plugins when possible
+- Comment out unused plugins instead of deleting
+- Keep plugin-specific configurations close to their initialization
+
+### Security
+- Store sensitive data in macOS Keychain
+- Use `security find-generic-password` for API keys
+- Never hardcode credentials
+- Use environment variables for sensitive configurations
+
+## Node.js Management
+
+### FNM (Fast Node Manager)
+- Use a single FNM initialization point
+- Enable automatic version switching with `--use-on-cd`
+- Keep FNM paths XDG compliant
+- Avoid multiple FNM PATH modifications
+
+## Editor Configuration
+
+### Neovim
+- Use as primary editor
+- Keep consistent with VSCode when possible
+- Store configuration in `$XDG_CONFIG_HOME/nvim`
+
+### VSCode/Cursor
+- Maintain settings in version control
+- Use workspace-specific settings when needed
+- Keep extensions list updated
+
+## Git Configuration
+
+### Credentials
+- Use osxkeychain helper
+- Configure for GitHub-specific credentials
+- Use 1Password integration when available
+
+### Aliases
+- Keep git aliases consistent between shell and git config
+- Document complex aliases
+- Prefer meaningful names over shortcuts
+
+## Package Management
+
+### Homebrew
+- Keep Brewfile updated
+- Use full paths in Brewfile
+- Run cleanup regularly
+- Update packages.yaml after changes
+
+## Automation
+
+### Scripts
+- Store in `~/.local/bin/my-scripts`
+- Use TypeScript for new scripts
+- Include proper error handling
+- Add usage documentation
+
+## Repository Structure
+
+### ChezMoi
+- Use templates for dynamic content
+- Keep sensitive data out of templates
+- Use appropriate file extensions (.tmpl)
+- Maintain clear documentation
+
+#### Directory Structure
+- Source directory: `~/.local/share/chezmoi`
+- Config file: `~/.config/chezmoi/chezmoi.toml`
+- Template files use `.tmpl` extension
+- Encrypted files use `.age` extension
+
+#### File Management Commands
+- `chezmoi add <file>` - Add a new file to management
+- `chezmoi edit <file>` - Edit source file (with template/encryption support)
+- `chezmoi edit --apply <file>` - Edit and apply changes immediately
+- `chezmoi edit --watch <file>` - Edit with auto-apply on save
+- `chezmoi cd` - Open shell in source directory
+- `chezmoi diff` - Show pending changes
+- `chezmoi apply` - Apply changes to home directory
+- `chezmoi update` - Pull and apply remote changes
+- `chezmoi merge <file>` - Resolve conflicts between source and destination
+
+#### State Management
+- Use `chezmoi managed` to list managed files
+- Use `chezmoi unmanaged` to find unmanaged files
+- Use `.chezmoiignore` for files to exclude
+- Use `chezmoi re-add` to update source from target
+- Always commit changes after modifying source files
+
+#### Templates and Machine-Specific Config
+- Use templates for files that vary between machines
+- Store machine-specific data in `chezmoi.toml`
+- Use `.tmpl` extension for template files
+- Access config data in templates via `.chezmoi` variables
+
+#### Best Practices
+- Review changes with `chezmoi diff` before applying
+- Use `--dry-run` flag to preview operations
+- Keep sensitive data in password manager or encrypted
+- Use templates instead of multiple file versions
+- Regularly commit and push changes
+- Test changes in clean environment before applying
+
+## Code Style
+
+### Shell Scripts
+- Use shellcheck for validation
+- Follow Google Shell Style Guide
+- Use functions for reusable code
+- Add error handling for critical operations
+
+### TypeScript/JavaScript
+- Use consistent formatting (Prettier)
+- Follow ESLint configurations
+- Use type annotations
+- Keep dependencies updated
+
+## Documentation
+
+### README
+- Keep installation instructions updated
+- Document dependencies
+- Include troubleshooting section
+- Maintain changelog
+
+## Performance
+
+### Startup Time
+- Profile startup regularly
+- Lazy load where possible
+- Use async operations when available
+- Keep plugins minimal
+
+## Testing
+
+### Changes
+- Test changes in clean environment
+- Verify on both Intel and Apple Silicon
+- Check for common error conditions
+- Validate against different shell versions
+
+## Maintenance
+
+### Regular Tasks
+- Update package managers
+- Clean up old configurations
+- Remove unused plugins
+- Update documentation
+
+## Error Handling
+
+### Configuration
+- Use fallbacks for missing tools
+- Check for required dependencies
+- Provide helpful error messages
+- Handle missing files gracefully
+
+## Integration
+
+### Tools
+- Maintain compatibility with:
+  - ChezMoi
+  - Zinit
+  - FNM
+  - Homebrew
+  - VSCode/Cursor
+  - Neovim
+  - Git
+  - 1Password CLI 
