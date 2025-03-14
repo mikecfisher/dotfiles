@@ -94,7 +94,7 @@ This repository includes a comprehensive set of Vim keybindings for VS Code and 
 ### ZSH Configuration
 
 High-performance shell setup using Zinit with:
-- Lazy-loading for slow-starting components (NVM, 1Password)
+- Lazy-loading for slow-starting components (fnm, 1Password)
 - Parallel plugin loading
 - Git abbreviations via zsh-abbr
 - Intelligent path management
@@ -123,7 +123,7 @@ The shell configuration uses Zinit for fast, efficient plugin management:
 ### Key Features
 
 - **Performance Optimization**:
-  - Lazy-loading for slow-starting components (NVM, 1Password credentials)
+  - Lazy-loading for slow-starting components (fnm, 1Password credentials)
   - Parallel plugin loading with Zinit
   - Standalone plugin installations without SVN dependencies
 
@@ -175,11 +175,11 @@ The shell configuration uses Zinit for fast, efficient plugin management:
 
 - **Node.js Management**:
   ```zsh
-  # Lazy-loaded NVM with automatic .nvmrc detection
-  function nvm() {
-    unfunction nvm                # Remove placeholder
-    source "$NVM_DIR/nvm.sh"      # Load actual nvm
-    nvm "$@"                      # Execute command
+  # Lazy-loaded fnm with automatic .nvmrc detection
+  function fnm() {
+    unfunction fnm                # Remove placeholder
+    source "$fnm_DIR/fnm.sh"      # Load actual fnm
+    fnm "$@"                      # Execute command
   }
   ```
 
@@ -197,7 +197,7 @@ The shell configuration uses Zinit for fast, efficient plugin management:
 
 ### Performance Characteristics
 - Startup time optimized through:
-  - Deferred loading of heavy components (NVM, 1Password)
+  - Deferred loading of heavy components (fnm, 1Password)
   - Standalone plugin installations
   - Compiled completion cache
 - Typical startup time: 150-200ms (vs 800ms+ with OMZ)

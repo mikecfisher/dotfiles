@@ -16,7 +16,7 @@ smudge = git-lfs smudge -- %f
 process = git-lfs filter-process
 required = true
 [core]
-excludesfile = /Users/mike/.gitignore_global
+excludesfile = ~/.gitignore_global
 pager = delta
 [pull]
 default = current

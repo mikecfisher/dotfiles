@@ -50,15 +50,6 @@ autoload -Uz _zinit
 # Ensure Zinit completions directory exists
 [[ ! -d ~/.cache/zinit/completions ]] && mkdir -p ~/.cache/zinit/completions
 
-# fnm - faster node version manager written in Rust
-FNM_PATH="/Users/mike/.local/share/fnm"
-if [ -d "$FNM_PATH" ]; then
-  export PATH="/Users/mike/.local/share/fnm:$PATH"
-  eval "$(fnm env)"
-fi
-
-eval "$(fnm env --use-on-cd --shell zsh)"
-
 # Load essential Zinit annexes - these extend Zinit's functionality
 # Annexes add features like binary downloading, monitoring, etc.
 zinit light-mode for \
@@ -70,7 +61,9 @@ zinit light-mode for \
 
 # ===== COMPLETION SYSTEM SETUP =====
 # Add Deno completions to search path
-if [[ ":$FPATH:" != *":/Users/mike/completions:"* ]]; then export FPATH="/Users/mike/completions:$FPATH"; fi
+if [[ ":$FPATH:" != *":${XDG_DATA_HOME}/completions:"* ]]; then
+  export FPATH="${XDG_DATA_HOME}/completions:$FPATH"
+fi
 
 # Add custom completions directory to fpath
 fpath=("${XDG_CONFIG_HOME:-$HOME/.config}/zsh/completions" $fpath)
@@ -106,7 +99,7 @@ function starship_reload() {
 
 # Load essential Zsh plugins
 # zsh-autosuggestions: Suggests commands as you type based on history
-# zinit light zsh-users/zsh-autosuggestions
+zinit light zsh-users/zsh-autosuggestions
 
 # zsh-history-substring-search: Search history with up/down arrows
 zinit light zsh-users/zsh-history-substring-search
@@ -241,7 +234,6 @@ path=(
   $HOME/bin
 
   # Node.js and package managers
-  $HOME/.nodenv/versions/18.11.0/bin
   $HOME/.yarn/bin
   $HOME/.config/yarn/global/node_modules/.bin
   $PNPM_HOME
@@ -284,10 +276,11 @@ setopt AUTO_CD
 
 # ===== AUTOCOMPLETIONS AND TOOL INITIALIZATION =====
 # EAS CLI (Expo Application Services) autocompletion
-EAS_AC_ZSH_SETUP_PATH=/Users/mike/Library/Caches/eas-cli/autocomplete/zsh_setup && test -f $EAS_AC_ZSH_SETUP_PATH && source $EAS_AC_ZSH_SETUP_PATH
+EAS_AC_ZSH_SETUP_PATH="${HOME}/Library/Caches/eas-cli/autocomplete/zsh_setup"
+test -f "$EAS_AC_ZSH_SETUP_PATH" && source "$EAS_AC_ZSH_SETUP_PATH"
 
 # Bun JavaScript runtime autocompletion
-[ -s "/Users/mike/.bun/_bun" ] && source "/Users/mike/.bun/_bun"
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
 # Zoxide intelligent directory jumper (faster alternative to cd)
 eval "$(zoxide init zsh)"
@@ -311,12 +304,6 @@ cyan="#2CF9ED"
 
 export FZF_DEFAULT_OPTS="--color=fg:${fg},bg:${bg},hl:${purple},fg+:${fg},bg+:${bg_highlight},hl+:${purple},info:${blue},prompt:${cyan},pointer:${cyan},marker:${cyan},spinner:${cyan},header:${cyan}"
 
-# -- Use fd instead of fzf --
-
-export FZF_DEFAULT_COMMAND="fd --hidden --strip-cwd-prefix --exclude .git"
-export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-export FZF_ALT_C_COMMAND="fd --type=d --hidden --strip-cwd-prefix --exclude .git"
-
 # Use fd (https://github.com/sharkdp/fd) for listing path candidates.
 # - The first argument to the function ($1) is the base path to start traversal
 # - See the source code (completion.{bash,zsh}) for the details.
@@ -332,18 +319,6 @@ _fzf_compgen_dir() {
 export FZF_DEFAULT_COMMAND="fd --hidden --strip-cwd-prefix --exclude .git"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_ALT_C_COMMAND="fd --type=d --hidden --strip-cwd-prefix --exclude .git"
-
-# Use fd (https://github.com/sharkdp/fd) for listing path candidates.
-# - The first argument to the function ($1) is the base path to start traversal
-# - See the source code (completion.{bash,zsh}) for the details.
-_fzf_compgen_path() {
-  fd --hidden --exclude .git . "$1"
-}
-
-# Use fd to generate the list for directory completion
-_fzf_compgen_dir() {
-  fd --type=d --hidden --exclude .git . "$1"
-}
 
 show_file_or_dir_preview="if [ -d {} ]; then eza --tree --color=always {} | head -200; else bat -n --color=always --line-range :500 {}; fi"
 
@@ -392,7 +367,7 @@ alias ......="cd ../../../../.."
 
 # ===== ADDITIONAL ENVIRONMENTS =====
 # Deno JavaScript/TypeScript runtime environment
-. "/Users/mike/.deno/env"
+. "$HOME/.deno/env"
 
 # === End of zshrc ===
 #compdef gt
@@ -414,8 +389,11 @@ _gt_yargs_completions() {
 compdef _gt_yargs_completions gt
 ###-end-gt-completions-###
 
-source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
-# bun completions
-[ -s "/Users/mike/.bun/_bun" ] && source "/Users/mike/.bun/_bun"
+# fnm
+FNM_PATH="/Users/mike/.local/share/fnm"
+if [ -d "$FNM_PATH" ]; then
+  export PATH="/Users/mike/.local/share/fnm:$PATH"
+  eval "`fnm env`"
+fi
