@@ -1,0 +1,72 @@
+{
+  "mcpServers": {
+    "github": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-github"
+      ],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "{{ onepasswordRead \"op://Private/GitHub Personal Access Token/credential\" }}"
+      }
+    },
+    "mcp-atlassian": {
+      "command": "uvx",
+      "args": [
+        "mcp-atlassian"
+      ],
+      "env": {
+        "JIRA_URL": "https://campingworld.atlassian.net",
+        "JIRA_USERNAME": "m.fisher@campingworld.com",
+        "JIRA_API_TOKEN": "{{ onepasswordRead \"op://Private/Jira API Token/credential\" }}"
+      }
+    },
+    "figma-developer-mcp": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "figma-developer-mcp",
+        "--stdio"
+      ],
+      "env": {
+        "FIGMA_API_KEY": "{{ onepasswordRead \"op://Private/Figma API Key/credential\" }}"
+      }
+    },
+    "sequential-thinking": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-sequential-thinking"
+      ]
+    },
+    "browser-tools": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@agentdeskai/browser-tools-mcp@1.2.0"
+      ]
+    },
+    "@smithery-ai-brave-search": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@smithery/cli@latest",
+        "run",
+        "@smithery-ai/brave-search",
+        "--config",
+        "{\"braveApiKey\":\"{{ onepasswordRead \"op://Private/Brave API Key/credential\" }}\"}"
+      ]
+    },
+    "@kazuph-mcp-taskmanager": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@smithery/cli@latest",
+        "run",
+        "@kazuph/mcp-taskmanager",
+        "--config",
+        "{}"
+      ]
+    }
+  }
+}
