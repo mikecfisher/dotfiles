@@ -1,14 +1,20 @@
 # ============================================================================
+# XDG BASE DIRECTORIES
+# ============================================================================
+export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
+export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
+
+# ============================================================================
 # PACKAGE MANAGERS
 # ============================================================================
 # Homebrew
 eval "$(/opt/homebrew/bin/brew shellenv)"
-
+export HOMEBREW_BREWFILE_FULL_NAME=1
 
 # Python package manager (uv)
 export UV_SYSTEM_PYTHON=1  # Allow uv to find system Python installations
 export UV_CACHE_DIR="$HOME/.cache/uv"  # Set cache directory
-export PATH="$HOME/.local/bin:$PATH"  # Ensure uv-installed tools are in PATH
 
 # ============================================================================
 # DEVELOPMENT ENVIRONMENT
@@ -16,15 +22,60 @@ export PATH="$HOME/.local/bin:$PATH"  # Ensure uv-installed tools are in PATH
 # Node.js SSL certificates
 export NODE_EXTRA_CA_CERTS="$HOME/Library/Application Support/mkcert/rootCA.pem"
 
+# Node.js package managers
+export BUN_INSTALL="$HOME/.bun"
+export PNPM_HOME="$HOME/.local/share/pnpm"
+export NODE_OPTIONS="--no-deprecation"
+
+# Android SDK
+export ANDROID_HOME=$HOME/Library/Android/sdk
+export ANDROID_SDK_ROOT=$HOME/Library/Android/sdk
+
+# Ruby compilation flags
+export LDFLAGS="-L/opt/homebrew/opt/ruby/lib"
+export CPPFLAGS="-I/opt/homebrew/opt/ruby/include"
+
+# Editor
+export EDITOR="nvim"
+export VISUAL="nvim"
+
+# API Keys (loaded at login)
+export ANTHROPIC_API_KEY=$(security find-generic-password -a ${USER} -s "anthropic_api_key" -w 2>/dev/null)
+export HASS_TOKEN=$(security find-generic-password -a ${USER} -s "homeassistant_token_api_key" -w 2>/dev/null)
+export OPENAI_API_KEY=$(security find-generic-password -a ${USER} -s "openai_api_key" -w 2>/dev/null)
+
 # ============================================================================
 # PATH MANAGEMENT
 # ============================================================================
-# Python managed by uv
-# Note: Consider removing this line and letting uv manage Python versions
-# PATH="/Library/Frameworks/Python.framework/Versions/3.12/bin:${PATH}"
+path=(
+  # User binaries
+  $HOME/.local/bin
+  $HOME/bin
 
+  # Node.js package managers
+  $HOME/.yarn/bin
+  $HOME/.config/yarn/global/node_modules/.bin
+  $PNPM_HOME
+  $BUN_INSTALL/bin
 
-# Toolbox App
-PATH="$PATH:/usr/local/bin"
+  # Ruby from Homebrew
+  /opt/homebrew/opt/ruby/bin
+  /opt/homebrew/lib/ruby/gems/3.0.0/bin
 
-export PATH
+  # Python
+  /Library/Frameworks/Python.framework/Versions/3.12/bin
+  $HOME/Library/Python/3.12/bin
+
+  # Android SDK tools
+  $ANDROID_HOME/cmdline-tools/latest/bin
+  $ANDROID_HOME/emulator
+  $ANDROID_HOME/platform-tools
+
+  # LM Studio
+  $HOME/.lmstudio/bin
+
+  # System paths
+  /usr/local/bin
+  $path
+)
+typeset -U path  # Remove duplicates
