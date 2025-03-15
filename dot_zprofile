@@ -13,8 +13,8 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 export HOMEBREW_BREWFILE_FULL_NAME=1
 
 # Python package manager (uv)
-export UV_SYSTEM_PYTHON=1  # Allow uv to find system Python installations
-export UV_CACHE_DIR="$HOME/.cache/uv"  # Set cache directory
+export UV_SYSTEM_PYTHON=1             # Allow uv to find system Python installations
+export UV_CACHE_DIR="$HOME/.cache/uv" # Set cache directory
 
 # ============================================================================
 # DEVELOPMENT ENVIRONMENT
@@ -38,11 +38,10 @@ export CPPFLAGS="-I/opt/homebrew/opt/ruby/include"
 # Editor
 export EDITOR="nvim"
 export VISUAL="nvim"
-
 # API Keys (loaded at login)
-export ANTHROPIC_API_KEY=$(security find-generic-password -a ${USER} -s "anthropic_api_key" -w 2>/dev/null)
-export HASS_TOKEN=$(security find-generic-password -a ${USER} -s "homeassistant_token_api_key" -w 2>/dev/null)
-export OPENAI_API_KEY=$(security find-generic-password -a ${USER} -s "openai_api_key" -w 2>/dev/null)
+export ANTHROPIC_API_KEY=$(timeout 2 security find-generic-password -a ${USER} -s "anthropic_api_key" -w 2>/dev/null)
+export HASS_TOKEN=$(timeout 2 security find-generic-password -a ${USER} -s "homeassistant_token_api_key" -w 2>/dev/null)
+export OPENAI_API_KEY=$(timeout 2 security find-generic-password -a ${USER} -s "openai_api_key" -w 2>/dev/null)
 
 export HASS_SERVER=http://homeassistant.local:8123
 
@@ -80,4 +79,4 @@ path=(
   /usr/local/bin
   $path
 )
-typeset -U path  # Remove duplicates
+typeset -U path # Remove duplicates

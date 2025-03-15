@@ -101,6 +101,6 @@ fi
 
 # Install packages using brew-file
 echo "Installing packages using brew-file..."
-brew file install -f "${BREWFILE}"
+brew file install --no-upgrade "${BREWFILE}"
 
 {{- end }}
