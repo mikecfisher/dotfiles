@@ -30,7 +30,7 @@ echo "📝 Logging to $LOG_FILE"
 
 # Update Homebrew packages using brew-file
 echo "📦 Updating Homebrew with brew-file..."
-if ! brew file update; then
+if ! brew update; then
   echo "⚠️ Warning: brew file update failed, continuing anyway..."
 fi
 
@@ -47,7 +47,7 @@ if ! mas upgrade; then
 fi
 
 # Clean up Docker
-if command -v docker &> /dev/null; then
+if command -v docker &>/dev/null; then
   echo "🐳 Checking Docker status..."
   # Check if Docker is actually running before attempting cleanup
   if docker info &>/dev/null; then

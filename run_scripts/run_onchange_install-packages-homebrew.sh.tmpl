@@ -13,20 +13,12 @@ fi
 echo "Updating Homebrew..."
 brew update
 
-# Make sure brew-file is installed
-if ! command -v brew-file &>/dev/null; then
-  echo "Installing brew-file..."
-  brew install rcmdnk/file/brew-file
-fi
+# Create a temporary Brewfile
+BREWFILE=$(mktemp)
+trap 'rm -f ${BREWFILE}' EXIT
 
-# Define Brewfile path
-BREWFILE="${HOME}/.config/brewfile/Brewfile"
-
-# Ensure brewfile directory exists
-mkdir -p "${HOME}/.config/brewfile"
-
-# Generate Brewfile based on machine type
-echo "# Generated Brewfile - DO NOT EDIT DIRECTLY" >"${BREWFILE}"
+# Generate Brewfile
+echo "# Generated Brewfile - Temporary" >"${BREWFILE}"
 echo "# Source: {{ .chezmoi.sourceDir }}/.chezmoidata/packages.yaml" >>"${BREWFILE}"
 echo "# Machine type: {{ .machine_type }}" >>"${BREWFILE}"
 echo "" >>"${BREWFILE}"
@@ -82,25 +74,8 @@ echo "" >>"${BREWFILE}"
 {{- end }}
 {{- end }}
 
-# Set HOMEBREW_BREWFILE for brew-file
-export HOMEBREW_BREWFILE="${BREWFILE}"
-
-# Check if brew-wrap is already configured in either file
-CONFIG_ZSH="${HOME}/.config/zsh/.zshrc"
-MAIN_ZSHRC="${HOME}/.zshrc"
-
-# Remove brew-wrap from ~/.config/zsh/zshrc if it exists
-if grep -q "brew-wrap" "$CONFIG_ZSH"; then
-  echo "Removing brew-wrap from $CONFIG_ZSH (it should only be in main .zshrc)"
-  # Use a different approach to avoid complex sed patterns with backslashes
-  grep -v "brew-wrap\|brew --prefix)/etc/brew-wrap" "$CONFIG_ZSH" >"$CONFIG_ZSH.tmp"
-  mv "$CONFIG_ZSH.tmp" "$CONFIG_ZSH"
-fi
-
-# Don't modify main .zshrc - it already has the configuration
-
-# Install packages using brew-file
-echo "Installing packages using brew-file..."
-brew file install --no-upgrade "${BREWFILE}"
+# Install packages using Homebrew
+echo "Installing packages from Brewfile..."
+brew bundle install --no-upgrade --file="${BREWFILE}"
 
 {{- end }}
