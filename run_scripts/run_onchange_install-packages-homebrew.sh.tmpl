@@ -46,7 +46,7 @@ echo "" >>"${BREWFILE}"
 
 {{- if .packages.common.mas }}
 {{- range .packages.common.mas }}
-echo "appstore {{ .id }} \"{{ .name }}\"" >>"${BREWFILE}"
+echo "mas \"{{ .name }}\", id: {{ .id }}" >>"${BREWFILE}"
 {{- end }}
 echo "" >>"${BREWFILE}"
 {{- end }}
