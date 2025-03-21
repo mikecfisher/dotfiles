@@ -1,4 +1,0 @@
-function la --wraps=ls --wraps='eza $EXA_STANDARD_OPTIONS $EXA_LA_OPTIONS $EXA_L_OPTIONS' --wraps='eza $EZA_STANDARD_OPTIONS $EZA_LA_OPTIONS $EZA_L_OPTIONS' --description 'alias la eza $EZA_STANDARD_OPTIONS $EZA_LA_OPTIONS $EZA_L_OPTIONS'
-  eza $EZA_STANDARD_OPTIONS $EZA_LA_OPTIONS $EZA_L_OPTIONS $argv
-        
-end
