@@ -13,7 +13,7 @@ end
 set -gx XDG_CONFIG_HOME $HOME/.config
 set -gx XDG_DATA_HOME $HOME/.local/share
 set -gx XDG_CACHE_HOME $HOME/.cache
-# 
+#
 # XDG Base Directories
 set -gx XDG_CONFIG_HOME $HOME/.config
 set -gx XDG_DATA_HOME $HOME/.local/share
@@ -63,11 +63,25 @@ if status is-interactive
     alias cd="z" # use zoxide for directory switching
     alias y="yazi"
     alias lg="lazygit"
-    alias v="nvim"
+    alias cat="bat"
     alias edit-fish="nvim ~/.config/fish/config.fish"
     alias reload-fish="source ~/.config/fish/config.fish"
 
+    alias lvim='env NVIM_APPNAME=nvim-lazy nvim'
+    alias kvim='env NVIM_APPNAME=nvim-kickstart nvim'
+    alias lv='env NVIM_APPNAME=nvim-lazy nvim'
+    alias kv='env NVIM_APPNAME=nvim-kickstart nvim'
     fish_vi_key_bindings
+end
+
+# Brew Wrapper
+if test -f (brew --prefix)/etc/brew-wrap.fish
+    source (brew --prefix)/etc/brew-wrap.fish
+
+    function _post_brewfile_update
+        echo "Brewfile was updated!"
+        ~/.local/bin/my-scripts/update-packages-yaml.ts
+    end
 end
 
 # # Basic prompt structure
