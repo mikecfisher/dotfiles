@@ -1,6 +1,6 @@
 # Vim Keybindings Reference
 
-This document provides a comprehensive reference for all Vim keybindings configured in my editor setup. These mappings are designed to create a powerful, LazyVim-inspired editing experience within VS Code and Cursor.
+This document provides a comprehensive reference for all Vim keybindings configured in my editor setup. These mappings are designed to create a powerful, NeoVim-inspired editing experience within VS Code and Cursor.
 
 ## Core Vim Settings
 
