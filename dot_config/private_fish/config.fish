@@ -90,6 +90,11 @@ end
 
 set -g fish_greeting
 
+function cursor
+    command /usr/local/bin/cursor $argv
+end
+
 # bun
 set --export BUN_INSTALL "$HOME/.bun"
 set --export PATH $BUN_INSTALL/bin $PATH
+starship init fish | source
