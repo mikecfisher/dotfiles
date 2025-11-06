@@ -1,6 +1,9 @@
 [user]
-name = Mike Fisher
-email = mikefisher84@gmail.com
+	name = Mike Fisher
+	email = mikefisher84@gmail.com
+
+[includeIf "gitdir:~/dev/work/"]
+    path = ~/.gitconfig-work
 [advice]
 detachedHead = false
 [init]
@@ -48,6 +51,12 @@ true-color = always
 line-numbers = true
 hyperlinks = true
 hyperlinks-file-link-format = "cursor://file/{path}:{line}"
-syntax-theme = tokyonight_night
+syntax-theme = "Catppuccin Macchiato"
 [merge]
 conflictStyle = zdiff3
+[credential "https://github.com"]
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential
