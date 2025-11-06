@@ -1,6 +1,6 @@
 # ==== THEME ====
 # Base colors and opacity
-theme = catppuccin-macchiato
+theme = catppuccin-macchiato.conf
 background-opacity = 0.98
 background-blur = 10
 font-size = 18
@@ -20,14 +20,14 @@ desktop-notifications = false
 window-inherit-working-directory = true
 
 # Remove window decorations (title bar, etc)
-# window-decoration = true
+# window-decoration = auto
 
 # Swap foreground/background colors in selected text
 selection-invert-fg-bg = false
 
 # Window padding and persistence
 window-padding-x = 4
-window-padding-y = 4
+window-padding-y = 8
 window-save-state = always
 window-vsync = true
 
@@ -35,7 +35,7 @@ split-divider-color =#33008a
 
 # ==== SHELL INTEGRATION ====
 # Enable shell features (cursor shape changes, sudo detection, window titles)
-shell-integration = zsh
+shell-integration = fish
 shell-integration-features = cursor,sudo,title
 
 # ==== CLIPBOARD BEHAVIOR ====
@@ -56,21 +56,14 @@ cursor-click-to-move = true
 
 # ==== PERFORMANCE ====
 # Increase scrollback buffer (default is smaller)
-scrollback-limit = 100000
+scrollback-limit = 9000000
 
 keybind = cmd+l=new_split:right
 keybind = cmd+j=new_split:down
 keybind = cmd+k=new_split:up
 
-
-
-
-
 # Navigate between splits (vim-style)
-
 focus-follows-mouse = true
-
-
 
 keybind = cmd+r=reload_config
 
@@ -85,4 +78,9 @@ macos-option-as-alt = true
 # Handle secure input automatically
 macos-auto-secure-input = true
 
-macos-titlebar-style = tabs
+macos-titlebar-style = hidden
+keybind = shift+enter=text:\n
+keybind = alt+left=unbind
+keybind = alt+right=unbind
+keybind = alt+left=unbind
+keybind = alt+l=unbind
