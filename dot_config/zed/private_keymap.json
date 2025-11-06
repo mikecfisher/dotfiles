@@ -1,0 +1,27 @@
+[{
+  "context": "Editor && vim_mode == insert && !menu",
+  "bindings": {
+    "j k": "vim::SwitchToNormalMode"
+  }
+},
+{
+  "context": "Workspace",
+  "use_key_equivalents": true,
+  "bindings": {
+    "alt-cmd-o": "projects::OpenRecent",
+    "ctrl-cmd-o": "projects::OpenRemote",
+    "alt-cmd-b": "branches::OpenRecent",
+    // ... other existing bindings ...
+  }
+},
+{
+  "context": "Dock",
+  "bindings": {
+    "ctrl-w h": "workspace::ActivatePaneLeft",
+    "ctrl-w l": "workspace::ActivatePaneRight",
+    "ctrl-w k": "workspace::ActivatePaneUp",
+    "ctrl-w j": "workspace::ActivatePaneDown"
+    // ... or other keybindings
+  }
+}
+]
