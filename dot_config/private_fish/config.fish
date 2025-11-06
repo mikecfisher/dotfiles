@@ -8,7 +8,6 @@ if test -d /opt/homebrew
     set -gx MANPATH /opt/homebrew/share/man $MANPATH
     set -gx INFOPATH /opt/homebrew/share/info $INFOPATH
 end
-# <D-s>
 # XDG Base Directories
 set -gx XDG_CONFIG_HOME $HOME/.config
 set -gx XDG_DATA_HOME $HOME/.local/share
@@ -19,11 +18,14 @@ set -gx XDG_CONFIG_HOME $HOME/.config
 set -gx XDG_DATA_HOME $HOME/.local/share
 set -gx XDG_CACHE_HOME $HOME/.cache
 
+# Claude CLI
+set -gx PATH $HOME/.claude/local $PATH
+
 # ============================================================================
 # DEVELOPMENT ENVIRONMENT VARIABLES
 # ============================================================================
 # Node.js SSL certificates
-set -gx NODE_EXTRA_CA_CERTS "$HOME/Library/Application Support/mkcert/rootCA.pem"
+set -gx NODE_EXTRA_CA_CERTS "$HOME/.local/share/mkcert/rootCA.pem"
 
 # Node.js package managers & options
 set -gx BUN_INSTALL "$HOME/.bun"
@@ -71,6 +73,7 @@ if status is-interactive
     alias kvim='env NVIM_APPNAME=nvim-kickstart nvim'
     alias lv='env NVIM_APPNAME=nvim-lazy nvim'
     alias kv='env NVIM_APPNAME=nvim-kickstart nvim'
+    alias claude="~/.claude/local/claude"
     fish_vi_key_bindings
 end
 
@@ -98,3 +101,31 @@ end
 set --export BUN_INSTALL "$HOME/.bun"
 set --export PATH $BUN_INSTALL/bin $PATH
 starship init fish | source
+
+# Added by OrbStack: command-line tools and integration
+# This won't be added again if you remove it.
+source ~/.orbstack/shell/init2.fish 2>/dev/null || :
+
+# remove the Alt-L directory-listing shortcut
+bind -e \el
+
+function sst-tunnel
+    # destroy all stale utun devices
+    for dev in (ifconfig | awk '/utun[0-9]+:/ {print substr($1,1,length($1)-1)}')
+        sudo ifconfig $dev destroy 2>/dev/null
+    end
+
+    # start SST tunnel
+    bun sst tunnel --print-logs --verbose
+end
+
+# opencode
+fish_add_path /Users/mike/.opencode/bin
+fish_add_path $HOME/.local/bin
+
+# pnpm
+set -gx PNPM_HOME "/Users/mike/.local/share/pnpm"
+if not string match -q -- $PNPM_HOME $PATH
+  set -gx PATH "$PNPM_HOME" $PATH
+end
+# pnpm end
