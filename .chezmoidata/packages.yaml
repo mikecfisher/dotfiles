@@ -329,6 +329,7 @@ packages:
       - "linear-linear"
       - "lm-studio"
       - "macupdater"
+      - "ngrok"
       - "notion"
       - "orbstack"
       - "postman"
