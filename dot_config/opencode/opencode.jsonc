@@ -1,0 +1,100 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  
+  // Model configuration
+  "model": "anthropic/claude-sonnet-4-5-20250929",
+  "small_model": "anthropic/claude-haiku-4-20250514",
+  
+  // Provider configurations with thinking mode for Sonnet 4.5
+  "provider": {
+    "anthropic": {
+      "models": {
+        "claude-sonnet-4-20250514": {
+          "options": {
+            "thinking": {
+              "type": "enabled",
+              "budgetTokens": 16000
+            }
+          }
+        },
+        "claude-sonnet-4-5-20250929": {
+          "options": {
+            "thinking": {
+              "type": "enabled",
+              "budgetTokens": 16000
+            }
+          }
+        }
+      }
+    },
+    "bedrock": {
+      "models": {
+        "claude-sonnet-4-5-20250929": {
+          "options": {
+            "thinking": {
+              "type": "enabled",
+              "budgetTokens": 16000
+            }
+          }
+        }
+      }
+    }
+  },
+  
+  // Theme and UI settings
+  "theme": "catppuccin",
+  "autoupdate": true,
+  
+  // Instructions for additional context
+  "instructions": ["AGENTS.md", ".cursor/rules/*.md"],
+  
+  // Tool permissions - require confirmation for destructive operations
+  "permission": {
+    "edit": "ask",
+    "bash": "ask"
+  },
+  
+  // Agent configurations
+  "agent": {
+    "build": {
+      "mode": "primary",
+      "description": "Default agent with full tool access for development work",
+      "tools": {
+        "write": true,
+        "edit": true,
+        "bash": true,
+        "webfetch": true
+      }
+    },
+    "plan": {
+      "mode": "primary", 
+      "description": "Analysis and planning agent - restricted to prevent unintended changes",
+      "model": "anthropic/claude-haiku-4-20250514",
+      "tools": {
+        "write": false,
+        "edit": false,
+        "bash": false
+      },
+      "permission": {
+        "edit": "deny",
+        "bash": "deny"
+      }
+    }
+  },
+  
+  // TUI settings
+  "tui": {
+    "scroll_speed": 1,
+    "scroll_acceleration": {
+      "enabled": true
+    }
+  },
+  
+  // Sharing settings
+  "share": "manual",
+  
+  // Experimental features
+  "experimental": {
+    "batch_tool": true
+  }
+}
