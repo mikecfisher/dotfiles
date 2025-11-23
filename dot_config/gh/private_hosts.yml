@@ -1,5 +1,6 @@
 github.com:
-    git_protocol: ssh
+    git_protocol: https
     users:
         mikecfisher:
+        mike-baton:
     user: mikecfisher

@@ -222,3 +222,71 @@ When generating TypeScript code, agents should:
 5. Use TypeScript's type system to enforce business rules
 
 Remember: Good TypeScript code should make it impossible to represent invalid states.
+
+## Next.js Development with MCP Tools
+
+When working on Next.js projects, you have access to powerful MCP tools through the `next-devtools` server:
+
+### When to Initialize
+
+**IMPORTANT**: At the start of every Next.js session, call the `init` tool from `next-devtools` to:
+- Set up proper context for Next.js development
+- Establish requirement to use `nextjs_docs` for ALL Next.js-related queries
+- Understand available tools and workflows
+
+### Available Tools
+
+1. **`nextjs_docs`** - Search and retrieve official Next.js documentation
+   - **When to use**: For ANY Next.js-related questions, API lookups, or best practices
+   - **Example**: "Search Next.js docs for generateMetadata"
+
+2. **`nextjs_runtime`** (Next.js 16+ only) - Access live dev server diagnostics
+   - **When to use**: When dev server is running and you need to check:
+     - Current errors or warnings
+     - Application routes and structure
+     - Dev server logs
+     - Server Actions by ID
+   - **Example**: "What errors are in my Next.js app?"
+
+3. **`browser_eval`** - Browser automation via Playwright
+   - **When to use**: For visual verification, testing user flows, or screenshots
+   - **Note**: For Next.js projects, prefer `nextjs_runtime` for error detection
+   - **Example**: "Take a screenshot of the homepage"
+
+4. **`upgrade_nextjs_16`** - Automated Next.js 16 upgrade
+   - **When to use**: Upgrading from Next.js 15 or earlier to Next.js 16
+   - **Example**: "Help me upgrade to Next.js 16"
+
+5. **`enable_cache_components`** - Cache Components migration
+   - **When to use**: Enabling Cache Components mode in Next.js 16
+   - **Example**: "Enable Cache Components in my app"
+
+### Best Practices
+
+- **Documentation First**: Always use `nextjs_docs` to search for official guidance before implementing Next.js features
+- **Runtime Diagnostics**: For Next.js 16+, use `nextjs_runtime` to check errors instead of browser console logs
+- **Auto-Initialize**: The `init` tool should be called automatically at session start (configure in agent settings)
+
+## General Documentation Search with Context7
+
+When you need to search through documentation for ANY technology, framework, or library (not just Next.js), use the `context7` MCP tools:
+
+### When to Use Context7
+
+- **Technology Documentation**: Search docs for Cloudflare Workers, React, TypeScript, etc.
+- **API References**: Find specific API methods and usage examples
+- **Best Practices**: Look up recommended patterns and approaches
+- **Configuration Help**: Find setup and configuration guidance
+
+### Usage
+
+Simply add "use context7" to your prompts:
+- "Configure a Cloudflare Worker script to cache JSON API responses for five minutes. use context7"
+- "How do I set up TypeScript strict mode? use context7"
+- "Best practices for React Server Components. use context7"
+
+### Rate Limits
+
+Context7 works without an API key but has rate limits. For higher limits:
+1. Sign up for a free account at [context7.com](https://context7.com)
+2. Set the environment variable: `export CONTEXT7_API_KEY="your_api_key"`

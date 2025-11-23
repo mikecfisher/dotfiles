@@ -1,3 +1,9 @@
 .cursorrules
 .cursor
 CLAUDE.md
+.repomixignore
+repomix-output.xml
+repomix.config.json
+.mike-private-notes
+.taskmaster
+plan.md

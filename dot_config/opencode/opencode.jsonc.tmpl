@@ -1,15 +1,14 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  
   // Model configuration
   "model": "anthropic/claude-sonnet-4-5-20250929",
-  "small_model": "anthropic/claude-haiku-4-20250514",
-  
+  "small_model": "anthropic/claude-haiku-4-5",
   // Provider configurations with thinking mode for Sonnet 4.5
   "provider": {
     "anthropic": {
+      "name": "Anthropic",
       "models": {
-        "claude-sonnet-4-20250514": {
+        "claude-sonnet-4-5-20250929": {
           "options": {
             "thinking": {
               "type": "enabled",
@@ -17,43 +16,52 @@
             }
           }
         },
-        "claude-sonnet-4-5-20250929": {
+        "claude-sonnet-4-5-deep": {
+          "id": "claude-sonnet-4-5-20250929",
           "options": {
             "thinking": {
               "type": "enabled",
-              "budgetTokens": 16000
-            }
-          }
-        }
-      }
-    },
-    "bedrock": {
-      "models": {
-        "claude-sonnet-4-5-20250929": {
-          "options": {
-            "thinking": {
-              "type": "enabled",
-              "budgetTokens": 16000
-            }
+              "budgetTokens": 28000
+            },
+            "maxTokens": 32000
           }
         }
       }
     }
   },
-  
+  // MCP Servers - Model Context Protocol integrations
+  "mcp": {
+    "next-devtools": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "next-devtools-mcp@latest"
+      ],
+      "enabled": true
+    },
+    "context7": {
+      "type": "remote",
+      "url": "https://mcp.context7.com/mcp",
+      "headers": {
+        "CONTEXT7_API_KEY": "{{ onepasswordRead "op://Private/Context7 Key/credential" }}"
+      },
+      "enabled": true
+    }
+  },
   // Theme and UI settings
   "theme": "catppuccin",
   "autoupdate": true,
-  
   // Instructions for additional context
-  "instructions": ["AGENTS.md", ".cursor/rules/*.md"],
-  
+  "instructions": [
+    "AGENTS.md",
+    ".cursor/rules/*.md"
+  ],
   // Tool permissions - require confirmation for destructive operations
   "permission": {
     "edit": "ask",
     "bash": "ask"
   },
-  
   // Agent configurations
   "agent": {
     "build": {
@@ -64,12 +72,16 @@
         "edit": true,
         "bash": true,
         "webfetch": true
+      },
+      "permission": {
+        "edit": "allow",
+        "bash": "allow"
       }
     },
     "plan": {
-      "mode": "primary", 
+      "mode": "primary",
       "description": "Analysis and planning agent - restricted to prevent unintended changes",
-      "model": "anthropic/claude-haiku-4-20250514",
+      "model": "anthropic/claude-sonnet-4-5",
       "tools": {
         "write": false,
         "edit": false,
@@ -79,9 +91,23 @@
         "edit": "deny",
         "bash": "deny"
       }
+    },
+    "deep-think": {
+      "mode": "primary",
+      "description": "Deep reasoning agent with maximum thinking budget for complex problem solving",
+      "model": "anthropic/claude-sonnet-4-5-deep",
+      "tools": {
+        "write": true,
+        "edit": true,
+        "bash": true,
+        "webfetch": true
+      },
+      "permission": {
+        "edit": "allow",
+        "bash": "allow"
+      }
     }
   },
-  
   // TUI settings
   "tui": {
     "scroll_speed": 1,
@@ -89,10 +115,8 @@
       "enabled": true
     }
   },
-  
   // Sharing settings
   "share": "manual",
-  
   // Experimental features
   "experimental": {
     "batch_tool": true

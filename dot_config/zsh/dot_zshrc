@@ -1,3 +1,5 @@
+# Amazon Q pre block. Keep at the top of this file.
+[[ -f "${HOME}/Library/Application Support/amazon-q/shell/zshrc.pre.zsh" ]] && builtin source "${HOME}/Library/Application Support/amazon-q/shell/zshrc.pre.zsh"
 # Organization:
 #   1. Zinit plugin manager setup
 #   2. Completion system configuration
@@ -187,6 +189,11 @@ function cleanup-remote-branches() {
     echo "Updating packages.yaml..."
     ~/.local/bin/my-scripts/update-packages-yaml.ts
   }
+
+# ===== GIT WORKTREE AUTOMATION =====
+# Load wt function for git worktree management
+if [[ -f "${XDG_CONFIG_HOME:-$HOME/.config}/zsh/functions/wt.zsh" ]]; then
+  source "${XDG_CONFIG_HOME:-$HOME/.config}/zsh/functions/wt.zsh"
 fi
 
 # ===== HISTORY SETTINGS =====
@@ -197,6 +204,8 @@ setopt share_history
 setopt hist_expire_dups_first
 setopt hist_ignore_dups
 setopt hist_verify
+
+CLAUDE_CODE_MAX_OUTPUT_TOKENS="4096"
 
 # ===== ZSH OPTIONS =====
 # Allow changing directory without typing 'cd'
@@ -290,8 +299,6 @@ alias .....="cd ../../../.."
 alias ......="cd ../../../../.."
 
 # ===== ADDITIONAL ENVIRONMENTS =====
-# Deno JavaScript/TypeScript runtime environment
-. "$HOME/.deno/env"
 
 # === End of zshrc ===
 #compdef gt
@@ -331,3 +338,6 @@ if [ -d "$FNM_PATH" ]; then
   export PATH="$FNM_PATH:$PATH"
   eval "$(fnm env)"
 fi
+
+# Amazon Q post block. Keep at the bottom of this file.
+[[ -f "${HOME}/Library/Application Support/amazon-q/shell/zshrc.post.zsh" ]] && builtin source "${HOME}/Library/Application Support/amazon-q/shell/zshrc.post.zsh"

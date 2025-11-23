@@ -74,6 +74,7 @@ if status is-interactive
     alias lv='env NVIM_APPNAME=nvim-lazy nvim'
     alias kv='env NVIM_APPNAME=nvim-kickstart nvim'
     alias claude="~/.claude/local/claude"
+    alias oc="opencode"
     fish_vi_key_bindings
 end
 
@@ -109,6 +110,8 @@ source ~/.orbstack/shell/init2.fish 2>/dev/null || :
 # remove the Alt-L directory-listing shortcut
 bind -e \el
 
+alias gconf 'nvim ~/.config/ghostty/config'
+
 function sst-tunnel
     # destroy all stale utun devices
     for dev in (ifconfig | awk '/utun[0-9]+:/ {print substr($1,1,length($1)-1)}')
@@ -126,6 +129,9 @@ fish_add_path $HOME/.local/bin
 # pnpm
 set -gx PNPM_HOME "/Users/mike/.local/share/pnpm"
 if not string match -q -- $PNPM_HOME $PATH
-  set -gx PATH "$PNPM_HOME" $PATH
+    set -gx PATH "$PNPM_HOME" $PATH
 end
 # pnpm end
+
+# Added by Antigravity
+fish_add_path /Users/mike/.antigravity/antigravity/bin

@@ -21,6 +21,7 @@ required = true
 [core]
 excludesfile = ~/.gitignore_global
 pager = delta
+	compression = 0
 [pull]
 default = current
 rebase = true
@@ -43,10 +44,10 @@ diffFilter = delta --color-only
 [diff]
 algorithm = histogram
 [http]
-postBuffer = 524288000
+	postBuffer = 524288000
 [delta]
 navigate = true # use n and N to move between diff sections
-side-by-side = true
+	side-by-side = false
 true-color = always
 line-numbers = true
 hyperlinks = true

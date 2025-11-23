@@ -3,8 +3,8 @@
 theme = catppuccin-macchiato.conf
 background-opacity = 0.98
 background-blur = 10
+font-family = "JetBrainsMono Nerd Font"
 font-size = 18
-font-family = "Hack"
 
 # Visual refinements for split panes
 unfocused-split-opacity = 0.5

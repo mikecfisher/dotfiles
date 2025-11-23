@@ -6,6 +6,52 @@ local act = wezterm.action
 local mux = wezterm.mux
 local config = wezterm.config_builder()
 
+-- ==== SMART PANE NAVIGATION ====
+-- Seamless navigation between WezTerm panes and Neovim splits/tabs
+-- Uses smart detection to route CTRL+HJKL appropriately
+
+-- Helper function to detect if we're in a Neovim instance
+local function is_vim(pane)
+	-- Check user variables first (more reliable, set by smart-splits.nvim)
+	local user_vars = pane:get_user_vars()
+	if user_vars.IS_NVIM == 'true' then
+		return true
+	end
+	
+	-- Fallback to process name detection
+	local process_name = string.gsub(pane:get_foreground_process_name(), '(.*[/\\])(.*)', '%2')
+	return process_name == 'nvim' or process_name == 'vim'
+end
+
+-- Direction mapping for navigation
+local direction_keys = {
+	h = 'Left',
+	j = 'Down', 
+	k = 'Up',
+	l = 'Right'
+}
+
+-- Smart navigation function
+local function smart_nav(key)
+	return {
+		key = key,
+		mods = 'CTRL',
+		action = wezterm.action_callback(function(window, pane)
+			if is_vim(pane) then
+				-- If in Neovim, send the key to Neovim for tab/split navigation
+				window:perform_action({
+					SendKey = { key = key, mods = 'CTRL' }
+				}, pane)
+			else
+				-- If not in Neovim, navigate WezTerm panes
+				window:perform_action({
+					ActivatePaneDirection = direction_keys[key]
+				}, pane)
+			end
+		end)
+	}
+end
+
 -- ==== THEME ====
 config.color_scheme = "Catppuccin Macchiato"
 config.window_background_opacity = 0.98
@@ -34,6 +80,34 @@ config.default_cursor_style = "SteadyBlock"
 -- Minimal UI: Hide tab bar when only one tab (like Ghostty)
 config.hide_tab_bar_if_only_one_tab = true
 config.use_fancy_tab_bar = false
+config.tab_bar_at_bottom = false
+config.tab_max_width = 32
+
+-- Tab bar colors (Catppuccin Macchiato)
+config.colors.tab_bar = {
+	background = "#181926",
+	active_tab = {
+		bg_color = "#8aadf4",
+		fg_color = "#181926",
+		intensity = "Bold",
+	},
+	inactive_tab = {
+		bg_color = "#1e2030",
+		fg_color = "#cad3f5",
+	},
+	inactive_tab_hover = {
+		bg_color = "#363a4f",
+		fg_color = "#cad3f5",
+	},
+	new_tab = {
+		bg_color = "#1e2030",
+		fg_color = "#8aadf4",
+	},
+	new_tab_hover = {
+		bg_color = "#363a4f",
+		fg_color = "#8aadf4",
+	},
+}
 
 -- Remove window decorations for minimal look
 config.window_decorations = "RESIZE"
@@ -61,13 +135,14 @@ config.front_end = "WebGpu"
 config.max_fps = 120
 config.audible_bell = "Disabled"
 
+-- Disable CSI u keyboard protocol to fix Ctrl+HJKL navigation with NeoVim
+-- See: https://github.com/wezterm/wezterm/issues/3180
+-- See: https://github.com/wezterm/wezterm/issues/3608
+config.enable_kitty_keyboard = false
+
 -- macOS specific: Option key as Alt (Ghostty-like)
 config.send_composed_key_when_left_alt_is_pressed = false
 config.send_composed_key_when_right_alt_is_pressed = false
-
--- ==== SIMPLE PANE NAVIGATION ====
--- CTRL+H/J/K/L to navigate WezTerm panes
--- Use CTRL+W then H/J/K/L to navigate Neovim splits (Neovim default)
 
 -- ==== WORKSPACE DEFINITIONS (replaces sesh.toml) ====
 local project_workspaces = {
@@ -149,6 +224,93 @@ local function spawn_project_workspace(workspace_config)
 	window:tabs()[1]:activate()
 end
 
+-- ==== TAB BAR STYLING ====
+-- Pill-shaped tabs with PowerLine arrows
+local SOLID_LEFT_ARROW = wezterm.nerdfonts.pl_right_hard_divider
+local SOLID_RIGHT_ARROW = wezterm.nerdfonts.pl_left_hard_divider
+
+wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_width)
+	local edge_background = "#181926"
+	local background = "#1e2030"
+	local foreground = "#cad3f5"
+	
+	if tab.is_active then
+		background = "#8aadf4"
+		foreground = "#181926"
+	elseif hover then
+		background = "#363a4f"
+		foreground = "#cad3f5"
+	end
+	
+	local edge_foreground = background
+	
+	local title = tab.tab_title
+	-- If the tab title is empty, use the active pane title
+	if title and #title > 0 then
+		title = title
+	else
+		title = tab.active_pane.title
+	end
+	
+	-- Clean up the title - remove paths and just show the meaningful part
+	title = title:gsub("^~/.*/", "")  -- Remove home directory paths
+	title = title:gsub("^/.*/ ", "")   -- Remove absolute paths
+	
+	-- Icon mapping based on title/process
+	local icon = "●"  -- default
+	local lower_title = title:lower()
+	
+	if lower_title:match("nvim") or lower_title:match("vim") then
+		icon = ""
+	elseif lower_title:match("claude") or lower_title:match("opencode") or lower_title:match("codex") then
+		icon = ""
+	elseif lower_title:match("git") or lower_title:match("lazygit") or lower_title:match("tig") then
+		icon = ""
+	elseif lower_title:match("node") or lower_title:match("npm") or lower_title:match("pnpm") or lower_title:match("yarn") then
+		icon = ""
+	elseif lower_title:match("docker") then
+		icon = ""
+	elseif lower_title:match("python") or lower_title:match("ipython") then
+		icon = ""
+	elseif lower_title:match("rust") or lower_title:match("cargo") then
+		icon = ""
+	elseif lower_title:match("go") then
+		icon = ""
+	elseif lower_title:match("task") or lower_title:match("todo") then
+		icon = ""
+	elseif lower_title:match("config") or lower_title:match("settings") then
+		icon = ""
+	elseif lower_title:match("test") then
+		icon = ""
+	elseif lower_title:match("server") or lower_title:match("dev") then
+		icon = ""
+	elseif lower_title:match("log") then
+		icon = ""
+	elseif lower_title:match("note") or lower_title:match("md") or lower_title:match("scratch") then
+		icon = ""
+	elseif lower_title:match("fish") or lower_title:match("bash") or lower_title:match("zsh") then
+		icon = ""
+	end
+	
+	-- Build the tab title with icon
+	local tab_title = icon .. " " .. tab.tab_index + 1 .. ": " .. title
+	
+	-- Ensure title fits with room for edges
+	tab_title = wezterm.truncate_right(tab_title, max_width - 2)
+	
+	return {
+		{ Background = { Color = edge_background } },
+		{ Foreground = { Color = edge_foreground } },
+		{ Text = SOLID_LEFT_ARROW },
+		{ Background = { Color = background } },
+		{ Foreground = { Color = foreground } },
+		{ Text = " " .. tab_title .. " " },
+		{ Background = { Color = edge_background } },
+		{ Foreground = { Color = edge_foreground } },
+		{ Text = SOLID_RIGHT_ARROW },
+	}
+end)
+
 -- ==== WORKSPACE HELPERS ====
 -- Get current workspace name for status line
 wezterm.on("update-status", function(window, pane)
@@ -186,12 +348,14 @@ config.keys = {
 		action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }),
 	},
 
-	-- Navigate panes with CTRL+h/j/k/l
-	-- (In Neovim, use CTRL+W then h/j/k/l for vim splits)
-	{ key = "h", mods = "CTRL", action = act.ActivatePaneDirection("Left") },
-	{ key = "j", mods = "CTRL", action = act.ActivatePaneDirection("Down") },
-	{ key = "k", mods = "CTRL", action = act.ActivatePaneDirection("Up") },
-	{ key = "l", mods = "CTRL", action = act.ActivatePaneDirection("Right") },
+	-- Smart navigation with CTRL+h/j/k/l
+	-- Seamlessly navigates between WezTerm panes and Neovim splits/tabs
+	-- In Neovim: CTRL+HJKL navigates tabs/splits
+	-- In WezTerm: CTRL+HJKL navigates panes
+	smart_nav('h'),
+	smart_nav('j'),
+	smart_nav('k'),
+	smart_nav('l'),
 
 	-- Resize panes (like your tmux ,.-= bindings)
 	{ key = "LeftArrow", mods = "CMD|SHIFT", action = act.AdjustPaneSize({ "Left", 5 }) },
@@ -216,6 +380,20 @@ config.keys = {
 	-- Move tabs around
 	{ key = "{", mods = "CMD|SHIFT", action = act.MoveTabRelative(-1) },
 	{ key = "}", mods = "CMD|SHIFT", action = act.MoveTabRelative(1) },
+
+	-- Rename current tab
+	{
+		key = "r",
+		mods = "CMD|SHIFT",
+		action = act.PromptInputLine({
+			description = "Enter new tab name:",
+			action = wezterm.action_callback(function(window, pane, line)
+				if line then
+					window:active_tab():set_title(line)
+				end
+			end),
+		}),
+	},
 
 	-- ===== WORKSPACES (replaces tmux sessions + sesh) =====
 	-- Fuzzy find and launch pre-configured workspace (like sesh connect with fzf)
@@ -316,8 +494,8 @@ config.keys = {
 	-- Search scrollback
 	{ key = "f", mods = "CMD|SHIFT", action = act.Search("CurrentSelectionOrEmptyString") },
 
-	-- Reload config (like tmux prefix+R)
-	{ key = "r", mods = "CMD|SHIFT", action = act.ReloadConfiguration },
+	-- Reload config (like tmux prefix+R) - moved to CMD+CTRL+R to make room for tab rename
+	{ key = "r", mods = "CMD|CTRL", action = act.ReloadConfiguration },
 
 	-- Command Palette
 	{ key = "p", mods = "CMD|SHIFT", action = act.ActivateCommandPalette },
