@@ -1,27 +1,257 @@
-[{
-  "context": "Editor && vim_mode == insert && !menu",
-  "bindings": {
-    "j k": "vim::SwitchToNormalMode"
+[
+  {
+    "context": "Editor && vim_mode == insert && !menu",
+    "bindings": {
+      "j k": "vim::SwitchToNormalMode"
+    }
+  },
+  {
+    "context": "Workspace",
+    "use_key_equivalents": true,
+    "bindings": {
+      "alt-cmd-o": "projects::OpenRecent",
+      "ctrl-cmd-o": "projects::OpenRemote",
+      "alt-cmd-b": "branches::OpenRecent"
+    }
+  },
+  {
+    "context": "VimControl && !menu || !Editor && !Terminal",
+    "bindings": {
+      // Window navigation (space w X)
+      "space w": null,
+      "space w h": "workspace::ActivatePaneLeft",
+      "space w j": "workspace::ActivatePaneDown",
+      "space w k": "workspace::ActivatePaneUp",
+      "space w l": "workspace::ActivatePaneRight",
+      "space w left": "workspace::ActivatePaneLeft",
+      "space w down": "workspace::ActivatePaneDown",
+      "space w up": "workspace::ActivatePaneUp",
+      "space w right": "workspace::ActivatePaneRight",
+
+      // Window splits
+      "space w v": "pane::SplitVertical",
+      "space w s": "pane::SplitHorizontal",
+      "space w n": "workspace::NewFileSplitHorizontal",
+
+      // Window swapping/moving
+      "space w shift-h": "workspace::MovePaneLeft",
+      "space w shift-j": "workspace::MovePaneDown",
+      "space w shift-k": "workspace::MovePaneUp",
+      "space w shift-l": "workspace::MovePaneRight",
+
+      // Window resizing
+      "space w >": "vim::ResizePaneRight",
+      "space w <": "vim::ResizePaneLeft",
+      "space w -": "vim::ResizePaneDown",
+      "space w +": "vim::ResizePaneUp",
+      "space w _": "vim::MaximizePane",
+      "space w =": "vim::ResetPaneSizes",
+
+      // Window closing
+      "space w c": "pane::CloseActiveItem",
+      "space w q": "pane::CloseActiveItem",
+      "space w o": "workspace::CloseInactiveTabsAndPanes",
+
+      // Next/previous pane
+      "space w w": "workspace::ActivateNextPane",
+      "space w p": "workspace::ActivatePreviousPane",
+
+      // Buffer management (space b X)
+      "space b": null,
+      "space b d": "pane::CloseActiveItem",
+      "space b n": "pane::ActivateNextItem",
+      "space b p": "pane::ActivatePreviousItem",
+      "space b o": "pane::CloseInactiveItems",
+      "space b b": "tab_switcher::Toggle",
+
+      // File/finder commands (space f X)
+      "space f": null,
+      "space f f": "file_finder::Toggle",
+      "space f r": "projects::OpenRecent",
+      "space f s": "workspace::Save",
+      "space f a": "workspace::SaveAll",
+      "space f n": "workspace::NewFile",
+      "space f e": "project_panel::ToggleFocus",
+
+      // Search commands (space s X)
+      "space s": null,
+      "space s p": "pane::DeploySearch",
+      "space s f": "buffer_search::Deploy",
+      "space s r": "buffer_search::DeployReplace",
+      "space s g": "workspace::NewSearch",
+      "space s s": "outline::Toggle",
+      "space s S": "project_symbols::Toggle",
+      "space s w": "editor::SelectAllMatches",
+
+      // Git commands (space g X)
+      "space g": null,
+      "space g s": "git_panel::ToggleFocus",
+      "space g b": "branches::OpenRecent",
+      "space g d": "editor::ToggleHunkDiff",
+      "space g r": "editor::RevertSelectedHunks",
+      "space g g": "git_panel::ToggleFocus",
+
+      // Toggle commands (space t X)
+      "space t": null,
+      "space t t": "workspace::ToggleBottomDock",
+      "space t l": "workspace::ToggleLeftDock",
+      "space t r": "workspace::ToggleRightDock",
+      "space t p": "project_panel::ToggleFocus",
+      "space t o": "outline_panel::ToggleFocus",
+      "space t c": "collab_panel::ToggleFocus",
+      "space t a": "assistant::ToggleFocus",
+      "space t z": "workspace::ToggleZoom",
+      "space t w": "editor::ToggleSoftWrap",
+
+      // Code/LSP commands (space c X)
+      "space c": null,
+      "space c a": "editor::ToggleCodeActions",
+      "space c r": "editor::Rename",
+      "space c f": "editor::Format",
+      "space c d": "diagnostics::Deploy",
+
+      // LSP goto (space l X) - LazyVim style
+      "space l": null,
+      "space l d": "editor::GoToDefinition",
+      "space l D": "editor::GoToDeclaration",
+      "space l r": "editor::FindAllReferences",
+      "space l i": "editor::GoToImplementation",
+      "space l t": "editor::GoToTypeDefinition",
+
+      // Diagnostics (space x X)
+      "space x": null,
+      "space x x": "diagnostics::Deploy",
+      "space x q": "editor::GoToDiagnostic",
+
+      // Quick actions (no prefix)
+      "space space": "file_finder::Toggle",
+      "space /": "workspace::NewSearch",
+      "space e": "project_panel::ToggleFocus",
+      "space ,": "tab_switcher::Toggle",
+      "space :": "command_palette::Toggle",
+      "space q": "pane::CloseActiveItem"
+    }
+  },
+  {
+    "context": "Dock",
+    "bindings": {
+      "space w h": "workspace::ActivatePaneLeft",
+      "space w j": "workspace::ActivatePaneDown",
+      "space w k": "workspace::ActivatePaneUp",
+      "space w l": "workspace::ActivatePaneRight",
+      "ctrl-h": "workspace::ActivatePaneLeft",
+      "ctrl-j": "workspace::ActivatePaneDown",
+      "ctrl-k": "workspace::ActivatePaneUp",
+      "ctrl-l": "workspace::ActivatePaneRight"
+    }
+  },
+  {
+    "context": "AssistantPanel",
+    "bindings": {
+      "ctrl-h": "workspace::ActivatePaneLeft",
+      "ctrl-j": "workspace::ActivatePaneDown",
+      "ctrl-k": "workspace::ActivatePaneUp",
+      "ctrl-l": "workspace::ActivatePaneRight"
+    }
+  },
+  {
+    "context": "ProjectPanel",
+    "bindings": {
+      "ctrl-h": "workspace::ActivatePaneLeft",
+      "ctrl-j": "workspace::ActivatePaneDown",
+      "ctrl-k": "workspace::ActivatePaneUp",
+      "ctrl-l": "workspace::ActivatePaneRight"
+    }
+  },
+  {
+    "context": "VimControl && !menu",
+    "bindings": {
+      "ctrl-h": "workspace::ActivatePaneLeft",
+      "ctrl-j": "workspace::ActivatePaneDown",
+      "ctrl-k": "workspace::ActivatePaneUp",
+      "ctrl-l": "workspace::ActivatePaneRight",
+
+      // Buffer navigation (LazyVim style)
+      "shift-h": "pane::ActivatePrevItem",
+      "shift-l": "pane::ActivateNextItem",
+      "[b": "pane::ActivatePrevItem",
+      "]b": "pane::ActivateNextItem",
+
+      // Diagnostics navigation
+      "[d": "editor::GoToPrevDiagnostic",
+      "]d": "editor::GoToDiagnostic",
+      "[e": "editor::GoToPrevDiagnostic",
+      "]e": "editor::GoToDiagnostic",
+
+      // Git hunk navigation
+      "[c": "editor::GoToPrevHunk",
+      "]c": "editor::GoToHunk",
+
+      // Quick fix
+      "[q": "editor::GoToPrevDiagnostic",
+      "]q": "editor::GoToDiagnostic",
+
+      // Better line movement (move lines up/down)
+      "alt-j": "editor::MoveLineDown",
+      "alt-k": "editor::MoveLineUp",
+
+      // Clear search highlight
+      "escape": "editor::Cancel",
+
+      // Better indenting (stay in visual mode)
+      ">": "editor::Indent",
+      "<": "editor::Outdent"
+    }
+  },
+  {
+    "context": "vim_mode == normal && !menu",
+    "bindings": {
+      // Y yanks to end of line (neovim default)
+      "shift-y": ["workspace::SendKeystrokes", "y $"],
+
+      // U for redo (more intuitive)
+      "shift-u": "editor::Redo",
+
+      // gw for word wrap
+      "g w": "editor::ToggleSoftWrap"
+    }
+  },
+  {
+    "context": "vim_mode == visual && !menu",
+    "bindings": {
+      // Move lines in visual mode
+      "alt-j": "editor::MoveLineDown",
+      "alt-k": "editor::MoveLineUp",
+
+      // Stay in visual mode when indenting
+      ">": ["editor::Indent", "editor::SelectLargerSyntaxNode"],
+      "<": ["editor::Outdent", "editor::SelectLargerSyntaxNode"],
+
+      // Surround in visual mode
+      "shift-s": "vim::PushAddSurrounds",
+
+      // Paste without yanking selection (preserve clipboard)
+      "p": ["vim::Paste", { "preserve_clipboard": true }]
+    }
+  },
+  {
+    "context": "vim_mode == insert",
+    "bindings": {
+      // Move lines in insert mode
+      "alt-j": "editor::MoveLineDown",
+      "alt-k": "editor::MoveLineUp",
+
+      // Quick save
+      "ctrl-s": "workspace::Save"
+    }
+  },
+  {
+    "context": "Terminal",
+    "bindings": {
+      "ctrl-h": "workspace::ActivatePaneLeft",
+      "ctrl-j": "workspace::ActivatePaneDown",
+      "ctrl-k": "workspace::ActivatePaneUp",
+      "ctrl-l": "workspace::ActivatePaneRight"
+    }
   }
-},
-{
-  "context": "Workspace",
-  "use_key_equivalents": true,
-  "bindings": {
-    "alt-cmd-o": "projects::OpenRecent",
-    "ctrl-cmd-o": "projects::OpenRemote",
-    "alt-cmd-b": "branches::OpenRecent",
-    // ... other existing bindings ...
-  }
-},
-{
-  "context": "Dock",
-  "bindings": {
-    "ctrl-w h": "workspace::ActivatePaneLeft",
-    "ctrl-w l": "workspace::ActivatePaneRight",
-    "ctrl-w k": "workspace::ActivatePaneUp",
-    "ctrl-w j": "workspace::ActivatePaneDown"
-    // ... or other keybindings
-  }
-}
 ]

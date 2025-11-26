@@ -1,15 +1,26 @@
 {
+  "current_line_highlight": "all",
+  "unnecessary_code_fade": 0.3,
+  "code_actions_on_format": {
+    "source.fixAll.eslint": true
+  },
   "context_servers": {
     "mcp-server-context7": {
       "source": "extension",
       "enabled": true,
       "settings": {
-        "default_minimum_tokens": "10000"
+        "context7_api_key": "***REDACTED_CONTEXT7_API_KEY***"
       }
+    },
+    "linear": {
+         "source": "custom",
+         "command": "npx",
+         "args": ["-y", "mcp-remote", "https://mcp.linear.app/mcp"],
+         "env": {}
     }
   },
   "inlay_hints": {
-    "enabled": true,
+    "enabled": false,
     "show_value_hints": true,
     "show_type_hints": true,
     "show_parameter_hints": true,
@@ -42,13 +53,17 @@
   "ensure_final_newline_on_save": true,
   "soft_wrap": "editor_width",
   "tab_size": 2,
-  "base_keymap": "VSCode",
+  "base_keymap": "Cursor",
   "icon_theme": "Catppuccin Macchiato",
   "language_models": {
     "anthropic": {
     }
   },
   "agent": {
+    "inline_assistant_model": {
+      "provider": "amazon-bedrock",
+      "model": "claude-sonnet-4-5-thinking"
+    },
     "play_sound_when_agent_done": true,
     "default_profile": "write",
     "profiles": {
@@ -82,8 +97,8 @@
     },
     "always_allow_tool_actions": true,
     "default_model": {
-      "provider": "zed.dev",
-      "model": "claude-3-7-sonnet-latest"
+      "provider": "amazon-bedrock",
+      "model": "claude-opus-4-5"
     },
     "provider": null
   },
@@ -170,14 +185,9 @@
       "format_on_save": "on"
     }
   },
-  "formatter": {
-    "code_actions": {
-      // ESLint fix code actions.
-      "source.fixAll.eslint": true
-    }
-  },
+  "formatter": [],
   "tabs": { "file_icons": true },
-  "relative_line_numbers": true,
+  "relative_line_numbers": "enabled",
   "theme": "Catppuccin Macchiato",
   "buffer_font_size": 16.0,
   "buffer_font_family": "FuraCode NF",
