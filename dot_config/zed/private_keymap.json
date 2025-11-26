@@ -15,7 +15,7 @@
     }
   },
   {
-    "context": "VimControl && !menu || !Editor && !Terminal",
+    "context": "VimControl && !menu",
     "bindings": {
       // Window navigation (space w X)
       "space w": null,
@@ -129,66 +129,31 @@
       "space e": "project_panel::ToggleFocus",
       "space ,": "tab_switcher::Toggle",
       "space :": "command_palette::Toggle",
-      "space q": "pane::CloseActiveItem"
-    }
-  },
-  {
-    "context": "Dock",
-    "bindings": {
-      "space w h": "workspace::ActivatePaneLeft",
-      "space w j": "workspace::ActivatePaneDown",
-      "space w k": "workspace::ActivatePaneUp",
-      "space w l": "workspace::ActivatePaneRight",
-      "ctrl-h": "workspace::ActivatePaneLeft",
-      "ctrl-j": "workspace::ActivatePaneDown",
-      "ctrl-k": "workspace::ActivatePaneUp",
-      "ctrl-l": "workspace::ActivatePaneRight"
-    }
-  },
-  {
-    "context": "AssistantPanel",
-    "bindings": {
-      "ctrl-h": "workspace::ActivatePaneLeft",
-      "ctrl-j": "workspace::ActivatePaneDown",
-      "ctrl-k": "workspace::ActivatePaneUp",
-      "ctrl-l": "workspace::ActivatePaneRight"
-    }
-  },
-  {
-    "context": "ProjectPanel",
-    "bindings": {
-      "ctrl-h": "workspace::ActivatePaneLeft",
-      "ctrl-j": "workspace::ActivatePaneDown",
-      "ctrl-k": "workspace::ActivatePaneUp",
-      "ctrl-l": "workspace::ActivatePaneRight"
-    }
-  },
-  {
-    "context": "VimControl && !menu",
-    "bindings": {
+      "space q": "pane::CloseActiveItem",
+
       "ctrl-h": "workspace::ActivatePaneLeft",
       "ctrl-j": "workspace::ActivatePaneDown",
       "ctrl-k": "workspace::ActivatePaneUp",
       "ctrl-l": "workspace::ActivatePaneRight",
 
       // Buffer navigation (LazyVim style)
-      "shift-h": "pane::ActivatePrevItem",
+      "shift-h": "pane::ActivatePreviousItem",
       "shift-l": "pane::ActivateNextItem",
-      "[b": "pane::ActivatePrevItem",
+      "[b": "pane::ActivatePreviousItem",
       "]b": "pane::ActivateNextItem",
 
       // Diagnostics navigation
-      "[d": "editor::GoToPrevDiagnostic",
+      "[d": "editor::GoToPreviousDiagnostic",
       "]d": "editor::GoToDiagnostic",
-      "[e": "editor::GoToPrevDiagnostic",
+      "[e": "editor::GoToPreviousDiagnostic",
       "]e": "editor::GoToDiagnostic",
 
       // Git hunk navigation
-      "[c": "editor::GoToPrevHunk",
+      "[c": "editor::GoToPreviousHunk",
       "]c": "editor::GoToHunk",
 
       // Quick fix
-      "[q": "editor::GoToPrevDiagnostic",
+      "[q": "editor::GoToPreviousDiagnostic",
       "]q": "editor::GoToDiagnostic",
 
       // Better line movement (move lines up/down)
@@ -201,6 +166,21 @@
       // Better indenting (stay in visual mode)
       ">": "editor::Indent",
       "<": "editor::Outdent"
+    }
+  },
+  {
+    "context": "Dock || ProjectPanel",
+    "bindings": {
+      "ctrl-h": "workspace::ActivatePaneLeft",
+      "ctrl-j": "workspace::ActivatePaneDown",
+      "ctrl-k": "workspace::ActivatePaneUp",
+      "ctrl-l": "workspace::ActivatePaneRight"
+    }
+  },
+  {
+    "context": "ProjectPanel && not_editing",
+    "bindings": {
+      "l": "project_panel::Open"
     }
   },
   {
