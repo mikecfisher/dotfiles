@@ -13,22 +13,7 @@ You will need to run the following commands in this directory: `~/.better-coding
 
 Execute the following git subtree pull commands in sequence to update each repository:
 
-1. **Update Svelte docs**
 
-   ```bash
-   git subtree pull --prefix resources/svelte.dev https://github.com/sveltejs/svelte.dev.git main
-   ```
-
-2. **Update Effect repository**
-
-   ```bash
-   git subtree pull --prefix resources/effect https://github.com/Effect-TS/effect.git main
-   ```
-
-3. **Update neverthrow repository**
-   ```bash
-   git subtree pull --prefix resources/neverthrow https://github.com/supermacro/neverthrow.git master
-   ```
 
 4. **Update TanStack DB repository**
    ```bash
