@@ -1,0 +1,92 @@
+# ~/.config/sesh/sesh.toml
+# -------------------------------------------------------------------
+# Lovecraft / Mike Fisher - Dev Workflow
+# Unified tmux + Neovim + AI environment setup
+# -------------------------------------------------------------------
+
+# --- Global Settings ------------------------------------------------
+auto_attach = true
+auto_create = true
+prompt_icon = "⚡"
+window_icons = true
+border_style = "rounded"
+preview_command = "eza --tree --level=2 --color=always {path}"
+
+# --- Project Sessions -----------------------------------------------
+
+[[session]]
+name = "listium"
+path = "~/dev/personal/listium"
+windows = ["dev", "claude", "codex", "git", "tasks", "scripts"]
+
+[[session]]
+name = "tmux config"
+path = "~/.config/tmux"
+startup_command = "lv tmux.conf"
+preview_command = "bat --color=always ~/.config/tmux/tmux.conf"
+windows = ["sesh-settings", "tmux-settings", "tmux-reset", "git"]
+
+[[session]]
+name = "scratch"
+path = "~/dev/scratch"
+description = "Temporary workspace for testing commands, configs, or snippets"
+windows = ["notes", "experiments", "shell"]
+
+
+# --- Window Templates -----------------------------------------------
+
+[[window]]
+name = "dev"
+startup_script = "nvim ."
+
+[[window]]
+name = "claude"
+startup_script = "claude"
+
+[[window]]
+name = "codex"
+startup_script = "codex"
+
+[[window]]
+name = "git"
+startup_script = "gt log"
+
+[[window]]
+name = "tasks"
+
+[[window]]
+name = "scripts"
+
+[[window]]
+name = "sesh-settings"
+path = "~/.config/sesh"
+startup_script = "lv sesh.toml"
+
+[[window]]
+name = "tmux-settings"
+path = "~/.config/tmux"
+startup_script = "lv tmux.conf"
+
+[[window]]
+name = "tmux-reset"
+path = "~/.config/tmux"
+startup_script = "lv tmux.reset.conf"
+
+[[window]]
+name = "notes"
+startup_script = "nvim ~/dev/scratch/notes.md"
+
+[[window]]
+name = "experiments"
+startup_script = "nvim"
+
+[[window]]
+name = "shell"
+startup_script = "zsh"
+
+# --- Session Groups -------------------------------------------------
+[[group]]
+name = "dotfiles"
+sessions = ["tmux config", "scratch"]
+description = "Quick access to configs and ephemeral sessions"
+
