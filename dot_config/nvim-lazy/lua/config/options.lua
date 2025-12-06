@@ -3,3 +3,6 @@
 vim.g.snacks_animate = false
 
 -- Add any additional options here
+
+-- Disable inlay hints (those inline type annotations)
+vim.lsp.inlay_hint.enable(false)
