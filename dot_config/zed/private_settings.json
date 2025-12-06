@@ -62,7 +62,7 @@
   "agent": {
     "inline_assistant_model": {
       "provider": "amazon-bedrock",
-      "model": "claude-sonnet-4-5-thinking"
+      "model": "claude-haiku-4-5"
     },
     "play_sound_when_agent_done": true,
     "default_profile": "write",

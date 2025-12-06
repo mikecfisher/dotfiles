@@ -233,5 +233,11 @@
       "ctrl-k": "workspace::ActivatePaneUp",
       "ctrl-l": "workspace::ActivatePaneRight"
     }
+  },
+  {
+    "context": "AgentPanel",
+    "bindings": {
+      "tab": "agent::CycleModeSelector"
+    }
   }
 ]
