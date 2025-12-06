@@ -1,3 +1,40 @@
+
+## Docker MCP Dynamic Tool Discovery
+
+Use Docker MCP Gateway to find and add tools on-demand instead of bloating context with unused tools.
+
+### Primordial Tools (Always Available)
+
+| Tool | Use |
+|------|-----|
+| `mcp-find` | Search catalog: `mcp-find query="github"` |
+| `mcp-add` | Add server: `mcp-add name="github-official" activate=true` |
+| `mcp-remove` | Remove server: `mcp-remove name="github-official"` |
+| `mcp-config-set` | Set config: `mcp-config-set server="x" key="y" value="z"` |
+
+### Workflow
+
+1. **Need a tool?** → `mcp-find query="what you need"`
+2. **Found it?** → `mcp-add name="server-name" activate=true`
+3. **Done?** → `mcp-remove name="server-name"`
+
+<IMPORTANT>
+All Tools Are Already Authorized. Do NOT ask the user to authorize unless you get an error
+</IMPORTANT>
+
+### Common Servers
+
+- `github-official` (40 tools) - GitHub API, issues, PRs
+- `playwright` (21 tools) - Browser automation
+- `neon` (19 tools) - Postgres database
+- `slack` - Messaging
+- `linear` - Project management
+
+### Known Issues
+
+- **Ref server is broken** in Docker MCP use the direct Ref MCP attached
+
+
 # TypeScript Best Practices for OpenCode Agents
 
 This document outlines strict TypeScript guidelines that all OpenCode agents should follow when generating or modifying TypeScript code.
@@ -48,7 +85,7 @@ This document outlines strict TypeScript guidelines that all OpenCode agents sho
 - **Benefit**: Better type narrowing and exhaustiveness checking
 - **Example**:
 ```typescript
-type Action = 
+type Action =
   | { type: 'increment'; amount: number }
   | { type: 'decrement'; amount: number }
   | { type: 'reset' };
@@ -154,11 +191,11 @@ class ErrorBoundary extends React.Component<Props, State> {
   static getDerivedStateFromError(error: Error): State {
     return { hasError: true, error };
   }
-  
+
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error('Error caught by boundary:', error, errorInfo);
   }
-  
+
   render() {
     if (this.state.hasError) {
       return <ErrorFallback error={this.state.error} />;
@@ -178,7 +215,7 @@ function handleAction(action: Action) {
     case 'increment': return action.amount;
     case 'decrement': return -action.amount;
     case 'reset': return 0;
-    default: 
+    default:
       const _exhaustive: never = action;
       throw new Error(`Unhandled action: ${_exhaustive}`);
   }

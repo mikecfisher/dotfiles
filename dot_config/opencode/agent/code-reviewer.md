@@ -1,8 +1,7 @@
 ---
 description: Specialized agent for thorough code reviews focusing on TypeScript best practices, security, and quality
-mode: primary
-model: anthropic/claude-sonnet-4-5
-temperature: 0.4
+model: anthropic/claude-opus-4-5
+temperature: 0.2
 tools:
   read: true
   grep: true
