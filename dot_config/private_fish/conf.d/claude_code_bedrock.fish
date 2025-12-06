@@ -15,7 +15,7 @@ end
 # Bedrock API key authentication (Option D)
 # Store your key in the macOS keychain with: security add-generic-password -a $USER -s "aws_bedrock_api_key" -w '<token>'
 # Then uncomment the line below to automatically export it for Claude Code.
-set -gx AWS_BEARER_TOKEN_BEDROCK "***REDACTED_AWS_BEDROCK_TOKEN***"
+set -gx AWS_BEARER_TOKEN_BEDROCK "***REDACTED***"
 
 # Claude Code default models (override if you use different inference profiles)
 # set -gx ANTHROPIC_MODEL "global.anthropic.claude-sonnet-4-5-20250929-v1:0"
