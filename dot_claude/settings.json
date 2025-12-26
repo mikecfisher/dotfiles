@@ -1,124 +1,45 @@
 {
-  "permissions": {
-    "allow": [
-      "Read(*)",
-      "Edit(*)",
-      "Write(*)",
-      "Glob(*)",
-      "Grep(*)",
-      "Bash(npm:*)",
-      "Bash(npx:*)",
-      "Bash(pnpm:*)",
-      "Bash(yarn:*)",
-      "Bash(bun:*)",
-      "Bash(bunx:*)",
-      "Bash(node:*)",
-      "Bash(deno:*)",
-      "Bash(vitest:*)",
-      "Bash(jest:*)",
-      "Bash(ts-node:*)",
-      "Bash(eslint:*)",
-      "Bash(biome:*)",
-      "Bash(prettier:*)",
-      "Bash(tsc:*)",
-      "Bash(make:*)",
-      "Bash(ls:*)",
-      "Bash(find:*)",
-      "Bash(grep:*)",
-      "Bash(cat:*)",
-      "Bash(tail:*)",
-      "Bash(head:*)",
-      "Bash(pwd:*)",
-      "Bash(which:*)",
-      "Bash(tree:*)",
-      "Bash(git status:*)",
-      "Bash(git diff:*)",
-      "Bash(git log:*)",
-      "Bash(git branch:*)",
-      "Bash(git switch:*)",
-      "Bash(git checkout:*)",
-      "Bash(git show:*)",
-      "Bash(git remote:*)",
-      "Bash(git fetch:*)",
-      "Bash(git pull:*)",
-      "WebFetch(domain:github.com)",
-      "WebFetch(domain:raw.githubusercontent.com)",
-      "WebFetch(domain:gitlab.com)",
-      "WebFetch(domain:bitbucket.org)",
-      "WebFetch(domain:docs.anthropic.com)",
-      "WebFetch(domain:code.claude.com)",
-      "WebFetch(domain:developer.mozilla.org)",
-      "WebFetch(domain:nodejs.org)",
-      "WebFetch(domain:npmjs.com)",
-      "WebFetch(domain:yarnpkg.com)",
-      "WebFetch(domain:bun.sh)",
-      "WebFetch(domain:react.dev)",
-      "WebFetch(domain:nextjs.org)",
-      "WebFetch(domain:remix.run)",
-      "WebFetch(domain:astro.build)",
-      "WebFetch(domain:vitejs.dev)",
-      "WebFetch(domain:typescriptlang.org)",
-      "WebFetch(domain:tailwindcss.com)"
-    ],
-    "deny": [
-      "Bash(git add:*)",
-      "Bash(git commit:*)",
-      "Bash(git push:*)",
-      "Bash(git merge:*)",
-      "Bash(git rebase:*)",
-      "Bash(git stash:*)",
-      "Bash(git reset:*)",
-      "Bash(git restore:*)",
-      "Read(**/*.pem)",
-      "Read(~/.ssh/**)",
-      "Read(~/.gnupg/**)",
-      "Read(~/.aws/**)",
-      "Read(//etc/ssh/**)",
-      "Read(//etc/passwd)",
-      "Read(//etc/shadow)"
-    ],
-    "ask": [
-      "Bash(rm:*)",
-      "Bash(sudo:*)",
-      "Bash(chmod:*)",
-      "Bash(chown:*)",
-      "Bash(mv:*)",
-      "Bash(docker:*)",
-      "Bash(kubectl:*)",
-      "Bash(helm:*)",
-      "Bash(aws:*)",
-      "Bash(az:*)",
-      "Bash(gcloud:*)",
-      "Bash(terraform:*)",
-      "Bash(flyctl:*)",
-      "Bash(vercel:*)",
-      "Bash(supabase:*)",
-      "Bash(psql:*)",
-      "Bash(curl:*)",
-      "Bash(wget:*)"
-    ],
-    "defaultMode": "default"
-  },
-  "enableAllProjectMcpServers": true,
+  "model": "opus",
   "statusLine": {
     "type": "command",
-    "command": "bunx -y ccstatusline@latest",
-    "padding": 0
+    "command": "bash -c 'input=$(cat); cwd=$(echo \"$input\" | jq -r \".workspace.current_dir\"); model=$(echo \"$input\" | jq -r \".model.display_name\"); output_style=$(echo \"$input\" | jq -r \".output_style.name\"); transcript_path=$(echo \"$input\" | jq -r \".transcript_path // empty\"); os_symbol=\"󰀵\"; username=$(whoami); dir_path=$(echo \"$cwd\" | awk -F\"/\" \"{n=NF; if(n<=3) print \\$0; else print \\\"…/\\\"\\$(n-2)\\\"/\\\"\\$(n-1)\\\"/\\\"\\$n}\" | sed \"s|^$HOME|~|\"); git_info=\"\"; if cd \"$cwd\" 2>/dev/null && git rev-parse --git-dir >/dev/null 2>&1; then branch=$(git branch --show-current 2>/dev/null); if [ -n \"$branch\" ]; then if ! git diff-index --quiet HEAD -- 2>/dev/null; then status_symbol=\"*\"; else status_symbol=\"\"; fi; git_info=\" $branch$status_symbol\"; fi; fi; bun_info=\"\"; if command -v bun >/dev/null 2>&1; then bun_version=$(bun --version 2>/dev/null | sed \"s/^v//\"); if [ -n \"$bun_version\" ]; then bun_info=\" bun $bun_version\"; fi; fi; msg_count=\"\"; if [ -n \"$transcript_path\" ] && [ -f \"$transcript_path\" ]; then count=$(grep -c \"^# User (\" \"$transcript_path\" 2>/dev/null || echo 0); msg_count=\" msgs:$count\"; fi; ctx_info=\"\"; usage=$(echo \"$input\" | jq \".context_window.current_usage\"); if [ \"$usage\" != \"null\" ]; then current=$(echo \"$usage\" | jq \".input_tokens + .cache_creation_input_tokens + .cache_read_input_tokens\"); size=$(echo \"$input\" | jq \".context_window.context_window_size\"); if [ \"$current\" != \"0\" ] && [ \"$size\" != \"0\" ]; then pct=$((current * 100 / size)); ctx_info=\" ctx:${pct}%\"; fi; fi; cache_info=\"\"; if [ \"$usage\" != \"null\" ]; then cache_read=$(echo \"$usage\" | jq \".cache_read_input_tokens\"); total_input=$(echo \"$usage\" | jq \".input_tokens + .cache_creation_input_tokens + .cache_read_input_tokens\"); if [ \"$total_input\" != \"0\" ] && [ \"$cache_read\" != \"0\" ]; then cache_pct=$((cache_read * 100 / total_input)); cache_info=\" cache:${cache_pct}%\"; fi; fi; token_info=\"\"; total_in=$(echo \"$input\" | jq \".context_window.total_input_tokens\"); total_out=$(echo \"$input\" | jq \".context_window.total_output_tokens\"); if [ \"$total_in\" != \"0\" ] || [ \"$total_out\" != \"0\" ]; then in_k=$((total_in / 1000)); out_k=$((total_out / 1000)); token_info=\" in:${in_k}k out:${out_k}k\"; fi; style_info=\"\"; if [ \"$output_style\" != \"default\" ] && [ \"$output_style\" != \"null\" ]; then style_info=\" [$output_style]\"; fi; current_time=$(date +%R); printf \"\\033[38;5;203m%s\\033[0m\" \"$os_symbol\"; printf \" \\033[38;5;203m%s\\033[0m\" \"$username\"; printf \" \\033[38;5;216m%s\\033[0m\" \"$dir_path\"; [ -n \"$git_info\" ] && printf \" \\033[38;5;221m%s\\033[0m\" \"$git_info\"; [ -n \"$bun_info\" ] && printf \" \\033[38;5;150m%s\\033[0m\" \"$bun_info\"; printf \" \\033[38;5;147m %s\\033[0m\" \"$model\"; [ -n \"$msg_count\" ] && printf \" \\033[38;5;118m%s\\033[0m\" \"$msg_count\"; [ -n \"$ctx_info\" ] && printf \" \\033[38;5;141m%s\\033[0m\" \"$ctx_info\"; [ -n \"$cache_info\" ] && printf \" \\033[38;5;177m%s\\033[0m\" \"$cache_info\"; [ -n \"$token_info\" ] && printf \" \\033[38;5;186m%s\\033[0m\" \"$token_info\"; [ -n \"$style_info\" ] && printf \" \\033[38;5;159m%s\\033[0m\" \"$style_info\"; printf \" \\033[38;5;183m %s\\033[0m\" \"$current_time\"'"
   },
   "enabledPlugins": {
-    "repomix-mcp@repomix": true,
-    "repomix-commands@repomix": true,
-    "repomix-explorer@repomix": true
+    "ast-grep@ast-grep-marketplace": true,
+    "typescript-lsp@claude-plugins-official": true,
+    "frontend-design@claude-plugins-official": true,
+    "pr-review-toolkit@claude-plugins-official": true,
+    "serena@claude-plugins-official": true,
+    "code-review@claude-plugins-official": true,
+    "hookify@claude-plugins-official": true,
+    "feature-dev@claude-plugins-official": true
   },
-  "sandbox": {
-    "excludedCommands": [
-      "docker",
-      "kubectl",
-      "ssh"
+  "lspServers": {
+    "typescript": {
+      "command": "typescript-language-server",
+      "args": [
+        "--stdio"
+      ],
+      "extensionToLanguage": {
+        ".ts": "typescript",
+        ".tsx": "typescriptreact",
+        ".js": "javascript",
+        ".jsx": "javascriptreact",
+        ".mts": "typescript",
+        ".cts": "typescript",
+        ".mjs": "javascript",
+        ".cjs": "javascript"
+      }
+    }
+  },
+  "ast-grep": {
+    "command": "uv",
+    "args": [
+      "--directory",
+      "/absolute/path/to/ast-grep-mcp",
+      "run",
+      "main.py"
     ],
-    "autoAllowBashIfSandboxed": true,
-    "allowUnsandboxedCommands": false,
-    "enabled": true
-  },
-  "alwaysThinkingEnabled": true
+    "env": {}
+  }
 }
