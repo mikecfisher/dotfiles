@@ -63,11 +63,6 @@ path=(
 
   # Ruby from Homebrew
   /opt/homebrew/opt/ruby/bin
-  /opt/homebrew/lib/ruby/gems/3.0.0/bin
-
-  # Python
-  /Library/Frameworks/Python.framework/Versions/3.12/bin
-  $HOME/Library/Python/3.12/bin
 
   # Android SDK tools
   $ANDROID_HOME/cmdline-tools/latest/bin
