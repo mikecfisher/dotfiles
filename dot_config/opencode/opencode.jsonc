@@ -49,22 +49,6 @@
         "https://mcp.polar.sh/mcp/polar-sandbox"
       ],
       "enabled": true
-    },
-    "serena": {
-      "type": "local",
-      "command": [
-        "uvx",
-        "--from",
-        "git+https://github.com/oraios/serena",
-        "serena",
-        "start-mcp-server",
-        "--context",
-        "ide-assistant",
-        "--project",
-        "/absolute/path/to/your/listium-repo"
-      ],
-      "enabled": true
-      // "environment": { }  // optional, for future tweaks
     }
   },
   // Theme and UI settings

@@ -10,6 +10,7 @@
         "GITHUB_PERSONAL_ACCESS_TOKEN": "{{ onepasswordRead "op://Private/GitHub CLI Personal Access Token/token" }}"
       }
     },
+    {{ if .is_work_machine }}
     "mcp-atlassian": {
       "command": "uvx",
       "args": [
@@ -21,6 +22,7 @@
         "JIRA_API_TOKEN": "{{ onepasswordRead "op://Private/Jira Personal Access Token/credential" }}"
       }
     },
+    {{ end }}
     "figma-developer-mcp": {
       "command": "npx",
       "args": [

@@ -31,15 +31,5 @@
         ".cjs": "javascript"
       }
     }
-  },
-  "ast-grep": {
-    "command": "uv",
-    "args": [
-      "--directory",
-      "/absolute/path/to/ast-grep-mcp",
-      "run",
-      "main.py"
-    ],
-    "env": {}
   }
 }

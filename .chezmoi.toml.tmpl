@@ -1,4 +1,5 @@
 {{- $machineType := promptStringOnce . "machine_type" "Machine type (personal/default)" "default" -}}
+{{- $isWork := promptBoolOnce . "is_work_machine" "Is this a work machine" -}}
 
 [data.vscode]
    app = "vscode"
@@ -8,6 +9,7 @@
 
 [data]
     machine_type = "{{ $machineType }}"
+    is_work_machine = {{ $isWork }}
 
 [git]
  autoCommit = true
