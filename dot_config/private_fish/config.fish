@@ -12,11 +12,6 @@ end
 set -gx XDG_CONFIG_HOME $HOME/.config
 set -gx XDG_DATA_HOME $HOME/.local/share
 set -gx XDG_CACHE_HOME $HOME/.cache
-#
-# XDG Base Directories
-set -gx XDG_CONFIG_HOME $HOME/.config
-set -gx XDG_DATA_HOME $HOME/.local/share
-set -gx XDG_CACHE_HOME $HOME/.cache
 
 # Claude CLI
 set -gx PATH $HOME/.claude/local $PATH
@@ -30,6 +25,7 @@ set -gx NODE_EXTRA_CA_CERTS "$HOME/.local/share/mkcert/rootCA.pem"
 # Node.js package managers & options
 set -gx BUN_INSTALL "$HOME/.bun"
 set -gx PNPM_HOME "$HOME/.local/share/pnpm"
+fish_add_path $PNPM_HOME
 set -gx NODE_OPTIONS --no-deprecation
 
 # Android SDK
@@ -121,15 +117,8 @@ function sst-tunnel
 end
 
 # opencode
-fish_add_path /Users/mike/.opencode/bin
+fish_add_path $HOME/.opencode/bin
 fish_add_path $HOME/.local/bin
 
-# pnpm
-set -gx PNPM_HOME "/Users/mike/.local/share/pnpm"
-if not string match -q -- $PNPM_HOME $PATH
-    set -gx PATH "$PNPM_HOME" $PATH
-end
-# pnpm end
-
 # Added by Antigravity
-fish_add_path /Users/mike/.antigravity/antigravity/bin
+fish_add_path $HOME/.antigravity/antigravity/bin
