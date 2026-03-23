@@ -31,11 +31,9 @@ autoSetupMerge = always
 ui = true
 [alias]
 dsf = diff --color
-[alias]
-cleanup-local = "!$SHELL -c 'source ~/.config/zsh/zshrc && cleanup-local-branches'"
-cleanup-remote = "!$SHELL -c 'source ~/.config/zsh/zshrc && cleanup-remote-branches'"
-cleanup-all = "!$SHELL -c 'source ~/.config/zsh/zshrc && cleanup-local-branches && cleanup-remote-branches'"
-
+cleanup-local = "!/bin/zsh -c 'source ~/.config/zsh/.zshrc && cleanup-local-branches'"
+cleanup-remote = "!/bin/zsh -c 'source ~/.config/zsh/.zshrc && cleanup-remote-branches'"
+cleanup-all = "!/bin/zsh -c 'source ~/.config/zsh/.zshrc && cleanup-local-branches && cleanup-remote-branches'"
 pushup = push --set-upstream origin HEAD
 [pager]
 dsf = diff-so-fancy | less --tabs=4 -RFXS
