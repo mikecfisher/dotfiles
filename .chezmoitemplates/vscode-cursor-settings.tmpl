@@ -779,69 +779,6 @@
         "workbench.view.explorer"
       ] // Space+e to open file explorer
     },
-    // Close current editor (buffer delete in Vim terminology)
-    {
-      "before": [
-        "<Leader>",
-        "b",
-        "d"
-      ],
-      "commands": [
-        "workbench.action.closeActiveEditor"
-      ] // Space+b+d to close current editor
-    },
-    // Quick file navigation (inspired by CtrlP/FZF plugins in Vim)
-    {
-      "before": [
-        "<Leader>",
-        "<Leader>"
-      ],
-      "commands": [
-        "workbench.action.showAllEditors"
-      ] // Space+Space to show all open editors
-    },
-    // Show all open editors
-    {
-      "before": [
-        "leader",
-        "leader"
-      ],
-      "commands": [
-        "workbench.action.quickOpen"
-      ] // space space to open quick file finder
-    },
-    {
-      "before": [
-        "leader",
-        "c",
-        "s"
-      ],
-      "commands": [
-        "workbench.action.gotoSymbol"
-      ] // Space+c+s to go to symbol in file (duplicate)
-    },
-    // Quick access to source control view
-    {
-      "before": [
-        "leader",
-        "g",
-        "g"
-      ],
-      "commands": [
-        "workbench.view.scm"
-      ] // Space+g+g to open source control view (duplicate)
-    },
-    // Quick access to file explorer
-    {
-      "before": [
-        "leader",
-        "g",
-        "e"
-      ],
-      "commands": [
-        "workbench.view.explorer"
-      ] // Space+g+e to open file explorer (duplicate)
-    },
     {
       "before": [
         "leader",
@@ -850,42 +787,6 @@
       "after": [
         "J"
       ] // Space+j to join lines (equivalent to J in vim)
-    },
-    {
-      "before": [
-        "<C-h>"
-      ],
-      "after": [
-        "<C-w>",
-        "h"
-      ] // Ctrl+h to navigate to the left split
-    },
-    {
-      "before": [
-        "<C-j>"
-      ],
-      "after": [
-        "<C-w>",
-        "j"
-      ] // Ctrl+j to navigate to the split below
-    },
-    {
-      "before": [
-        "<C-k>"
-      ],
-      "after": [
-        "<C-w>",
-        "k"
-      ] // Ctrl+k to navigate to the split above
-    },
-    {
-      "before": [
-        "<C-l>"
-      ],
-      "after": [
-        "<C-w>",
-        "l"
-      ] // Ctrl+l to navigate to the right split
     }
   ],
   "vim.insertModeKeyBindings": [
