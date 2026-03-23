@@ -70,9 +70,7 @@ if status is-interactive
     alias reload-fish="source ~/.config/fish/config.fish"
 
     alias lvim='env NVIM_APPNAME=nvim-lazy nvim'
-    alias kvim='env NVIM_APPNAME=nvim-kickstart nvim'
     alias lv='env NVIM_APPNAME=nvim-lazy nvim'
-    alias kv='env NVIM_APPNAME=nvim-kickstart nvim'
     alias claude="~/.claude/local/claude"
     alias oc="opencode"
     fish_vi_key_bindings
