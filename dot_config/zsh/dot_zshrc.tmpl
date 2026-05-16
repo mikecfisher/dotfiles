@@ -12,6 +12,10 @@
 #   9. Autocompletions
 #  10. Additional environment loaders
 
+export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
+export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
+
 alias reload-zsh="source ~/.zshrc"
 alias edit-zsh="nvim ~/.zshrc"
 
@@ -27,22 +31,31 @@ bindkey '^[[A' history-search-backward
 bindkey '^[[B' history-search-forward
 
 ### Zinit initialization - moved to top
-# This ensures Zinit is installed before attempting to use it
+# This ensures Zinit is installed before attempting to use it.
 if [[ ! -f "$XDG_DATA_HOME/zinit/zinit.git/zinit.zsh" ]]; then
-  print -P "%F{33} %F{220}Installing %F{33}ZDHARMA-CONTINUUM%F{220} Initiative Plugin Manager (%F{33}zdharma-continuum/zinit%F{220})…%f"
-  command mkdir -p "$XDG_DATA_HOME/zinit" && command chmod g-rwX "$XDG_DATA_HOME/zinit"
-  command git clone https://github.com/zdharma-continuum/zinit "$XDG_DATA_HOME/zinit/zinit.git" &&
-    print -P "%F{33} %F{34}Installation successful.%f%b" ||
-    print -P "%F{160} The clone has failed.%f%b"
+  if command -v git >/dev/null 2>&1; then
+    print -P "%F{33} %F{220}Installing %F{33}ZDHARMA-CONTINUUM%F{220} Initiative Plugin Manager (%F{33}zdharma-continuum/zinit%F{220})…%f"
+    command mkdir -p "$XDG_DATA_HOME/zinit" && command chmod g-rwX "$XDG_DATA_HOME/zinit"
+    command git clone https://github.com/zdharma-continuum/zinit "$XDG_DATA_HOME/zinit/zinit.git" &&
+      print -P "%F{33} %F{34}Installation successful.%f%b" ||
+      print -P "%F{160} The clone has failed.%f%b"
+  else
+    print -P "%F{220}git not found; skipping zinit bootstrap for now.%f"
+  fi
 fi
 
-# Load Zinit and set up autocompletion for it
-source "$XDG_DATA_HOME/zinit/zinit.git/zinit.zsh"
-autoload -Uz _zinit
-[[ -v _comps ]] && _comps[zinit]=_zinit
+if [[ -f "$XDG_DATA_HOME/zinit/zinit.git/zinit.zsh" ]]; then
+  # Load Zinit and set up autocompletion for it
+  source "$XDG_DATA_HOME/zinit/zinit.git/zinit.zsh"
+  autoload -Uz _zinit
+  [[ -v _comps ]] && _comps[zinit]=_zinit
 
-# Ensure Zinit completions directory exists
-[[ ! -d ~/.cache/zinit/completions ]] && mkdir -p ~/.cache/zinit/completions
+  # Ensure Zinit completions directory exists
+  [[ ! -d ~/.cache/zinit/completions ]] && mkdir -p ~/.cache/zinit/completions
+else
+  # Keep the rest of this file quiet on a partially bootstrapped machine.
+  function zinit() { return 0; }
+fi
 
 # Load essential Zinit annexes - these extend Zinit's functionality
 # Annexes add features like binary downloading, monitoring, etc.
@@ -69,7 +82,9 @@ compinit
 # ===== SHELL PLUGINS AND PROMPT =====
 # Initialize Starship prompt - a fast, customizable cross-shell prompt
 # This replaces Powerlevel10k and is configured in ~/.config/starship.toml
-eval "$(starship init zsh)"
+if command -v starship >/dev/null 2>&1; then
+  eval "$(starship init zsh)"
+fi
 
 # Reload Starship prompt when config file changes
 function starship_reload() {
@@ -220,16 +235,21 @@ test -f "$EAS_AC_ZSH_SETUP_PATH" && source "$EAS_AC_ZSH_SETUP_PATH"
 [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
 # Zoxide intelligent directory jumper (faster alternative to cd)
-eval "$(zoxide init zsh)"
-
-alias cd="z"
+if command -v zoxide >/dev/null 2>&1; then
+  eval "$(zoxide init zsh)"
+  alias cd="z"
+fi
 
 # 1Password CLI autocompletion
-eval "$(op completion zsh)"
-compdef _op op
+if command -v op >/dev/null 2>&1; then
+  eval "$(op completion zsh)"
+  compdef _op op
+fi
 
 # FZF fuzzy finder key bindings and completion
-source <(fzf --zsh)
+if command -v fzf >/dev/null 2>&1; then
+  source <(fzf --zsh)
+fi
 
 # --- setup fzf theme ---
 fg="#CBE0F0"
@@ -289,7 +309,9 @@ alias lt="eza --tree --level=2 --long --icons --git"
 alias ltree="eza --tree --level=2  --icons --git"
 
 # ---- TheFuck -----
-eval $(thefuck --alias)
+if command -v thefuck >/dev/null 2>&1; then
+  eval $(thefuck --alias)
+fi
 
 # Dirs
 alias ..="cd .."
@@ -331,7 +353,13 @@ function y() {
   rm -f -- "$tmp"
 }
 
-source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+if [[ -n "${HOMEBREW_PREFIX:-}" && -f "${HOMEBREW_PREFIX}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]]; then
+  source "${HOMEBREW_PREFIX}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+elif [[ -f /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
+  source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+elif [[ -f /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
+  source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+fi
 # fnm
 FNM_PATH="${HOME}/.local/share/fnm"
 if [ -d "$FNM_PATH" ]; then

@@ -49,29 +49,47 @@ To update your dotfiles after changes have been made to the repository:
 chezmoi update
 ```
 
-## Machine Types
+## Init Prompts
 
-When initializing chezmoi, you'll be prompted to choose between two machine types:
+When initializing chezmoi, you'll be prompted for machine-specific data:
 
-- **Default**: Includes common development tools and applications
-- **Personal**: Includes everything in the default configuration plus additional tools for music production and personal use
+- **Machine type**: `default` or `personal`
+  - `default`: common development tools and applications
+  - `personal`: default plus music/personal packages
+- **Work machine**: enables work-specific editor/MCP configuration
+- **Use 1Password secrets**: only say yes after `op` is installed/signed in, or expect blank secret values until you re-apply
+- **Git name/email**: rendered into `~/.gitconfig`
 
-The prompt will look like this:
+## Fresh Mac Notes
+
+The first apply bootstraps Homebrew before package installation and supports both Apple Silicon (`/opt/homebrew`) and Intel (`/usr/local`) prefixes.
+
+Mac App Store apps are skipped unless you're signed in. After signing in, re-run:
+
+```bash
+chezmoi apply
 ```
-? Machine type (personal/default) default
-```
 
-Select the appropriate type for your machine.
+If 1Password secrets were skipped on first apply, install/sign in to 1Password CLI and re-run:
+
+```bash
+op signin
+chezmoi apply --init
+```
 
 ## Post-Installation
 
 After installation, you may want to:
 
-1. Check that all dependencies were installed correctly
+1. Check that all dependencies were installed correctly:
+   ```bash
+   ~/bin/my-scripts/audit-chezmoi.sh ~/.local/share/chezmoi
+   ```
 2. Set up the fish shell as your default shell:
    ```bash
-   echo /opt/homebrew/bin/fish | sudo tee -a /etc/shells
-   chsh -s /opt/homebrew/bin/fish
+   BREW_PREFIX="$(brew --prefix)"
+   echo "$BREW_PREFIX/bin/fish" | sudo tee -a /etc/shells
+   chsh -s "$BREW_PREFIX/bin/fish"
    ```
 
-3. Set up 1Password CLI integration (required for credential management)
+3. Set up/sign in to 1Password CLI integration if you use secret-backed templates

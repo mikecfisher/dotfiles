@@ -1,5 +1,6 @@
 # Amazon Q pre block. Keep at the top of this file.
 [[ -f "${HOME}/Library/Application Support/amazon-q/shell/zprofile.pre.zsh" ]] && builtin source "${HOME}/Library/Application Support/amazon-q/shell/zprofile.pre.zsh"
+
 # ============================================================================
 # XDG BASE DIRECTORIES
 # ============================================================================
@@ -10,8 +11,13 @@ export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
 # ============================================================================
 # PACKAGE MANAGERS
 # ============================================================================
-# Homebrew
-eval "$(/opt/homebrew/bin/brew shellenv)"
+# Homebrew: support both Apple Silicon (/opt/homebrew) and Intel (/usr/local),
+# and stay quiet before Homebrew has been installed.
+if [[ -x /opt/homebrew/bin/brew ]]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+elif [[ -x /usr/local/bin/brew ]]; then
+  eval "$(/usr/local/bin/brew shellenv)"
+fi
 export HOMEBREW_BREWFILE_FULL_NAME=1
 
 # Python package manager (uv)
@@ -30,26 +36,50 @@ export PNPM_HOME="$HOME/.local/share/pnpm"
 export NODE_OPTIONS="--no-deprecation"
 
 # Android SDK
-export ANDROID_HOME=$HOME/Library/Android/sdk
-export ANDROID_SDK_ROOT=$HOME/Library/Android/sdk
+export ANDROID_HOME="$HOME/Library/Android/sdk"
+export ANDROID_SDK_ROOT="$HOME/Library/Android/sdk"
 
 # Ruby compilation flags
-export LDFLAGS="-L/opt/homebrew/opt/ruby/lib"
-export CPPFLAGS="-I/opt/homebrew/opt/ruby/include"
+if [[ -n "${HOMEBREW_PREFIX:-}" && -d "${HOMEBREW_PREFIX}/opt/ruby" ]]; then
+  export LDFLAGS="-L${HOMEBREW_PREFIX}/opt/ruby/lib"
+  export CPPFLAGS="-I${HOMEBREW_PREFIX}/opt/ruby/include"
+fi
 
 # Editor
 export EDITOR="nvim"
 export VISUAL="nvim"
-# API Keys (loaded at login)
-export ANTHROPIC_API_KEY=$(timeout 2 security find-generic-password -a ${USER} -s "anthropic_api_key" -w 2>/dev/null)
-export HASS_TOKEN=$(timeout 2 security find-generic-password -a ${USER} -s "homeassistant_token_api_key" -w 2>/dev/null)
-export OPENAI_API_KEY=$(timeout 2 security find-generic-password -a ${USER} -s "openai_api_key" -w 2>/dev/null)
 
-export HASS_SERVER=http://homeassistant.local:8123
+_read_keychain_secret() {
+  local service="$1"
+
+  if ! command -v security >/dev/null 2>&1; then
+    return 0
+  fi
+
+  if command -v timeout >/dev/null 2>&1; then
+    timeout 2 security find-generic-password -a "${USER}" -s "${service}" -w 2>/dev/null || true
+  elif command -v gtimeout >/dev/null 2>&1; then
+    gtimeout 2 security find-generic-password -a "${USER}" -s "${service}" -w 2>/dev/null || true
+  else
+    security find-generic-password -a "${USER}" -s "${service}" -w 2>/dev/null || true
+  fi
+}
+
+# API Keys (loaded at login when present in macOS Keychain)
+export ANTHROPIC_API_KEY="$(_read_keychain_secret anthropic_api_key)"
+export HASS_TOKEN="$(_read_keychain_secret homeassistant_token_api_key)"
+export OPENAI_API_KEY="$(_read_keychain_secret openai_api_key)"
+
+export HASS_SERVER="http://homeassistant.local:8123"
 
 # ============================================================================
 # PATH MANAGEMENT
 # ============================================================================
+homebrew_ruby_path=()
+if [[ -n "${HOMEBREW_PREFIX:-}" && -d "${HOMEBREW_PREFIX}/opt/ruby/bin" ]]; then
+  homebrew_ruby_path=("${HOMEBREW_PREFIX}/opt/ruby/bin")
+fi
+
 path=(
   # User binaries
   $HOME/.local/bin
@@ -62,7 +92,7 @@ path=(
   $BUN_INSTALL/bin
 
   # Ruby from Homebrew
-  /opt/homebrew/opt/ruby/bin
+  $homebrew_ruby_path
 
   # Android SDK tools
   $ANDROID_HOME/cmdline-tools/latest/bin

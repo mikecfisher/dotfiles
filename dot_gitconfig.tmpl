@@ -1,6 +1,20 @@
+{{- $gitName := (get . "git_name" | default "Mike Fisher") -}}
+{{- $gitEmail := (get . "git_email" | default "mikefisher84@gmail.com") -}}
+{{- $brewPrefix := "" -}}
+{{- if eq .chezmoi.os "darwin" -}}
+{{-   if eq .chezmoi.arch "arm64" -}}
+{{-     $brewPrefix = "/opt/homebrew" -}}
+{{-   else -}}
+{{-     $brewPrefix = "/usr/local" -}}
+{{-   end -}}
+{{- end -}}
+{{- $gh := "gh" -}}
+{{- if $brewPrefix -}}
+{{-   $gh = printf "%s/bin/gh" $brewPrefix -}}
+{{- end -}}
 [user]
-	name = Mike Fisher
-	email = mikefisher84@gmail.com
+	name = {{ $gitName }}
+	email = {{ $gitEmail }}
 
 [includeIf "gitdir:~/dev/work/"]
     path = ~/.gitconfig-work
@@ -55,7 +69,7 @@ syntax-theme = "Catppuccin Macchiato"
 conflictStyle = zdiff3
 [credential "https://github.com"]
 	helper = 
-	helper = !/opt/homebrew/bin/gh auth git-credential
+	helper = !{{ $gh }} auth git-credential
 [credential "https://gist.github.com"]
 	helper = 
-	helper = !/opt/homebrew/bin/gh auth git-credential
+	helper = !{{ $gh }} auth git-credential

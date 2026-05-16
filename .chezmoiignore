@@ -1,4 +1,5 @@
 README.md
+.install-1password-cli.sh
 docs/**
 .cursor/**
 .cursorrules

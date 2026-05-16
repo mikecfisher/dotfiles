@@ -1,3 +1,13 @@
+{{- $fishShell := "/bin/zsh" -}}
+{{- if eq .chezmoi.os "darwin" -}}
+{{-   if eq .chezmoi.arch "arm64" -}}
+{{-     $fishShell = "/opt/homebrew/bin/fish" -}}
+{{-   else -}}
+{{-     $fishShell = "/usr/local/bin/fish" -}}
+{{-   end -}}
+{{- else if eq .chezmoi.os "linux" -}}
+{{-   $fishShell = "/usr/bin/fish" -}}
+{{- end -}}
 source-file ~/.config/tmux/tmux.reset.conf
 
 # # Enable 256-color and true-color (24-bit) support in tmux
@@ -5,7 +15,7 @@ set -g default-terminal "screen-256color" # Set terminal type for 256-color supp
 set -ga terminal-overrides ",*256col*:Tc" # Override to enable true-color for compatible terminals
 
 # General
-set -g default-shell /opt/homebrew/bin/fish
+set -g default-shell {{ $fishShell }}
 set -g prefix ^A
 set -g base-index 1              # start indexing windows at 1 instead of 0
 set -g detach-on-destroy off     # don't exit from tmux when closing a session

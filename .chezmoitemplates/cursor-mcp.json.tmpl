@@ -1,3 +1,4 @@
+{{- $use1Password := (get . "use_1password" | default false) -}}
 {
   "mcpServers": {
     "github": {
@@ -7,7 +8,7 @@
         "@modelcontextprotocol/server-github"
       ],
       "env": {
-        "GITHUB_PERSONAL_ACCESS_TOKEN": "{{ onepasswordRead "op://Private/GitHub CLI Personal Access Token/token" }}"
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "{{ if and $use1Password (lookPath "op") }}{{ onepasswordRead "op://Private/GitHub CLI Personal Access Token/token" }}{{ end }}"
       }
     },
     {{ if .is_work_machine }}
@@ -19,7 +20,7 @@
       "env": {
         "JIRA_URL": "https://campingworld.atlassian.net",
         "JIRA_USERNAME": "m.fisher@campingworld.com",
-        "JIRA_API_TOKEN": "{{ onepasswordRead "op://Private/Jira Personal Access Token/credential" }}"
+        "JIRA_API_TOKEN": "{{ if and $use1Password (lookPath "op") }}{{ onepasswordRead "op://Private/Jira Personal Access Token/credential" }}{{ end }}"
       }
     },
     {{ end }}
@@ -31,7 +32,7 @@
         "--stdio"
       ],
       "env": {
-        "FIGMA_API_KEY": "{{ onepasswordRead "op://Private/Figma Personal Access Token/credential" }}"
+        "FIGMA_API_KEY": "{{ if and $use1Password (lookPath "op") }}{{ onepasswordRead "op://Private/Figma Personal Access Token/credential" }}{{ end }}"
       }
     },
     "sequential-thinking": {
@@ -56,7 +57,7 @@
         "run",
         "@smithery-ai/brave-search",
         "--config",
-        "{\"braveApiKey\":\"{{ onepasswordRead "op://Private/Brave API Key/credential" }}\"}"
+        "{\"braveApiKey\":\"{{ if and $use1Password (lookPath "op") }}{{ onepasswordRead "op://Private/Brave API Key/credential" }}{{ end }}\"}"
       ]
     },
     "@kazuph-mcp-taskmanager": {

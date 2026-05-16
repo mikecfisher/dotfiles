@@ -1,4 +1,5 @@
 {{- $app := "cursor" -}}
+{{- $use1Password := (get . "use_1password" | default false) -}}
 {{- if eq .chezmoi.targetFile (joinPath .chezmoi.homeDir "Library/Application Support/Code/User/settings.json") -}}
 {{-   $app = "vscode" -}}
 {{- end -}}
@@ -863,7 +864,7 @@
 
   // ===== Home Assistant =====
   "vscode-home-assistant.hostUrl": "http://homeassistant.local:8123",
-  "vscode-home-assistant.longLivedAccessToken": "{{ onepasswordRead "op://Private/Home Assistant Long Lived Access Key/credential" }}",
+  "vscode-home-assistant.longLivedAccessToken": "{{ if and $use1Password (lookPath "op") }}{{ onepasswordRead "op://Private/Home Assistant Long Lived Access Key/credential" }}{{ end }}",
 
   // ===== Common Miscellaneous Settings =====
   "window.zoomLevel": 1,

@@ -1,5 +1,8 @@
 {{- $machineType := promptStringOnce . "machine_type" "Machine type (personal/default)" "default" -}}
-{{- $isWork := promptBoolOnce . "is_work_machine" "Is this a work machine" -}}
+{{- $isWork := promptBoolOnce . "is_work_machine" "Is this a work machine" false -}}
+{{- $use1Password := promptBoolOnce . "use_1password" "Use 1Password secrets in templates" false -}}
+{{- $gitName := promptStringOnce . "git_name" "Git user name" "Mike Fisher" -}}
+{{- $gitEmail := promptStringOnce . "git_email" "Git email" "mikefisher84@gmail.com" -}}
 
 [data.vscode]
    app = "vscode"
@@ -8,8 +11,16 @@
    app = "cursor"
 
 [data]
-    machine_type = "{{ $machineType }}"
+    machine_type = {{ $machineType | quote }}
     is_work_machine = {{ $isWork }}
+    use_1password = {{ $use1Password }}
+    git_name = {{ $gitName | quote }}
+    git_email = {{ $gitEmail | quote }}
+
+{{ if $use1Password -}}
+[hooks.read-source-state.pre]
+command = {{ joinPath .chezmoi.sourceDir ".install-1password-cli.sh" | quote }}
+{{ end -}}
 
 [git]
  autoCommit = true

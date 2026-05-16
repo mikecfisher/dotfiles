@@ -1,4 +1,28 @@
 packages:
+  # Small first-run set needed for shell/editor bootstrap. Keep this list
+  # intentionally boring and user-facing; the larger common list below can be
+  # retried independently if a nonessential formula/cask is temporarily broken.
+  bootstrap:
+    brews:
+      - "bat"
+      - "coreutils"
+      - "eza"
+      - "fd"
+      - "fish"
+      - "fnm"
+      - "fzf"
+      - "gh"
+      - "git"
+      - "git-lfs"
+      - "jq"
+      - "mas"
+      - "neovim"
+      - "node"
+      - "ripgrep"
+      - "starship"
+      - "uv"
+      - "yq"
+      - "zoxide"
   taps:
     - "dopplerhq/cli"
     - "felixkratz/formulae"

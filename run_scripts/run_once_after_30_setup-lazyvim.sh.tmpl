@@ -1,0 +1,53 @@
+#!/bin/bash
+set -euo pipefail
+
+# Optional stock LazyVim setup. This is separate from the chezmoi-managed
+# ~/.config/nvim-lazy config and only runs if ~/.config/nvim is absent.
+if [ -f "${HOME}/.config/nvim/init.lua" ]; then
+  echo "LazyVim already appears to be installed at ~/.config/nvim; skipping."
+  exit 0
+fi
+
+echo "Setting up LazyVim at ~/.config/nvim..."
+
+{{ if eq .chezmoi.os "darwin" -}}
+if command -v brew >/dev/null 2>&1; then
+  eval "$(brew shellenv)"
+elif [ -x /opt/homebrew/bin/brew ]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+elif [ -x /usr/local/bin/brew ]; then
+  eval "$(/usr/local/bin/brew shellenv)"
+fi
+
+if ! command -v brew >/dev/null 2>&1; then
+  echo "error: Homebrew is required to install LazyVim dependencies on macOS" >&2
+  exit 1
+fi
+
+brew install git neovim ripgrep fd
+{{ else if eq .chezmoi.os "linux" -}}
+if command -v apt-get >/dev/null 2>&1; then
+  sudo apt-get update
+  sudo apt-get install -y git neovim ripgrep fd-find
+else
+  echo "warning: install git, neovim, ripgrep, and fd before using LazyVim" >&2
+fi
+{{ else -}}
+echo "Skipping LazyVim setup: unsupported OS {{ .chezmoi.os }}."
+exit 0
+{{ end -}}
+
+for cmd in git nvim; do
+  if ! command -v "${cmd}" >/dev/null 2>&1; then
+    echo "error: ${cmd} is required for LazyVim setup" >&2
+    exit 1
+  fi
+done
+
+mkdir -p "${HOME}/.config"
+git clone https://github.com/LazyVim/starter "${HOME}/.config/nvim"
+rm -rf "${HOME}/.config/nvim/.git"
+
+nvim --headless "+Lazy! sync" +qa
+
+echo "LazyVim plugins installed successfully."
