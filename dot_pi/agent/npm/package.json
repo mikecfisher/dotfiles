@@ -1,0 +1,11 @@
+{
+  "name": "pi-extensions",
+  "private": true,
+  "dependencies": {
+    "@juicesharp/rpiv-ask-user-question": "^1.13.0",
+    "@plannotator/pi-extension": "^0.19.23",
+    "pi-codex-goal": "^0.1.14",
+    "pi-subagents": "^0.25.0",
+    "pi-web-access": "^0.10.7"
+  }
+}

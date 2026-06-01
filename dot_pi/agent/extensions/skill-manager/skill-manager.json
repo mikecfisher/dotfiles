@@ -1,0 +1,18 @@
+{
+  "defaultProfile": "lean",
+  "activeProfile": "lean",
+  "profiles": {
+    "lean": [],
+    "frontend": [
+      "~/.agents/skills/frontend-design",
+      "~/.agents/skills/polish",
+      "~/.agents/skills/adapt",
+      "~/.agents/skills/audit"
+    ],
+    "planning": [
+      "~/.agents/skills/write-a-prd",
+      "~/.agents/skills/prd-to-plan",
+      "~/.agents/skills/to-issues"
+    ]
+  }
+}

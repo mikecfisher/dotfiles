@@ -1,0 +1,7 @@
+{
+  "allowBrowserCookies": true,
+  "shortcuts": {
+    "curate": "ctrl+shift+r",
+    "activity": "ctrl+shift+w"
+  }
+}
