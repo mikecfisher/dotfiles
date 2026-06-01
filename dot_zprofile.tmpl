@@ -28,7 +28,15 @@ export UV_CACHE_DIR="$HOME/.cache/uv" # Set cache directory
 # DEVELOPMENT ENVIRONMENT
 # ============================================================================
 # Node.js SSL certificates
-export NODE_EXTRA_CA_CERTS="$HOME/Library/Application Support/mkcert/rootCA.pem"
+for node_extra_ca_cert in \
+  "$HOME/Library/Application Support/mkcert/rootCA.pem" \
+  "$HOME/.local/share/mkcert/rootCA.pem"; do
+  if [[ -f "$node_extra_ca_cert" ]]; then
+    export NODE_EXTRA_CA_CERTS="$node_extra_ca_cert"
+    break
+  fi
+done
+unset node_extra_ca_cert
 
 # Node.js package managers
 export BUN_INSTALL="$HOME/.bun"
@@ -88,6 +96,7 @@ path=(
   # Node.js package managers
   $HOME/.yarn/bin
   $HOME/.config/yarn/global/node_modules/.bin
+  $PNPM_HOME/bin
   $PNPM_HOME
   $BUN_INSTALL/bin
 

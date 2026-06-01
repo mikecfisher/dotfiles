@@ -25,6 +25,10 @@ add_fnm_to_path() {
 load_homebrew_shellenv
 add_fnm_to_path
 
+export PNPM_HOME="${PNPM_HOME:-${HOME}/.local/share/pnpm}"
+mkdir -p "${PNPM_HOME}/bin"
+export PATH="${PNPM_HOME}/bin:${PNPM_HOME}:${PATH}"
+
 if ! command -v fnm >/dev/null 2>&1; then
   echo "Installing fnm..."
   curl -fsSL https://fnm.vercel.app/install | bash -s -- --skip-shell
@@ -67,6 +71,7 @@ fi
 
 echo "Installing global Node packages with pnpm..."
 pnpm add -g \
+  --allow-build=@anthropic-ai/claude-code \
   @anthropic-ai/claude-code \
   cursor-tools \
   playwright \
@@ -74,3 +79,5 @@ pnpm add -g \
   typescript-language-server \
   typescript \
   yarn
+
+claude --version >/dev/null

@@ -17,6 +17,42 @@ load_homebrew() {
   fi
 }
 
+can_run_sudo_without_prompt() {
+  sudo -n true >/dev/null 2>&1
+}
+
+filter_privileged_casks_for_noninteractive_apply() {
+  local brewfile="$1"
+  local filtered_brewfile
+
+  if can_run_sudo_without_prompt; then
+    return
+  fi
+
+  if [ -t 0 ]; then
+    return
+  fi
+
+  filtered_brewfile="$(mktemp)"
+
+  awk '
+    /^cask "(font-sf-pro|karabiner-elements|sf-symbols)"$/ {
+      skipped = skipped $2 " "
+      next
+    }
+    { print }
+    END {
+      if (skipped != "") {
+        print "Skipping sudo-only casks in non-interactive apply: " skipped > "/dev/stderr"
+        print "Install manually from an interactive terminal:" > "/dev/stderr"
+        print "  brew install --cask font-sf-pro karabiner-elements sf-symbols" > "/dev/stderr"
+      }
+    }
+  ' "${brewfile}" >"${filtered_brewfile}"
+
+  mv "${filtered_brewfile}" "${brewfile}"
+}
+
 write_core_brewfile() {
   local brewfile="$1"
 
@@ -75,12 +111,14 @@ EOF
 }
 
 load_homebrew
+export HOMEBREW_DOWNLOAD_CONCURRENCY="${HOMEBREW_DOWNLOAD_CONCURRENCY:-4}"
 
 CORE_BREWFILE="$(mktemp)"
 MAS_BREWFILE="$(mktemp)"
 trap 'rm -f "${CORE_BREWFILE}" "${MAS_BREWFILE}"' EXIT
 
 write_core_brewfile "${CORE_BREWFILE}"
+filter_privileged_casks_for_noninteractive_apply "${CORE_BREWFILE}"
 write_mas_brewfile "${MAS_BREWFILE}"
 
 echo "Installing remaining Homebrew formulae and casks from generated Brewfile..."

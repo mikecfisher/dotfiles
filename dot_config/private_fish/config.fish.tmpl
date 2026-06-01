@@ -27,12 +27,17 @@ fish_add_path $HOME/.claude/local
 # DEVELOPMENT ENVIRONMENT VARIABLES
 # ============================================================================
 # Node.js SSL certificates
-set -gx NODE_EXTRA_CA_CERTS "$HOME/.local/share/mkcert/rootCA.pem"
+for node_extra_ca_cert in "$HOME/Library/Application Support/mkcert/rootCA.pem" "$HOME/.local/share/mkcert/rootCA.pem"
+    if test -f "$node_extra_ca_cert"
+        set -gx NODE_EXTRA_CA_CERTS "$node_extra_ca_cert"
+        break
+    end
+end
 
 # Node.js package managers & options
 set -gx BUN_INSTALL "$HOME/.bun"
 set -gx PNPM_HOME "$HOME/.local/share/pnpm"
-fish_add_path $PNPM_HOME
+fish_add_path --move --path $PNPM_HOME/bin $PNPM_HOME
 set -gx NODE_OPTIONS --no-deprecation
 
 # Android SDK
@@ -92,7 +97,9 @@ if status is-interactive
 
     alias lvim='env NVIM_APPNAME=nvim-lazy nvim'
     alias lv='env NVIM_APPNAME=nvim-lazy nvim'
-    alias claude="~/.claude/local/claude"
+    if test -x "$HOME/.claude/local/claude"
+        alias claude="$HOME/.claude/local/claude"
+    end
     alias oc="opencode"
     fish_vi_key_bindings
 end
