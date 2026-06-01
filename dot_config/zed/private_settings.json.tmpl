@@ -9,7 +9,7 @@
       "source": "extension",
       "enabled": true,
       "settings": {
-        "context7_api_key": "***REDACTED_CONTEXT7_API_KEY***"
+        "context7_api_key": "{{ if and (get . "use_1password" | default false) (lookPath "op") }}{{ onepasswordRead "op://Private/Context7 API Key/credential" }}{{ end }}"
       }
     },
     "linear": {

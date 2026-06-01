@@ -1,0 +1,21 @@
+;; Lexicon Vim Navigation Layer
+;; When Lexicon app is focused, Cmd+hjkl becomes arrow keys
+;; Layer is activated by Hammerspoon via TCP when Lexicon gains focus
+
+;; fork syntax: (fork $default-action $alternate-action $trigger-keys)
+;; When Cmd (lmet/rmet) is held, use alternate action (arrow key)
+;; unmod releases modifiers before outputting the key
+(defalias
+  lex-h (fork h (unmod left) (lmet rmet))
+  lex-j (fork j (unmod down) (lmet rmet))
+  lex-k (fork k (unmod up) (lmet rmet))
+  lex-l (fork l (unmod right) (lmet rmet))
+)
+
+(deflayermap (lexicon)
+  h @lex-h
+  j @lex-j
+  k @lex-k
+  l @lex-l
+  ;; All other keys pass through unchanged (implicit)
+)

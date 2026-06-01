@@ -1,0 +1,8 @@
+#:schema https://docs.jj-vcs.dev/latest/config-schema.json
+
+[user]
+name = "Mike Fisher"
+email = "mikefisher84@gmail.com"
+
+[ui]
+editor = "nvim"

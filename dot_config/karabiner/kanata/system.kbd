@@ -1,0 +1,18 @@
+;; System Controls Layer
+;; Leader -> s -> key
+
+;; Aliases for system commands
+(defalias
+  system-dnd (multi lctl lalt lmet d)      ;; Ctrl+Opt+Cmd+D (Do Not Disturb)
+  system-lock (multi lctl lmet q)          ;; Ctrl+Cmd+Q (Lock Screen)
+  system-emoji (multi lctl lmet spc)       ;; Ctrl+Cmd+Space (Emoji Picker)
+)
+
+;; System layer - system control shortcuts
+(deflayermap (system)
+  d (multi @system-dnd (layer-switch base))
+  l (multi @system-lock (layer-switch base))
+  e (multi @system-emoji (layer-switch base))
+  esc (layer-switch base)
+  _ (layer-switch base)
+)

@@ -1,0 +1,26 @@
+;; Raycast Commands Layer
+;; Leader -> r -> key
+
+;; Aliases for raycast commands
+(defalias
+  raycast-camera (cmd open -g "raycast://extensions/raycast/system/open-camera")
+  raycast-emoji (cmd open -g "raycast://extensions/raycast/emoji-symbols/search-emoji-symbols")
+  raycast-google (cmd open -g "raycast://extensions/mblode/google-search/index")
+  raycast-clipboard (cmd open -g "raycast://extensions/raycast/clipboard-history/clipboard-history")
+  raycast-ai (cmd open -g "raycast://extensions/raycast/raycast-ai/ai-chat")
+  raycast-notifications (cmd open -g "raycast://script-commands/dismiss-notifications")
+  raycast-confetti (cmd open -g "raycast://extensions/raycast/raycast/confetti")
+)
+
+;; Raycast layer - raycast extension shortcuts
+(deflayermap (raycast)
+  c (multi @raycast-camera (layer-switch base))
+  e (multi @raycast-emoji (layer-switch base))
+  g (multi @raycast-google (layer-switch base))
+  h (multi @raycast-clipboard (layer-switch base))
+  i (multi @raycast-ai (layer-switch base))
+  n (multi @raycast-notifications (layer-switch base))
+  p (multi @raycast-confetti (layer-switch base))
+  esc (layer-switch base)
+  _ (layer-switch base)
+)

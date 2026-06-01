@@ -1,0 +1,14 @@
+[[plugin.deps]]
+use = "gallardo994/clippy"
+rev = "8ce5541"
+hash = "977c6f4ffceada33ced20d941f1defab"
+
+[[flavor.deps]]
+use = "yazi-rs/flavors:catppuccin-macchiato"
+rev = "b929df6"
+hash = "3ec21bcfd2735cfcbab61faaf43e59e4"
+
+[[flavor.deps]]
+use = "BennyOe/tokyo-night"
+rev = "695dac6"
+hash = "a8f426ea0d9cb843b081d62ab01364c8"

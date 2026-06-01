@@ -1,0 +1,77 @@
+;; Kanata Configuration - Migrated from Karabiner-Elements
+;; Modular config: Caps Lock + Leader Key for App Launching & Window Management
+;;
+;; Architecture: Chord (. + /) -> Leader Layer -> Category Layer -> Action
+;; Each layer change emits an event for Hammerspoon overlay
+;;
+;; REQUIRES: cmd_allowed binary (not Homebrew version)
+;; Download from: https://github.com/jtroo/kanata/releases
+
+(defcfg
+  process-unmapped-keys yes
+  danger-enable-cmd yes
+  concurrent-tap-hold yes
+)
+
+;; Minimal defsrc - only keys we're remapping
+;; h/j/k/l added for lexicon layer vim navigation
+;; lmet/rmet added so fork can detect Cmd state for lexicon layer
+(defsrc
+  f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12
+  fn caps . / h j k l lmet rmet
+)
+
+(defvar
+  tap-timeout 200
+  hold-timeout 200
+)
+
+;; Caps Lock: tap=Escape, hold=Control
+(defalias
+  cap (tap-hold $tap-timeout $hold-timeout esc lctl)
+  ;; Clear notifications - direct action from leader layer
+  clear-notifications (cmd open -g "raycast://script-commands/dismiss-notifications")
+  fnl (layer-while-held fkeys)
+  mission-control (multi lctl up)
+  spotlight (multi lmet spc)
+)
+
+;; Leader key chord: . + / pressed simultaneously -> switches to leader layer
+(defchordsv2
+  (. /) (layer-switch leader) 200 first-release ()
+)
+
+;; Include modular configuration files (each defines its own layer and aliases)
+(include kanata-commands.kbd)
+(include apps.kbd)
+(include windows.kbd)
+(include raycast.kbd)
+(include browser.kbd)
+(include system.kbd)
+(include lexicon.kbd)
+
+;; Base layer
+(deflayer base
+  f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12
+  @fnl @cap . / h j k l lmet rmet
+)
+
+(deflayer fkeys
+  brdn brup @mission-control @spotlight f5 @system-dnd prev pp next mute vold volu
+  fn @cap . / h j k l lmet rmet
+)
+
+;; Leader layer - category selection
+;; Press the chord (./) then press a category key
+(deflayermap (leader)
+  a (layer-switch apps)
+  b (layer-switch browser)
+  i (layer-switch intelligence)
+  k (layer-switch kanata-cmds)
+  n (multi @clear-notifications (layer-switch base))
+  r (layer-switch raycast)
+  s (layer-switch system)
+  w (layer-switch windows)
+  esc (layer-switch base)
+  _ (layer-switch base)
+)

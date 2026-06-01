@@ -1,0 +1,33 @@
+;; Window Management Layer
+;; Leader -> w -> key
+;; Uses Raycast window management with -g flag (no focus stealing)
+
+;; Aliases for window management commands
+(defalias
+  win-center (cmd open -g "raycast://extensions/raycast/window-management/center-third")
+  win-maximize (cmd open -g "raycast://extensions/raycast/window-management/maximize")
+  win-left-half (cmd open -g "raycast://extensions/raycast/window-management/left-half")
+  win-bottom-half (cmd open -g "raycast://extensions/raycast/window-management/bottom-half")
+  win-top-half (cmd open -g "raycast://extensions/raycast/window-management/top-half")
+  win-right-half (cmd open -g "raycast://extensions/raycast/window-management/right-half")
+  win-prev-display (cmd open -g "raycast://extensions/raycast/window-management/previous-display")
+  win-next-display (cmd open -g "raycast://extensions/raycast/window-management/next-display")
+  win-prev-desktop (cmd open -g "raycast://extensions/raycast/window-management/previous-desktop")
+  win-next-desktop (cmd open -g "raycast://extensions/raycast/window-management/next-desktop")
+)
+
+;; Windows layer - window management shortcuts (vim-style)
+(deflayermap (windows)
+  c (multi @win-center (layer-switch base))
+  f (multi @win-maximize (layer-switch base))
+  h (multi @win-left-half (layer-switch base))
+  j (multi @win-bottom-half (layer-switch base))
+  k (multi @win-top-half (layer-switch base))
+  l (multi @win-right-half (layer-switch base))
+  [ (multi @win-prev-display (layer-switch base))
+  ] (multi @win-next-display (layer-switch base))
+  - (multi @win-prev-desktop (layer-switch base))
+  = (multi @win-next-desktop (layer-switch base))
+  esc (layer-switch base)
+  _ (layer-switch base)
+)

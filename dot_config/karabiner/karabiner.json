@@ -1,0 +1,4041 @@
+{
+  "profiles": [
+    {
+      "complex_modifications": {
+        "rules": [
+          {
+            "description": "Caps Lock → Control/Escape",
+            "manipulators": [
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "caps_lock"
+                },
+                "to": [
+                  {
+                    "key_code": "left_command",
+                    "modifiers": [
+                      "option",
+                      "control",
+                      "shift"
+                    ]
+                  }
+                ],
+                "to_if_alone": [
+                  {
+                    "key_code": "escape"
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "frontmost_application_if",
+                    "bundle_identifiers": [
+                      "^com\\.rekord\\.cloud\\.lexicon$"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "caps_lock"
+                },
+                "to": [
+                  {
+                    "key_code": "left_control"
+                  }
+                ],
+                "to_if_alone": [
+                  {
+                    "key_code": "escape"
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "frontmost_application_unless",
+                    "bundle_identifiers": [
+                      "^com\\.rekord\\.cloud\\.lexicon$"
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "description": "Leader Key",
+            "manipulators": [
+              {
+                "type": "basic",
+                "from": {
+                  "simultaneous": [
+                    {
+                      "key_code": "period"
+                    },
+                    {
+                      "key_code": "slash"
+                    }
+                  ]
+                },
+                "parameters": {
+                  "basic.simultaneous_threshold_milliseconds": 250
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": "(A)pps (R)aycast (W)indow (B)rowser (S)ystem (E)moji (C)ode (N)otifications (T)iling"
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": 0
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "escape"
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_unless",
+                    "name": "leader",
+                    "value": 0
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "a"
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "value": "apps"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": "(A)Akiflow (B)Browser (C)Zed (D)Discord (F)Finder (G)Google Chrome (I)ChatGPT (L)Lexicon (N)Notion (P)Perplexity (S)Slack (T)Terminal (V)Visual Studio Code (W)Microsoft Teams (Z)Cursor"
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": 1
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "r"
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "value": "raycast"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": "(C)Camera (E)Emoji (G)Google (H)History (I)IA Chat (N)Notifications (P)Confetti"
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": 1
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "w"
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "value": "window"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": "(C)Center (F)Fullscreen (H)Left (J)Bottom (K)Top (L)Right ([)Previous Display (])Next Display (-)Previous Desktop (=)Next Desktop"
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": 1
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "b"
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "value": "browser"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": "(G)GitHub (T)Twitter (H)Hacker News (R)Reddit (Y)YouTube (C)ChatGPT"
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": 1
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "s"
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "value": "system"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": "(D)Do Not Disturb (L)Lock Screen (E)Emoji Picker"
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": 1
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "c"
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "value": "code"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": "(L)Log (F)Function (I)If (R)Return (T)This"
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": 1
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "t"
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "value": "aerospace"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": "(S)Stack Layout (F)Float Toggle (U)Fullscreen (Z)Balance Sizes (H)Focus Left (J)Focus Down (K)Focus Up (L)Focus Right (⇧H)Move Left (⇧J)Move Down (⇧K)Move Up (⇧L)Move Right (1)Workspace 1 (2)Workspace 2 (3)Workspace 3 (4)Workspace 4 (5)Workspace 5 (B)Workspace B (C)Workspace C (T)Workspace T (⇧(N))Move to (N) (-)Resize -50 (=)Resize +50 (SLASH)Tiles Layout (COMMA)Accordion Layout (SEMICOLON)Service Mode"
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": 1
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "e"
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "value": "emoji"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": "(J)😂 (H)❤️ (T)👍 (F)🔥 (S)🙁 (O)😍 (P)🙏 (C)👏 (L)🥰 (W)🙂 (E)🤔 (A)😅 (R)🚀 (V)✅ (G)😬 (M)🤯 (Z)😎 (B)💪"
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": 1
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "n"
+                },
+                "to": [
+                  {
+                    "shell_command": "osascript -e '\\\ntell application \"System Events\"\n  try\n    repeat\n      set _groups to groups of UI element 1 of scroll area 1 of group 1 of window \"Notification Center\" of application process \"NotificationCenter\"\n      set numGroups to number of _groups\n      if numGroups = 0 then\n        exit repeat\n      end if\n      repeat with _group in _groups\n        set _actions to actions of _group\n        set actionPerformed to false\n        repeat with _action in _actions\n          if description of _action is in {\"Clear All\", \"Close\"} then\n            perform _action\n            set actionPerformed to true\n            exit repeat\n          end if\n        end repeat\n        if actionPerformed then\n          exit repeat\n        end if\n      end repeat\n    end repeat\n  end try\nend tell'"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": 1
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "1"
+                },
+                "to": [
+                  {
+                    "shell_command": "open -a \"1Password\".app"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "apps"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "a"
+                },
+                "to": [
+                  {
+                    "shell_command": "open -a \"Akiflow\".app"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "apps"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "b"
+                },
+                "to": [
+                  {
+                    "software_function": {
+                      "open_application": {
+                        "file_path": "/Applications/ChatGPT Atlas.app"
+                      }
+                    }
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "apps"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "c"
+                },
+                "to": [
+                  {
+                    "shell_command": "open -a \"Zed\".app"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "apps"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "d"
+                },
+                "to": [
+                  {
+                    "shell_command": "open -a \"Discord\".app"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "apps"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "e"
+                },
+                "to": [
+                  {
+                    "shell_command": "open -a \"Superhuman\".app"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "apps"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "f"
+                },
+                "to": [
+                  {
+                    "shell_command": "open -a \"Finder\".app"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "apps"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "g"
+                },
+                "to": [
+                  {
+                    "shell_command": "open -a \"Google Chrome\".app"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "apps"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "i"
+                },
+                "to": [
+                  {
+                    "shell_command": "open -a \"ChatGPT\".app"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "apps"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "m"
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "value": "apps_messages"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": "(M)essages (W)hatsApp (B)eeper"
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "apps"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "n"
+                },
+                "to": [
+                  {
+                    "shell_command": "open -a \"Notion\".app"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "apps"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "o"
+                },
+                "to": [
+                  {
+                    "shell_command": "open -a \"Simulator\".app"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "apps"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "p"
+                },
+                "to": [
+                  {
+                    "shell_command": "open -a \"Perplexity\".app"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "apps"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "r"
+                },
+                "to": [
+                  {
+                    "shell_command": "open -a \"Reflect\".app"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "apps"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "s"
+                },
+                "to": [
+                  {
+                    "shell_command": "open -a \"Slack\".app"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "apps"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "t"
+                },
+                "to": [
+                  {
+                    "shell_command": "open -a \"Ghostty\".app"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "apps"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "v"
+                },
+                "to": [
+                  {
+                    "shell_command": "open -a \"Visual Studio Code\".app"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "apps"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "w"
+                },
+                "to": [
+                  {
+                    "shell_command": "open -a \"Microsoft Teams\".app"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "apps"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "x"
+                },
+                "to": [
+                  {
+                    "shell_command": "open -a \"Lexicon\".app"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "apps"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "y"
+                },
+                "to": [
+                  {
+                    "shell_command": "open -a \"Figma\".app"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "apps"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "z"
+                },
+                "to": [
+                  {
+                    "shell_command": "open -a \"Cursor\".app"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "apps"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "m"
+                },
+                "to": [
+                  {
+                    "shell_command": "open -a \"Messages\".app"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "apps_messages"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "w"
+                },
+                "to": [
+                  {
+                    "shell_command": "open -a \"WhatsApp\".app"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "apps_messages"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "b"
+                },
+                "to": [
+                  {
+                    "shell_command": "open -a \"Beeper Desktop\".app"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "apps_messages"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "c"
+                },
+                "to": [
+                  {
+                    "shell_command": "open 'raycast://extensions/raycast/system/open-camera'"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "raycast"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "e"
+                },
+                "to": [
+                  {
+                    "shell_command": "open 'raycast://extensions/raycast/emoji-symbols/search-emoji-symbols'"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "raycast"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "g"
+                },
+                "to": [
+                  {
+                    "shell_command": "open 'raycast://extensions/mblode/google-search/index'"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "raycast"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "h"
+                },
+                "to": [
+                  {
+                    "shell_command": "open 'raycast://extensions/raycast/clipboard-history/clipboard-history'"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "raycast"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "i"
+                },
+                "to": [
+                  {
+                    "shell_command": "open 'raycast://extensions/raycast/raycast-ai/ai-chat'"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "raycast"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "n"
+                },
+                "to": [
+                  {
+                    "shell_command": "open 'raycast://script-commands/dismiss-notifications'"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "raycast"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "p"
+                },
+                "to": [
+                  {
+                    "shell_command": "open 'raycast://extensions/raycast/raycast/confetti'"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "raycast"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "c"
+                },
+                "to": [
+                  {
+                    "shell_command": "open -g 'raycast://extensions/raycast/window-management/center-half'"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "window"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "f"
+                },
+                "to": [
+                  {
+                    "shell_command": "open -g 'raycast://extensions/raycast/window-management/maximize'"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "window"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "h"
+                },
+                "to": [
+                  {
+                    "shell_command": "open -g 'raycast://extensions/raycast/window-management/left-half'"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "window"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "j"
+                },
+                "to": [
+                  {
+                    "shell_command": "open -g 'raycast://extensions/raycast/window-management/bottom-half'"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "window"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "k"
+                },
+                "to": [
+                  {
+                    "shell_command": "open -g 'raycast://extensions/raycast/window-management/top-half'"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "window"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "l"
+                },
+                "to": [
+                  {
+                    "shell_command": "open -g 'raycast://extensions/raycast/window-management/right-half'"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "window"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "open_bracket"
+                },
+                "to": [
+                  {
+                    "shell_command": "open -g 'raycast://extensions/raycast/window-management/previous-display'"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "window"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "close_bracket"
+                },
+                "to": [
+                  {
+                    "shell_command": "open -g 'raycast://extensions/raycast/window-management/next-display'"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "window"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "hyphen"
+                },
+                "to": [
+                  {
+                    "shell_command": "open -g 'raycast://extensions/raycast/window-management/previous-desktop'"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "window"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "equal_sign"
+                },
+                "to": [
+                  {
+                    "shell_command": "open -g 'raycast://extensions/raycast/window-management/next-desktop'"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "window"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "c"
+                },
+                "to": [
+                  {
+                    "shell_command": "open 'https://chatgpt.com'"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "browser"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "g"
+                },
+                "to": [
+                  {
+                    "shell_command": "open 'https://github.com'"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "browser"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "h"
+                },
+                "to": [
+                  {
+                    "shell_command": "open 'https://news.ycombinator.com'"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "browser"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "l"
+                },
+                "to": [
+                  {
+                    "shell_command": "open 'https://linkedin.com'"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "browser"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "p"
+                },
+                "to": [
+                  {
+                    "shell_command": "open 'https://perplexity.com'"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "browser"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "r"
+                },
+                "to": [
+                  {
+                    "shell_command": "open 'https://reddit.com'"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "browser"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "t"
+                },
+                "to": [
+                  {
+                    "shell_command": "open 'https://twitter.com'"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "browser"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "y"
+                },
+                "to": [
+                  {
+                    "shell_command": "open 'https://youtube.com'"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "browser"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "d"
+                },
+                "to": [
+                  {
+                    "key_code": "d",
+                    "modifiers": [
+                      "left_command",
+                      "left_option",
+                      "left_control"
+                    ]
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "system"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "l"
+                },
+                "to": [
+                  {
+                    "key_code": "q",
+                    "modifiers": [
+                      "right_control",
+                      "right_command"
+                    ]
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "system"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "e"
+                },
+                "to": [
+                  {
+                    "key_code": "spacebar",
+                    "modifiers": [
+                      "right_control",
+                      "right_command"
+                    ]
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "system"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "j"
+                },
+                "to": [
+                  {
+                    "shell_command": "osascript -e '\nset prev to the clipboard\nset the clipboard to \"😂\"\ntell application \"System Events\"\n  keystroke \"v\" using command down\n  delay 0.1\nend tell\nset the clipboard to prev'"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "emoji"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "h"
+                },
+                "to": [
+                  {
+                    "shell_command": "osascript -e '\nset prev to the clipboard\nset the clipboard to \"❤️\"\ntell application \"System Events\"\n  keystroke \"v\" using command down\n  delay 0.1\nend tell\nset the clipboard to prev'"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "emoji"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "t"
+                },
+                "to": [
+                  {
+                    "shell_command": "osascript -e '\nset prev to the clipboard\nset the clipboard to \"👍\"\ntell application \"System Events\"\n  keystroke \"v\" using command down\n  delay 0.1\nend tell\nset the clipboard to prev'"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "emoji"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "f"
+                },
+                "to": [
+                  {
+                    "shell_command": "osascript -e '\nset prev to the clipboard\nset the clipboard to \"🔥\"\ntell application \"System Events\"\n  keystroke \"v\" using command down\n  delay 0.1\nend tell\nset the clipboard to prev'"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "emoji"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "s"
+                },
+                "to": [
+                  {
+                    "shell_command": "osascript -e '\nset prev to the clipboard\nset the clipboard to \"🙁\"\ntell application \"System Events\"\n  keystroke \"v\" using command down\n  delay 0.1\nend tell\nset the clipboard to prev'"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "emoji"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "o"
+                },
+                "to": [
+                  {
+                    "shell_command": "osascript -e '\nset prev to the clipboard\nset the clipboard to \"😍\"\ntell application \"System Events\"\n  keystroke \"v\" using command down\n  delay 0.1\nend tell\nset the clipboard to prev'"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "emoji"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "p"
+                },
+                "to": [
+                  {
+                    "shell_command": "osascript -e '\nset prev to the clipboard\nset the clipboard to \"🙏\"\ntell application \"System Events\"\n  keystroke \"v\" using command down\n  delay 0.1\nend tell\nset the clipboard to prev'"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "emoji"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "c"
+                },
+                "to": [
+                  {
+                    "shell_command": "osascript -e '\nset prev to the clipboard\nset the clipboard to \"👏\"\ntell application \"System Events\"\n  keystroke \"v\" using command down\n  delay 0.1\nend tell\nset the clipboard to prev'"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "emoji"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "l"
+                },
+                "to": [
+                  {
+                    "shell_command": "osascript -e '\nset prev to the clipboard\nset the clipboard to \"🥰\"\ntell application \"System Events\"\n  keystroke \"v\" using command down\n  delay 0.1\nend tell\nset the clipboard to prev'"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "emoji"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "w"
+                },
+                "to": [
+                  {
+                    "shell_command": "osascript -e '\nset prev to the clipboard\nset the clipboard to \"🙂\"\ntell application \"System Events\"\n  keystroke \"v\" using command down\n  delay 0.1\nend tell\nset the clipboard to prev'"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "emoji"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "e"
+                },
+                "to": [
+                  {
+                    "shell_command": "osascript -e '\nset prev to the clipboard\nset the clipboard to \"🤔\"\ntell application \"System Events\"\n  keystroke \"v\" using command down\n  delay 0.1\nend tell\nset the clipboard to prev'"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "emoji"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "a"
+                },
+                "to": [
+                  {
+                    "shell_command": "osascript -e '\nset prev to the clipboard\nset the clipboard to \"😅\"\ntell application \"System Events\"\n  keystroke \"v\" using command down\n  delay 0.1\nend tell\nset the clipboard to prev'"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "emoji"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "r"
+                },
+                "to": [
+                  {
+                    "shell_command": "osascript -e '\nset prev to the clipboard\nset the clipboard to \"🚀\"\ntell application \"System Events\"\n  keystroke \"v\" using command down\n  delay 0.1\nend tell\nset the clipboard to prev'"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "emoji"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "v"
+                },
+                "to": [
+                  {
+                    "shell_command": "osascript -e '\nset prev to the clipboard\nset the clipboard to \"✅\"\ntell application \"System Events\"\n  keystroke \"v\" using command down\n  delay 0.1\nend tell\nset the clipboard to prev'"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "emoji"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "g"
+                },
+                "to": [
+                  {
+                    "shell_command": "osascript -e '\nset prev to the clipboard\nset the clipboard to \"😬\"\ntell application \"System Events\"\n  keystroke \"v\" using command down\n  delay 0.1\nend tell\nset the clipboard to prev'"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "emoji"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "m"
+                },
+                "to": [
+                  {
+                    "shell_command": "osascript -e '\nset prev to the clipboard\nset the clipboard to \"🤯\"\ntell application \"System Events\"\n  keystroke \"v\" using command down\n  delay 0.1\nend tell\nset the clipboard to prev'"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "emoji"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "z"
+                },
+                "to": [
+                  {
+                    "shell_command": "osascript -e '\nset prev to the clipboard\nset the clipboard to \"😎\"\ntell application \"System Events\"\n  keystroke \"v\" using command down\n  delay 0.1\nend tell\nset the clipboard to prev'"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "emoji"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "b"
+                },
+                "to": [
+                  {
+                    "shell_command": "osascript -e '\nset prev to the clipboard\nset the clipboard to \"💪\"\ntell application \"System Events\"\n  keystroke \"v\" using command down\n  delay 0.1\nend tell\nset the clipboard to prev'"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "emoji"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "l"
+                },
+                "to": [
+                  {
+                    "shell_command": "osascript -e '\nset prev to the clipboard\nset the clipboard to \"console.log();\"\ntell application \"System Events\"\n  keystroke \"v\" using command down\n  delay 0.1\nend tell\nset the clipboard to prev'"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "code"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "f"
+                },
+                "to": [
+                  {
+                    "shell_command": "osascript -e '\nset prev to the clipboard\nset the clipboard to \"() => {}\"\ntell application \"System Events\"\n  keystroke \"v\" using command down\n  delay 0.1\nend tell\nset the clipboard to prev'"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "code"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "i"
+                },
+                "to": [
+                  {
+                    "shell_command": "osascript -e '\nset prev to the clipboard\nset the clipboard to \"if () {}\"\ntell application \"System Events\"\n  keystroke \"v\" using command down\n  delay 0.1\nend tell\nset the clipboard to prev'"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "code"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "r"
+                },
+                "to": [
+                  {
+                    "shell_command": "osascript -e '\nset prev to the clipboard\nset the clipboard to \"return \"\ntell application \"System Events\"\n  keystroke \"v\" using command down\n  delay 0.1\nend tell\nset the clipboard to prev'"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "code"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "t"
+                },
+                "to": [
+                  {
+                    "shell_command": "osascript -e '\nset prev to the clipboard\nset the clipboard to \"this.\"\ntell application \"System Events\"\n  keystroke \"v\" using command down\n  delay 0.1\nend tell\nset the clipboard to prev'"
+                  },
+                  {
+                    "set_variable": {
+                      "name": "leader",
+                      "type": "unset"
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "leader",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "leader",
+                    "value": "code"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "description": "Lexicon Vim Navigation",
+            "manipulators": [
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "j",
+                  "modifiers": {
+                    "mandatory": [
+                      "command"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "down_arrow"
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "frontmost_application_if",
+                    "bundle_identifiers": [
+                      "^com\\.rekord\\.cloud\\.lexicon$"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "k",
+                  "modifiers": {
+                    "mandatory": [
+                      "command"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "up_arrow"
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "frontmost_application_if",
+                    "bundle_identifiers": [
+                      "^com\\.rekord\\.cloud\\.lexicon$"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "h",
+                  "modifiers": {
+                    "mandatory": [
+                      "command"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "left_arrow"
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "frontmost_application_if",
+                    "bundle_identifiers": [
+                      "^com\\.rekord\\.cloud\\.lexicon$"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "l",
+                  "modifiers": {
+                    "mandatory": [
+                      "command"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "right_arrow"
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "frontmost_application_if",
+                    "bundle_identifiers": [
+                      "^com\\.rekord\\.cloud\\.lexicon$"
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "description": "Browser Navigation",
+            "manipulators": [
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "h",
+                  "modifiers": {
+                    "mandatory": [
+                      "control",
+                      "option"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "open_bracket",
+                    "modifiers": [
+                      "command"
+                    ]
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "frontmost_application_if",
+                    "bundle_identifiers": [
+                      "^company\\.thebrowser\\.Browser$",
+                      "^com\\.apple\\.Safari$",
+                      "^com\\.google\\.Chrome$",
+                      "^app\\.zen-browser\\.zen$",
+                      "^com\\.brave\\.Browser$",
+                      "^com\\.openai\\.atlas$"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "l",
+                  "modifiers": {
+                    "mandatory": [
+                      "control",
+                      "option"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "close_bracket",
+                    "modifiers": [
+                      "command"
+                    ]
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "frontmost_application_if",
+                    "bundle_identifiers": [
+                      "^company\\.thebrowser\\.Browser$",
+                      "^com\\.apple\\.Safari$",
+                      "^com\\.google\\.Chrome$",
+                      "^app\\.zen-browser\\.zen$",
+                      "^com\\.brave\\.Browser$",
+                      "^com\\.openai\\.atlas$"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "h",
+                  "modifiers": {
+                    "mandatory": [
+                      "control"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "open_bracket",
+                    "modifiers": [
+                      "command",
+                      "shift"
+                    ]
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "frontmost_application_if",
+                    "bundle_identifiers": [
+                      "^company\\.thebrowser\\.Browser$",
+                      "^com\\.apple\\.Safari$",
+                      "^com\\.google\\.Chrome$",
+                      "^app\\.zen-browser\\.zen$",
+                      "^com\\.brave\\.Browser$",
+                      "^com\\.openai\\.atlas$"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "l",
+                  "modifiers": {
+                    "mandatory": [
+                      "control"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "close_bracket",
+                    "modifiers": [
+                      "command",
+                      "shift"
+                    ]
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "frontmost_application_if",
+                    "bundle_identifiers": [
+                      "^company\\.thebrowser\\.Browser$",
+                      "^com\\.apple\\.Safari$",
+                      "^com\\.google\\.Chrome$",
+                      "^app\\.zen-browser\\.zen$",
+                      "^com\\.brave\\.Browser$",
+                      "^com\\.openai\\.atlas$"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "h",
+                  "modifiers": {
+                    "mandatory": [
+                      "command",
+                      "option",
+                      "control"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "tab",
+                    "modifiers": [
+                      "control",
+                      "shift"
+                    ]
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "frontmost_application_if",
+                    "bundle_identifiers": [
+                      "^company\\.thebrowser\\.Browser$",
+                      "^com\\.apple\\.Safari$",
+                      "^com\\.google\\.Chrome$",
+                      "^app\\.zen-browser\\.zen$",
+                      "^com\\.brave\\.Browser$",
+                      "^com\\.openai\\.atlas$"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "l",
+                  "modifiers": {
+                    "mandatory": [
+                      "command",
+                      "option",
+                      "control"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "tab",
+                    "modifiers": [
+                      "control"
+                    ]
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "frontmost_application_if",
+                    "bundle_identifiers": [
+                      "^company\\.thebrowser\\.Browser$",
+                      "^com\\.apple\\.Safari$",
+                      "^com\\.google\\.Chrome$",
+                      "^app\\.zen-browser\\.zen$",
+                      "^com\\.brave\\.Browser$",
+                      "^com\\.openai\\.atlas$"
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "description": "Finder Vim Navigation",
+            "manipulators": [
+              {
+                "type": "basic",
+                "from": {
+                  "simultaneous": [
+                    {
+                      "key_code": "j"
+                    },
+                    {
+                      "key_code": "k"
+                    }
+                  ]
+                },
+                "parameters": {
+                  "basic.simultaneous_threshold_milliseconds": 50
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "finder_vim_mode",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "finder_vim",
+                      "text": "🎯 Finder Vim Mode: ON (ESC to exit)"
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "finder_vim_mode",
+                    "value": 0
+                  },
+                  {
+                    "type": "frontmost_application_if",
+                    "bundle_identifiers": [
+                      "^com\\.apple\\.finder$"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "g"
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "finder_g",
+                      "value": 1
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "finder_g",
+                    "value": 0
+                  },
+                  {
+                    "type": "frontmost_application_if",
+                    "bundle_identifiers": [
+                      "^com\\.apple\\.finder$"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "g"
+                },
+                "to": [
+                  {
+                    "key_code": "left_arrow",
+                    "modifiers": [
+                      "fn"
+                    ]
+                  },
+                  {
+                    "set_variable": {
+                      "name": "finder_g",
+                      "value": 0
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "finder_g",
+                    "value": 1
+                  },
+                  {
+                    "type": "frontmost_application_if",
+                    "bundle_identifiers": [
+                      "^com\\.apple\\.finder$"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "e"
+                },
+                "to": [
+                  {
+                    "key_code": "right_arrow",
+                    "modifiers": [
+                      "fn"
+                    ]
+                  },
+                  {
+                    "set_variable": {
+                      "name": "finder_g",
+                      "value": 0
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "finder_g",
+                    "value": 1
+                  },
+                  {
+                    "type": "frontmost_application_if",
+                    "bundle_identifiers": [
+                      "^com\\.apple\\.finder$"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "h"
+                },
+                "to": [
+                  {
+                    "key_code": "h",
+                    "modifiers": [
+                      "command",
+                      "shift"
+                    ]
+                  },
+                  {
+                    "set_variable": {
+                      "name": "finder_g",
+                      "value": 0
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "finder_g",
+                    "value": 1
+                  },
+                  {
+                    "type": "frontmost_application_if",
+                    "bundle_identifiers": [
+                      "^com\\.apple\\.finder$"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "d"
+                },
+                "to": [
+                  {
+                    "key_code": "d",
+                    "modifiers": [
+                      "command",
+                      "shift"
+                    ]
+                  },
+                  {
+                    "set_variable": {
+                      "name": "finder_g",
+                      "value": 0
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "finder_g",
+                    "value": 1
+                  },
+                  {
+                    "type": "frontmost_application_if",
+                    "bundle_identifiers": [
+                      "^com\\.apple\\.finder$"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "c"
+                },
+                "to": [
+                  {
+                    "key_code": "c",
+                    "modifiers": [
+                      "command",
+                      "shift"
+                    ]
+                  },
+                  {
+                    "set_variable": {
+                      "name": "finder_g",
+                      "value": 0
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "finder_g",
+                    "value": 1
+                  },
+                  {
+                    "type": "frontmost_application_if",
+                    "bundle_identifiers": [
+                      "^com\\.apple\\.finder$"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "a"
+                },
+                "to": [
+                  {
+                    "key_code": "a",
+                    "modifiers": [
+                      "command",
+                      "shift"
+                    ]
+                  },
+                  {
+                    "set_variable": {
+                      "name": "finder_g",
+                      "value": 0
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "finder_g",
+                    "value": 1
+                  },
+                  {
+                    "type": "frontmost_application_if",
+                    "bundle_identifiers": [
+                      "^com\\.apple\\.finder$"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "u"
+                },
+                "to": [
+                  {
+                    "key_code": "u",
+                    "modifiers": [
+                      "command",
+                      "shift"
+                    ]
+                  },
+                  {
+                    "set_variable": {
+                      "name": "finder_g",
+                      "value": 0
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "finder_g",
+                    "value": 1
+                  },
+                  {
+                    "type": "frontmost_application_if",
+                    "bundle_identifiers": [
+                      "^com\\.apple\\.finder$"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "i"
+                },
+                "to": [
+                  {
+                    "key_code": "i",
+                    "modifiers": [
+                      "command",
+                      "shift"
+                    ]
+                  },
+                  {
+                    "set_variable": {
+                      "name": "finder_g",
+                      "value": 0
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "finder_g",
+                    "value": 1
+                  },
+                  {
+                    "type": "frontmost_application_if",
+                    "bundle_identifiers": [
+                      "^com\\.apple\\.finder$"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "l"
+                },
+                "to": [
+                  {
+                    "key_code": "l",
+                    "modifiers": [
+                      "command",
+                      "option"
+                    ]
+                  },
+                  {
+                    "set_variable": {
+                      "name": "finder_g",
+                      "value": 0
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "finder_g",
+                    "value": 1
+                  },
+                  {
+                    "type": "frontmost_application_if",
+                    "bundle_identifiers": [
+                      "^com\\.apple\\.finder$"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "escape"
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "finder_g",
+                      "value": 0
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "finder_g",
+                    "value": 1
+                  },
+                  {
+                    "type": "frontmost_application_if",
+                    "bundle_identifiers": [
+                      "^com\\.apple\\.finder$"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "j"
+                },
+                "to": [
+                  {
+                    "key_code": "down_arrow"
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "finder_g",
+                    "value": 0
+                  },
+                  {
+                    "type": "variable_if",
+                    "name": "finder_vim_mode",
+                    "value": 1
+                  },
+                  {
+                    "type": "frontmost_application_if",
+                    "bundle_identifiers": [
+                      "^com\\.apple\\.finder$"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "k"
+                },
+                "to": [
+                  {
+                    "key_code": "up_arrow"
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "finder_g",
+                    "value": 0
+                  },
+                  {
+                    "type": "variable_if",
+                    "name": "finder_vim_mode",
+                    "value": 1
+                  },
+                  {
+                    "type": "frontmost_application_if",
+                    "bundle_identifiers": [
+                      "^com\\.apple\\.finder$"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "h"
+                },
+                "to": [
+                  {
+                    "key_code": "up_arrow",
+                    "modifiers": [
+                      "command"
+                    ]
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "finder_g",
+                    "value": 0
+                  },
+                  {
+                    "type": "variable_if",
+                    "name": "finder_vim_mode",
+                    "value": 1
+                  },
+                  {
+                    "type": "frontmost_application_if",
+                    "bundle_identifiers": [
+                      "^com\\.apple\\.finder$"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "l"
+                },
+                "to": [
+                  {
+                    "key_code": "down_arrow",
+                    "modifiers": [
+                      "command"
+                    ]
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "finder_g",
+                    "value": 0
+                  },
+                  {
+                    "type": "variable_if",
+                    "name": "finder_vim_mode",
+                    "value": 1
+                  },
+                  {
+                    "type": "frontmost_application_if",
+                    "bundle_identifiers": [
+                      "^com\\.apple\\.finder$"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "j",
+                  "modifiers": {
+                    "mandatory": [
+                      "shift"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "down_arrow",
+                    "modifiers": [
+                      "shift"
+                    ]
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "finder_g",
+                    "value": 0
+                  },
+                  {
+                    "type": "variable_if",
+                    "name": "finder_vim_mode",
+                    "value": 1
+                  },
+                  {
+                    "type": "frontmost_application_if",
+                    "bundle_identifiers": [
+                      "^com\\.apple\\.finder$"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "k",
+                  "modifiers": {
+                    "mandatory": [
+                      "shift"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "up_arrow",
+                    "modifiers": [
+                      "shift"
+                    ]
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "finder_g",
+                    "value": 0
+                  },
+                  {
+                    "type": "variable_if",
+                    "name": "finder_vim_mode",
+                    "value": 1
+                  },
+                  {
+                    "type": "frontmost_application_if",
+                    "bundle_identifiers": [
+                      "^com\\.apple\\.finder$"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "slash"
+                },
+                "to": [
+                  {
+                    "key_code": "f",
+                    "modifiers": [
+                      "command"
+                    ]
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "finder_g",
+                    "value": 0
+                  },
+                  {
+                    "type": "variable_if",
+                    "name": "finder_vim_mode",
+                    "value": 1
+                  },
+                  {
+                    "type": "frontmost_application_if",
+                    "bundle_identifiers": [
+                      "^com\\.apple\\.finder$"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "n"
+                },
+                "to": [
+                  {
+                    "key_code": "g",
+                    "modifiers": [
+                      "command"
+                    ]
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "finder_g",
+                    "value": 0
+                  },
+                  {
+                    "type": "variable_if",
+                    "name": "finder_vim_mode",
+                    "value": 1
+                  },
+                  {
+                    "type": "frontmost_application_if",
+                    "bundle_identifiers": [
+                      "^com\\.apple\\.finder$"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "n",
+                  "modifiers": {
+                    "mandatory": [
+                      "shift"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "g",
+                    "modifiers": [
+                      "command",
+                      "shift"
+                    ]
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "finder_g",
+                    "value": 0
+                  },
+                  {
+                    "type": "variable_if",
+                    "name": "finder_vim_mode",
+                    "value": 1
+                  },
+                  {
+                    "type": "frontmost_application_if",
+                    "bundle_identifiers": [
+                      "^com\\.apple\\.finder$"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "d"
+                },
+                "to": [
+                  {
+                    "key_code": "delete_or_backspace",
+                    "modifiers": [
+                      "command"
+                    ]
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "finder_g",
+                    "value": 0
+                  },
+                  {
+                    "type": "variable_if",
+                    "name": "finder_vim_mode",
+                    "value": 1
+                  },
+                  {
+                    "type": "frontmost_application_if",
+                    "bundle_identifiers": [
+                      "^com\\.apple\\.finder$"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "r"
+                },
+                "to": [
+                  {
+                    "key_code": "return_or_enter"
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "finder_g",
+                    "value": 0
+                  },
+                  {
+                    "type": "variable_if",
+                    "name": "finder_vim_mode",
+                    "value": 1
+                  },
+                  {
+                    "type": "frontmost_application_if",
+                    "bundle_identifiers": [
+                      "^com\\.apple\\.finder$"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "m"
+                },
+                "to": [
+                  {
+                    "key_code": "n",
+                    "modifiers": [
+                      "command",
+                      "shift"
+                    ]
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "finder_g",
+                    "value": 0
+                  },
+                  {
+                    "type": "variable_if",
+                    "name": "finder_vim_mode",
+                    "value": 1
+                  },
+                  {
+                    "type": "frontmost_application_if",
+                    "bundle_identifiers": [
+                      "^com\\.apple\\.finder$"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "y"
+                },
+                "to": [
+                  {
+                    "key_code": "c",
+                    "modifiers": [
+                      "command"
+                    ]
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "finder_g",
+                    "value": 0
+                  },
+                  {
+                    "type": "variable_if",
+                    "name": "finder_vim_mode",
+                    "value": 1
+                  },
+                  {
+                    "type": "frontmost_application_if",
+                    "bundle_identifiers": [
+                      "^com\\.apple\\.finder$"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "p"
+                },
+                "to": [
+                  {
+                    "key_code": "v",
+                    "modifiers": [
+                      "command"
+                    ]
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "finder_g",
+                    "value": 0
+                  },
+                  {
+                    "type": "variable_if",
+                    "name": "finder_vim_mode",
+                    "value": 1
+                  },
+                  {
+                    "type": "frontmost_application_if",
+                    "bundle_identifiers": [
+                      "^com\\.apple\\.finder$"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "x"
+                },
+                "to": [
+                  {
+                    "key_code": "x",
+                    "modifiers": [
+                      "command"
+                    ]
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "finder_g",
+                    "value": 0
+                  },
+                  {
+                    "type": "variable_if",
+                    "name": "finder_vim_mode",
+                    "value": 1
+                  },
+                  {
+                    "type": "frontmost_application_if",
+                    "bundle_identifiers": [
+                      "^com\\.apple\\.finder$"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "u"
+                },
+                "to": [
+                  {
+                    "key_code": "z",
+                    "modifiers": [
+                      "command"
+                    ]
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "finder_g",
+                    "value": 0
+                  },
+                  {
+                    "type": "variable_if",
+                    "name": "finder_vim_mode",
+                    "value": 1
+                  },
+                  {
+                    "type": "frontmost_application_if",
+                    "bundle_identifiers": [
+                      "^com\\.apple\\.finder$"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "r",
+                  "modifiers": {
+                    "mandatory": [
+                      "control"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "z",
+                    "modifiers": [
+                      "command",
+                      "shift"
+                    ]
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "finder_g",
+                    "value": 0
+                  },
+                  {
+                    "type": "variable_if",
+                    "name": "finder_vim_mode",
+                    "value": 1
+                  },
+                  {
+                    "type": "frontmost_application_if",
+                    "bundle_identifiers": [
+                      "^com\\.apple\\.finder$"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "v"
+                },
+                "to": [
+                  {
+                    "key_code": "spacebar"
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "finder_g",
+                    "value": 0
+                  },
+                  {
+                    "type": "variable_if",
+                    "name": "finder_vim_mode",
+                    "value": 1
+                  },
+                  {
+                    "type": "frontmost_application_if",
+                    "bundle_identifiers": [
+                      "^com\\.apple\\.finder$"
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "description": "Finder Vim Mode Exit (Global)",
+            "manipulators": [
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "escape"
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "finder_vim_mode",
+                      "value": 0
+                    }
+                  },
+                  {
+                    "set_notification_message": {
+                      "id": "finder_vim",
+                      "text": ""
+                    }
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "finder_g",
+                    "value": 0
+                  },
+                  {
+                    "type": "variable_if",
+                    "name": "finder_vim_mode",
+                    "value": 1
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "parameters": {
+          "basic.to_if_alone_timeout_milliseconds": 1000,
+          "basic.to_if_held_down_threshold_milliseconds": 500,
+          "basic.to_delayed_action_delay_milliseconds": 500,
+          "basic.simultaneous_threshold_milliseconds": 50,
+          "mouse_motion_to_scroll.speed": 100
+        }
+      },
+      "devices": [
+        {
+          "identifiers": {
+            "is_keyboard": true,
+            "product_id": 1072,
+            "vendor_id": 13364
+          },
+          "treat_as_built_in_keyboard": true
+        },
+        {
+          "identifiers": {
+            "is_keyboard": true,
+            "is_pointing_device": true,
+            "product_id": 1072,
+            "vendor_id": 13364
+          },
+          "ignore": false
+        },
+        {
+          "identifiers": {
+            "is_keyboard": true,
+            "is_pointing_device": true,
+            "product_id": 2384,
+            "vendor_id": 13364
+          },
+          "ignore": false
+        },
+        {
+          "identifiers": {
+            "is_keyboard": true,
+            "is_pointing_device": true,
+            "product_id": 18,
+            "vendor_id": 13807
+          },
+          "ignore": false
+        },
+        {
+          "identifiers": {
+            "is_keyboard": true,
+            "is_pointing_device": true,
+            "product_id": 100,
+            "vendor_id": 14289
+          },
+          "ignore": false
+        }
+      ],
+      "name": "Default",
+      "virtual_hid_keyboard": {
+        "keyboard_type_v2": "ansi"
+      }
+    }
+  ]
+}

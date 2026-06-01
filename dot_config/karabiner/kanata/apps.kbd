@@ -1,0 +1,79 @@
+;; App Launching Layer
+;; Leader -> a -> key
+;; For messaging apps: Leader -> a -> m -> m/w/b
+
+;; Aliases for app launching commands
+(defalias
+  open-1password (cmd open -b com.1password.1password)
+  open-akiflow (cmd open -b com.akiflow.akiflow)
+  open-atlas (cmd open "/Applications/ChatGPT Atlas.app")
+  open-zed (cmd open -b dev.zed.Zed)
+  open-discord (cmd open -b com.hnc.Discord)
+  open-superhuman (cmd open -a Superhuman)
+  open-finder (cmd open -b com.apple.finder)
+  open-chrome (cmd open -b com.google.Chrome)
+  open-chatgpt (cmd open -b com.openai.chat)
+  open-claude (cmd open -b com.anthropic.claudefordesktop)
+  open-messages (cmd open -b com.apple.MobileSMS)
+  open-whatsapp (cmd open -b net.whatsapp.WhatsApp)
+  open-beeper (cmd open -b com.automattic.beeper.desktop)
+  open-notion (cmd open -b notion.id)
+  open-ios-simulator (cmd open -b com.apple.iphonesimulator)
+  open-perplexity (cmd open -b ai.perplexity.mac)
+  open-reflect (cmd open -b app.reflect.ReflectDesktop)
+  open-slack (cmd open -b com.tinyspeck.slackmacgap)
+  open-ghostty (cmd open -b com.mitchellh.ghostty)
+  open-cmux (cmd open -b com.cmuxterm.app)
+  open-vscode (cmd open -b com.microsoft.VSCode)
+  open-teams (cmd open -b com.microsoft.teams2)
+  open-lexicon (cmd open -b com.rekord.cloud.lexicon)
+  open-figma (cmd open -b com.figma.Desktop)
+  open-cursor (cmd open -b com.todesktop.230313mzl4w4u92)
+)
+
+;; Apps layer - main app shortcuts
+(deflayermap (apps)
+  1 (multi @open-1password (layer-switch base))
+  a (multi @open-akiflow (layer-switch base))
+  b (multi @open-atlas (layer-switch base))
+  c (multi @open-zed (layer-switch base))
+  d (multi @open-discord (layer-switch base))
+  e (multi @open-superhuman (layer-switch base))
+  f (multi @open-finder (layer-switch base))
+  g (multi @open-chrome (layer-switch base))
+  i (multi @open-chatgpt (layer-switch base))
+  ;; 'm' enters messaging sub-layer for Messages/WhatsApp/Beeper
+  m (layer-switch messaging)
+  n (multi @open-notion (layer-switch base))
+  o (multi @open-ios-simulator (layer-switch base))
+  p (multi @open-perplexity (layer-switch base))
+  r (multi @open-reflect (layer-switch base))
+  s (multi @open-slack (layer-switch base))
+  t (multi @open-cmux (layer-switch base))
+  v (multi @open-vscode (layer-switch base))
+  w (multi @open-teams (layer-switch base))
+  x (multi @open-lexicon (layer-switch base))
+  y (multi @open-figma (layer-switch base))
+  z (multi @open-cursor (layer-switch base))
+  esc (layer-switch base)
+  _ (layer-switch base)
+)
+
+;; Messaging sub-layer - for Messages, WhatsApp and Beeper
+;; Access: Leader -> a -> m -> m/w/b
+(deflayermap (messaging)
+  m (multi @open-messages (layer-switch base))
+  w (multi @open-whatsapp (layer-switch base))
+  b (multi @open-beeper (layer-switch base))
+  esc (layer-switch base)
+  _ (layer-switch base)
+)
+
+;; Intelligence sub-layer - for LLM chat apps
+;; Access: Leader -> i -> c/g
+(deflayermap (intelligence)
+  c (multi @open-claude (layer-switch base))
+  g (multi @open-chatgpt (layer-switch base))
+  esc (layer-switch base)
+  _ (layer-switch base)
+)

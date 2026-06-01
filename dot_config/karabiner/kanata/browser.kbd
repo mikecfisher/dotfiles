@@ -1,0 +1,28 @@
+;; Browser URL Shortcuts Layer
+;; Leader -> b -> key
+
+;; Aliases for browser URL commands
+(defalias
+  browser-chatgpt (cmd open "https://chatgpt.com")
+  browser-github (cmd open "https://github.com")
+  browser-hackernews (cmd open "https://news.ycombinator.com")
+  browser-linkedin (cmd open "https://linkedin.com")
+  browser-perplexity (cmd open "https://perplexity.ai")
+  browser-reddit (cmd open "https://reddit.com")
+  browser-twitter (cmd open "https://twitter.com")
+  browser-youtube (cmd open "https://youtube.com")
+)
+
+;; Browser layer - quick URL shortcuts
+(deflayermap (browser)
+  c (multi @browser-chatgpt (layer-switch base))
+  g (multi @browser-github (layer-switch base))
+  h (multi @browser-hackernews (layer-switch base))
+  l (multi @browser-linkedin (layer-switch base))
+  p (multi @browser-perplexity (layer-switch base))
+  r (multi @browser-reddit (layer-switch base))
+  t (multi @browser-twitter (layer-switch base))
+  y (multi @browser-youtube (layer-switch base))
+  esc (layer-switch base)
+  _ (layer-switch base)
+)
