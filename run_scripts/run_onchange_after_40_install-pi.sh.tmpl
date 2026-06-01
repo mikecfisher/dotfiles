@@ -1,0 +1,54 @@
+#!/bin/bash
+set -euo pipefail
+
+{{ if or (eq .chezmoi.os "darwin") (eq .chezmoi.os "linux") -}}
+# Install pi after the fnm/Node bootstrap has run.
+# The official curl installer uses npm globally; install the npm package
+# directly here so the chezmoi step stays auditable and non-interactive.
+
+add_fnm_to_path() {
+  local candidate
+  for candidate in \
+    "${HOME}/.local/share/fnm" \
+    "${HOME}/.fnm"; do
+    if [ -x "${candidate}/fnm" ]; then
+      export PATH="${candidate}:${PATH}"
+    fi
+  done
+}
+
+load_node() {
+  add_fnm_to_path
+
+  if command -v fnm >/dev/null 2>&1; then
+    eval "$(fnm env --shell bash)"
+    fnm install 22 --corepack-enabled
+    fnm use 22
+    hash -r
+  fi
+
+  if ! command -v npm >/dev/null 2>&1; then
+    echo "error: npm is required to install pi. Re-run chezmoi apply after fnm/Node setup completes." >&2
+    exit 1
+  fi
+}
+
+load_node
+
+if command -v pi >/dev/null 2>&1; then
+  pi_version="$(pi --version 2>/dev/null || true)"
+  if [ -n "${pi_version}" ]; then
+    echo "pi already installed: ${pi_version}"
+  else
+    echo "pi already installed at $(command -v pi)"
+  fi
+  exit 0
+fi
+
+echo "Installing pi coding agent..."
+npm install -g --ignore-scripts @earendil-works/pi-coding-agent
+
+pi --version >/dev/null
+{{ else -}}
+echo "Skipping pi install: unsupported OS {{ .chezmoi.os }}."
+{{ end -}}

@@ -1,6 +1,6 @@
 # ==== THEME ====
 # Base colors and opacity
-theme = catppuccin-macchiato.conf
+theme = Catppuccin Macchiato
 background-opacity = 0.98
 background-blur = 10
 font-family = "JetBrainsMono Nerd Font"
