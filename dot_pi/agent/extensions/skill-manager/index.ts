@@ -1,9 +1,9 @@
-import type { ExtensionAPI, ExtensionContext, ExtensionCommandContext } from "@mariozechner/pi-coding-agent";
+import type { ExtensionAPI, ExtensionContext, ExtensionCommandContext } from "@earendil-works/pi-coding-agent";
 import { existsSync } from "node:fs";
 import { mkdir, readFile, writeFile, readdir } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { homedir } from "node:os";
-import { Key, matchesKey, truncateToWidth, type Component } from "@mariozechner/pi-tui";
+import { Key, matchesKey, truncateToWidth, type Component } from "@earendil-works/pi-tui";
 
 interface Config {
   defaultProfile: string;

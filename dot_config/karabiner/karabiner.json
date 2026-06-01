@@ -4,7 +4,7 @@
       "complex_modifications": {
         "rules": [
           {
-            "description": "Caps Lock → Control/Escape",
+            "description": "Caps Lock \u2192 Control/Escape",
             "manipulators": [
               {
                 "type": "basic",
@@ -293,33 +293,6 @@
               {
                 "type": "basic",
                 "from": {
-                  "key_code": "t"
-                },
-                "to": [
-                  {
-                    "set_variable": {
-                      "name": "leader",
-                      "value": "aerospace"
-                    }
-                  },
-                  {
-                    "set_notification_message": {
-                      "id": "leader",
-                      "text": "(S)Stack Layout (F)Float Toggle (U)Fullscreen (Z)Balance Sizes (H)Focus Left (J)Focus Down (K)Focus Up (L)Focus Right (⇧H)Move Left (⇧J)Move Down (⇧K)Move Up (⇧L)Move Right (1)Workspace 1 (2)Workspace 2 (3)Workspace 3 (4)Workspace 4 (5)Workspace 5 (B)Workspace B (C)Workspace C (T)Workspace T (⇧(N))Move to (N) (-)Resize -50 (=)Resize +50 (SLASH)Tiles Layout (COMMA)Accordion Layout (SEMICOLON)Service Mode"
-                    }
-                  }
-                ],
-                "conditions": [
-                  {
-                    "type": "variable_if",
-                    "name": "leader",
-                    "value": 1
-                  }
-                ]
-              },
-              {
-                "type": "basic",
-                "from": {
                   "key_code": "e"
                 },
                 "to": [
@@ -332,7 +305,7 @@
                   {
                     "set_notification_message": {
                       "id": "leader",
-                      "text": "(J)😂 (H)❤️ (T)👍 (F)🔥 (S)🙁 (O)😍 (P)🙏 (C)👏 (L)🥰 (W)🙂 (E)🤔 (A)😅 (R)🚀 (V)✅ (G)😬 (M)🤯 (Z)😎 (B)💪"
+                      "text": "(J)\ud83d\ude02 (H)\u2764\ufe0f (T)\ud83d\udc4d (F)\ud83d\udd25 (S)\ud83d\ude41 (O)\ud83d\ude0d (P)\ud83d\ude4f (C)\ud83d\udc4f (L)\ud83e\udd70 (W)\ud83d\ude42 (E)\ud83e\udd14 (A)\ud83d\ude05 (R)\ud83d\ude80 (V)\u2705 (G)\ud83d\ude2c (M)\ud83e\udd2f (Z)\ud83d\ude0e (B)\ud83d\udcaa"
                     }
                   }
                 ],
@@ -1955,7 +1928,7 @@
                 },
                 "to": [
                   {
-                    "shell_command": "osascript -e '\nset prev to the clipboard\nset the clipboard to \"😂\"\ntell application \"System Events\"\n  keystroke \"v\" using command down\n  delay 0.1\nend tell\nset the clipboard to prev'"
+                    "shell_command": "osascript -e '\nset prev to the clipboard\nset the clipboard to \"\ud83d\ude02\"\ntell application \"System Events\"\n  keystroke \"v\" using command down\n  delay 0.1\nend tell\nset the clipboard to prev'"
                   },
                   {
                     "set_variable": {
@@ -1985,7 +1958,7 @@
                 },
                 "to": [
                   {
-                    "shell_command": "osascript -e '\nset prev to the clipboard\nset the clipboard to \"❤️\"\ntell application \"System Events\"\n  keystroke \"v\" using command down\n  delay 0.1\nend tell\nset the clipboard to prev'"
+                    "shell_command": "osascript -e '\nset prev to the clipboard\nset the clipboard to \"\u2764\ufe0f\"\ntell application \"System Events\"\n  keystroke \"v\" using command down\n  delay 0.1\nend tell\nset the clipboard to prev'"
                   },
                   {
                     "set_variable": {
@@ -2015,7 +1988,7 @@
                 },
                 "to": [
                   {
-                    "shell_command": "osascript -e '\nset prev to the clipboard\nset the clipboard to \"👍\"\ntell application \"System Events\"\n  keystroke \"v\" using command down\n  delay 0.1\nend tell\nset the clipboard to prev'"
+                    "shell_command": "osascript -e '\nset prev to the clipboard\nset the clipboard to \"\ud83d\udc4d\"\ntell application \"System Events\"\n  keystroke \"v\" using command down\n  delay 0.1\nend tell\nset the clipboard to prev'"
                   },
                   {
                     "set_variable": {
@@ -2045,7 +2018,7 @@
                 },
                 "to": [
                   {
-                    "shell_command": "osascript -e '\nset prev to the clipboard\nset the clipboard to \"🔥\"\ntell application \"System Events\"\n  keystroke \"v\" using command down\n  delay 0.1\nend tell\nset the clipboard to prev'"
+                    "shell_command": "osascript -e '\nset prev to the clipboard\nset the clipboard to \"\ud83d\udd25\"\ntell application \"System Events\"\n  keystroke \"v\" using command down\n  delay 0.1\nend tell\nset the clipboard to prev'"
                   },
                   {
                     "set_variable": {
@@ -2075,7 +2048,7 @@
                 },
                 "to": [
                   {
-                    "shell_command": "osascript -e '\nset prev to the clipboard\nset the clipboard to \"🙁\"\ntell application \"System Events\"\n  keystroke \"v\" using command down\n  delay 0.1\nend tell\nset the clipboard to prev'"
+                    "shell_command": "osascript -e '\nset prev to the clipboard\nset the clipboard to \"\ud83d\ude41\"\ntell application \"System Events\"\n  keystroke \"v\" using command down\n  delay 0.1\nend tell\nset the clipboard to prev'"
                   },
                   {
                     "set_variable": {
@@ -2105,7 +2078,7 @@
                 },
                 "to": [
                   {
-                    "shell_command": "osascript -e '\nset prev to the clipboard\nset the clipboard to \"😍\"\ntell application \"System Events\"\n  keystroke \"v\" using command down\n  delay 0.1\nend tell\nset the clipboard to prev'"
+                    "shell_command": "osascript -e '\nset prev to the clipboard\nset the clipboard to \"\ud83d\ude0d\"\ntell application \"System Events\"\n  keystroke \"v\" using command down\n  delay 0.1\nend tell\nset the clipboard to prev'"
                   },
                   {
                     "set_variable": {
@@ -2135,7 +2108,7 @@
                 },
                 "to": [
                   {
-                    "shell_command": "osascript -e '\nset prev to the clipboard\nset the clipboard to \"🙏\"\ntell application \"System Events\"\n  keystroke \"v\" using command down\n  delay 0.1\nend tell\nset the clipboard to prev'"
+                    "shell_command": "osascript -e '\nset prev to the clipboard\nset the clipboard to \"\ud83d\ude4f\"\ntell application \"System Events\"\n  keystroke \"v\" using command down\n  delay 0.1\nend tell\nset the clipboard to prev'"
                   },
                   {
                     "set_variable": {
@@ -2165,7 +2138,7 @@
                 },
                 "to": [
                   {
-                    "shell_command": "osascript -e '\nset prev to the clipboard\nset the clipboard to \"👏\"\ntell application \"System Events\"\n  keystroke \"v\" using command down\n  delay 0.1\nend tell\nset the clipboard to prev'"
+                    "shell_command": "osascript -e '\nset prev to the clipboard\nset the clipboard to \"\ud83d\udc4f\"\ntell application \"System Events\"\n  keystroke \"v\" using command down\n  delay 0.1\nend tell\nset the clipboard to prev'"
                   },
                   {
                     "set_variable": {
@@ -2195,7 +2168,7 @@
                 },
                 "to": [
                   {
-                    "shell_command": "osascript -e '\nset prev to the clipboard\nset the clipboard to \"🥰\"\ntell application \"System Events\"\n  keystroke \"v\" using command down\n  delay 0.1\nend tell\nset the clipboard to prev'"
+                    "shell_command": "osascript -e '\nset prev to the clipboard\nset the clipboard to \"\ud83e\udd70\"\ntell application \"System Events\"\n  keystroke \"v\" using command down\n  delay 0.1\nend tell\nset the clipboard to prev'"
                   },
                   {
                     "set_variable": {
@@ -2225,7 +2198,7 @@
                 },
                 "to": [
                   {
-                    "shell_command": "osascript -e '\nset prev to the clipboard\nset the clipboard to \"🙂\"\ntell application \"System Events\"\n  keystroke \"v\" using command down\n  delay 0.1\nend tell\nset the clipboard to prev'"
+                    "shell_command": "osascript -e '\nset prev to the clipboard\nset the clipboard to \"\ud83d\ude42\"\ntell application \"System Events\"\n  keystroke \"v\" using command down\n  delay 0.1\nend tell\nset the clipboard to prev'"
                   },
                   {
                     "set_variable": {
@@ -2255,7 +2228,7 @@
                 },
                 "to": [
                   {
-                    "shell_command": "osascript -e '\nset prev to the clipboard\nset the clipboard to \"🤔\"\ntell application \"System Events\"\n  keystroke \"v\" using command down\n  delay 0.1\nend tell\nset the clipboard to prev'"
+                    "shell_command": "osascript -e '\nset prev to the clipboard\nset the clipboard to \"\ud83e\udd14\"\ntell application \"System Events\"\n  keystroke \"v\" using command down\n  delay 0.1\nend tell\nset the clipboard to prev'"
                   },
                   {
                     "set_variable": {
@@ -2285,7 +2258,7 @@
                 },
                 "to": [
                   {
-                    "shell_command": "osascript -e '\nset prev to the clipboard\nset the clipboard to \"😅\"\ntell application \"System Events\"\n  keystroke \"v\" using command down\n  delay 0.1\nend tell\nset the clipboard to prev'"
+                    "shell_command": "osascript -e '\nset prev to the clipboard\nset the clipboard to \"\ud83d\ude05\"\ntell application \"System Events\"\n  keystroke \"v\" using command down\n  delay 0.1\nend tell\nset the clipboard to prev'"
                   },
                   {
                     "set_variable": {
@@ -2315,7 +2288,7 @@
                 },
                 "to": [
                   {
-                    "shell_command": "osascript -e '\nset prev to the clipboard\nset the clipboard to \"🚀\"\ntell application \"System Events\"\n  keystroke \"v\" using command down\n  delay 0.1\nend tell\nset the clipboard to prev'"
+                    "shell_command": "osascript -e '\nset prev to the clipboard\nset the clipboard to \"\ud83d\ude80\"\ntell application \"System Events\"\n  keystroke \"v\" using command down\n  delay 0.1\nend tell\nset the clipboard to prev'"
                   },
                   {
                     "set_variable": {
@@ -2345,7 +2318,7 @@
                 },
                 "to": [
                   {
-                    "shell_command": "osascript -e '\nset prev to the clipboard\nset the clipboard to \"✅\"\ntell application \"System Events\"\n  keystroke \"v\" using command down\n  delay 0.1\nend tell\nset the clipboard to prev'"
+                    "shell_command": "osascript -e '\nset prev to the clipboard\nset the clipboard to \"\u2705\"\ntell application \"System Events\"\n  keystroke \"v\" using command down\n  delay 0.1\nend tell\nset the clipboard to prev'"
                   },
                   {
                     "set_variable": {
@@ -2375,7 +2348,7 @@
                 },
                 "to": [
                   {
-                    "shell_command": "osascript -e '\nset prev to the clipboard\nset the clipboard to \"😬\"\ntell application \"System Events\"\n  keystroke \"v\" using command down\n  delay 0.1\nend tell\nset the clipboard to prev'"
+                    "shell_command": "osascript -e '\nset prev to the clipboard\nset the clipboard to \"\ud83d\ude2c\"\ntell application \"System Events\"\n  keystroke \"v\" using command down\n  delay 0.1\nend tell\nset the clipboard to prev'"
                   },
                   {
                     "set_variable": {
@@ -2405,7 +2378,7 @@
                 },
                 "to": [
                   {
-                    "shell_command": "osascript -e '\nset prev to the clipboard\nset the clipboard to \"🤯\"\ntell application \"System Events\"\n  keystroke \"v\" using command down\n  delay 0.1\nend tell\nset the clipboard to prev'"
+                    "shell_command": "osascript -e '\nset prev to the clipboard\nset the clipboard to \"\ud83e\udd2f\"\ntell application \"System Events\"\n  keystroke \"v\" using command down\n  delay 0.1\nend tell\nset the clipboard to prev'"
                   },
                   {
                     "set_variable": {
@@ -2435,7 +2408,7 @@
                 },
                 "to": [
                   {
-                    "shell_command": "osascript -e '\nset prev to the clipboard\nset the clipboard to \"😎\"\ntell application \"System Events\"\n  keystroke \"v\" using command down\n  delay 0.1\nend tell\nset the clipboard to prev'"
+                    "shell_command": "osascript -e '\nset prev to the clipboard\nset the clipboard to \"\ud83d\ude0e\"\ntell application \"System Events\"\n  keystroke \"v\" using command down\n  delay 0.1\nend tell\nset the clipboard to prev'"
                   },
                   {
                     "set_variable": {
@@ -2465,7 +2438,7 @@
                 },
                 "to": [
                   {
-                    "shell_command": "osascript -e '\nset prev to the clipboard\nset the clipboard to \"💪\"\ntell application \"System Events\"\n  keystroke \"v\" using command down\n  delay 0.1\nend tell\nset the clipboard to prev'"
+                    "shell_command": "osascript -e '\nset prev to the clipboard\nset the clipboard to \"\ud83d\udcaa\"\ntell application \"System Events\"\n  keystroke \"v\" using command down\n  delay 0.1\nend tell\nset the clipboard to prev'"
                   },
                   {
                     "set_variable": {
@@ -2975,7 +2948,7 @@
                   {
                     "set_notification_message": {
                       "id": "finder_vim",
-                      "text": "🎯 Finder Vim Mode: ON (ESC to exit)"
+                      "text": "\ud83c\udfaf Finder Vim Mode: ON (ESC to exit)"
                     }
                   }
                 ],
