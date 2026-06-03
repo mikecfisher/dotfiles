@@ -1,0 +1,35 @@
+#!/bin/bash
+set -euo pipefail
+
+{{ if or (eq .chezmoi.os "darwin") (eq .chezmoi.os "linux") -}}
+# Install Bun with the official standalone installer. Keep PATH/profile changes
+# under chezmoi's control: dot_zprofile.tmpl and fish config already export
+# BUN_INSTALL and add ~/.bun/bin to PATH. Prepending the install bin dir here
+# also makes the installer skip appending duplicate shell config after install.
+BUN_INSTALL="${BUN_INSTALL:-${HOME}/.bun}"
+export BUN_INSTALL
+export PATH="${BUN_INSTALL}/bin:${PATH}"
+
+if ! command -v unzip >/dev/null 2>&1; then
+  echo "error: unzip is required to install Bun" >&2
+  exit 1
+fi
+
+if [ ! -x "${BUN_INSTALL}/bin/bun" ]; then
+  echo "Installing Bun to ${BUN_INSTALL}..."
+  curl -fsSL https://bun.sh/install | bash
+else
+  echo "Bun already installed at ${BUN_INSTALL}/bin/bun"
+fi
+
+hash -r
+
+if ! command -v bun >/dev/null 2>&1; then
+  echo "error: bun is not available after installation" >&2
+  exit 1
+fi
+
+bun --version
+{{ else -}}
+echo "Skipping Bun install: unsupported OS {{ .chezmoi.os }}."
+{{ end -}}
