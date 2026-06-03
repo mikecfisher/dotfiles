@@ -1,0 +1,57 @@
+#!/bin/bash
+set -euo pipefail
+
+{{ if or (eq .chezmoi.os "darwin") (eq .chezmoi.os "linux") -}}
+# Install uv with Astral's standalone installer instead of Homebrew so uv can
+# manage its own updates and Python/tool shims. Keep PATH/profile changes under
+# chezmoi's control with UV_NO_MODIFY_PATH.
+XDG_BIN_HOME="${XDG_BIN_HOME:-${HOME}/.local/bin}"
+XDG_CACHE_HOME="${XDG_CACHE_HOME:-${HOME}/.cache}"
+XDG_DATA_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}"
+export XDG_BIN_HOME XDG_CACHE_HOME XDG_DATA_HOME
+
+UV_INSTALL_DIR="${UV_INSTALL_DIR:-${XDG_BIN_HOME}}"
+UV_CACHE_DIR="${UV_CACHE_DIR:-${XDG_CACHE_HOME}/uv}"
+export UV_INSTALL_DIR UV_CACHE_DIR UV_NO_MODIFY_PATH=1
+export PATH="${UV_INSTALL_DIR}:${PATH}"
+
+mkdir -p "${UV_INSTALL_DIR}" "${UV_CACHE_DIR}"
+
+install_uv() {
+  if command -v curl >/dev/null 2>&1; then
+    curl -LsSf https://astral.sh/uv/install.sh | env UV_INSTALL_DIR="${UV_INSTALL_DIR}" UV_NO_MODIFY_PATH=1 sh
+  elif command -v wget >/dev/null 2>&1; then
+    wget -qO- https://astral.sh/uv/install.sh | env UV_INSTALL_DIR="${UV_INSTALL_DIR}" UV_NO_MODIFY_PATH=1 sh
+  else
+    echo "error: curl or wget is required to install uv" >&2
+    exit 1
+  fi
+}
+
+if [ -x "${UV_INSTALL_DIR}/uv" ] && \
+   [ -x "${UV_INSTALL_DIR}/uvx" ] && \
+   "${UV_INSTALL_DIR}/uv" --version >/dev/null 2>&1 && \
+   "${UV_INSTALL_DIR}/uvx" --version >/dev/null 2>&1; then
+  echo "uv already installed at ${UV_INSTALL_DIR}/uv"
+else
+  echo "Installing uv to ${UV_INSTALL_DIR}..."
+  install_uv
+fi
+
+hash -r
+
+if ! command -v uv >/dev/null 2>&1; then
+  echo "error: uv is not available after installation" >&2
+  exit 1
+fi
+
+if ! command -v uvx >/dev/null 2>&1; then
+  echo "error: uvx is not available after installation" >&2
+  exit 1
+fi
+
+uv --version
+uvx --version >/dev/null
+{{ else -}}
+echo "Skipping uv install: unsupported OS {{ .chezmoi.os }}."
+{{ end -}}

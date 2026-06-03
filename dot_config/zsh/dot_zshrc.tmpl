@@ -15,6 +15,14 @@
 export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
 export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
 export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
+export XDG_BIN_HOME="${XDG_BIN_HOME:-$HOME/.local/bin}"
+
+path=("$XDG_BIN_HOME" $path)
+typeset -U path
+
+export UV_CACHE_DIR="${UV_CACHE_DIR:-$XDG_CACHE_HOME/uv}"
+export UV_TOOL_BIN_DIR="${UV_TOOL_BIN_DIR:-$XDG_BIN_HOME}"
+export UV_PYTHON_BIN_DIR="${UV_PYTHON_BIN_DIR:-$XDG_BIN_HOME}"
 
 alias reload-zsh="source ~/.zshrc"
 alias edit-zsh="nvim ~/.zshrc"
@@ -249,6 +257,15 @@ fi
 # FZF fuzzy finder key bindings and completion
 if command -v fzf >/dev/null 2>&1; then
   source <(fzf --zsh)
+fi
+
+# uv and uvx autocompletion
+if command -v uv >/dev/null 2>&1; then
+  eval "$(uv generate-shell-completion zsh)"
+fi
+
+if command -v uvx >/dev/null 2>&1; then
+  eval "$(uvx --generate-shell-completion zsh)"
 fi
 
 # --- setup fzf theme ---

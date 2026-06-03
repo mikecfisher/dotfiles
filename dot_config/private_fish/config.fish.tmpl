@@ -19,6 +19,13 @@ end
 set -gx XDG_CONFIG_HOME $HOME/.config
 set -gx XDG_DATA_HOME $HOME/.local/share
 set -gx XDG_CACHE_HOME $HOME/.cache
+set -gx XDG_BIN_HOME $HOME/.local/bin
+fish_add_path $XDG_BIN_HOME
+
+# Python package manager (uv)
+set -gx UV_CACHE_DIR $XDG_CACHE_HOME/uv
+set -gx UV_TOOL_BIN_DIR $XDG_BIN_HOME
+set -gx UV_PYTHON_BIN_DIR $XDG_BIN_HOME
 
 # Claude CLI
 fish_add_path $HOME/.claude/local
@@ -167,7 +174,7 @@ end
 
 # opencode
 fish_add_path $HOME/.opencode/bin
-fish_add_path $HOME/.local/bin
+fish_add_path $XDG_BIN_HOME
 
 # Added by Antigravity
 fish_add_path $HOME/.antigravity/antigravity/bin

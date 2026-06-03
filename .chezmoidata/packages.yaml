@@ -19,7 +19,6 @@ packages:
       - "neovim"
       - "ripgrep"
       - "starship"
-      - "uv"
       - "yq"
       - "zoxide"
   taps:

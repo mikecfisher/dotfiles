@@ -64,6 +64,8 @@ When initializing chezmoi, you'll be prompted for machine-specific data:
 
 The first apply bootstraps Homebrew before package installation and supports both Apple Silicon (`/opt/homebrew`) and Intel (`/usr/local`) prefixes.
 
+`uv` is installed with Astral's standalone installer into `~/.local/bin` with shell-profile modification disabled; chezmoi manages the PATH and completions for zsh, fish, and bash.
+
 Mac App Store apps are skipped unless you're signed in. After signing in, re-run:
 
 ```bash

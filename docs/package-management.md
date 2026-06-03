@@ -4,7 +4,7 @@ This document explains how Homebrew packages and applications are managed in thi
 
 ## Overview
 
-This dotfiles repository uses a simplified package management approach based on Homebrew, with automatic Brewfile updates. The system supports two machine types:
+This dotfiles repository uses a simplified package management approach based on Homebrew, with automatic Brewfile updates. `uv` is the exception: it is installed with Astral's standalone installer so `uv self update` works and Python/tool shims live in `~/.local/bin`. The system supports two machine types:
 
 - **Default**: Common development tools and applications suitable for any machine
 - **Personal**: Includes everything in the default configuration plus additional tools for personal use

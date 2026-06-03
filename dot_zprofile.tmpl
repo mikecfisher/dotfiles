@@ -7,6 +7,7 @@
 export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
 export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
 export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
+export XDG_BIN_HOME="${XDG_BIN_HOME:-$HOME/.local/bin}"
 
 # ============================================================================
 # PACKAGE MANAGERS
@@ -21,8 +22,11 @@ fi
 export HOMEBREW_BREWFILE_FULL_NAME=1
 
 # Python package manager (uv)
-export UV_SYSTEM_PYTHON=1             # Allow uv to find system Python installations
-export UV_CACHE_DIR="$HOME/.cache/uv" # Set cache directory
+# Do not set UV_SYSTEM_PYTHON globally; it is equivalent to --system and is
+# intended for CI/containers, not day-to-day project environments.
+export UV_CACHE_DIR="${UV_CACHE_DIR:-$XDG_CACHE_HOME/uv}"
+export UV_TOOL_BIN_DIR="${UV_TOOL_BIN_DIR:-$XDG_BIN_HOME}"
+export UV_PYTHON_BIN_DIR="${UV_PYTHON_BIN_DIR:-$XDG_BIN_HOME}"
 
 # ============================================================================
 # DEVELOPMENT ENVIRONMENT
@@ -90,7 +94,7 @@ fi
 
 path=(
   # User binaries
-  $HOME/.local/bin
+  $XDG_BIN_HOME
   $HOME/bin
 
   # Node.js package managers
