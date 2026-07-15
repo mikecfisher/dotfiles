@@ -1,9 +1,9 @@
 return {
   "mrjones2014/smart-splits.nvim",
-  lazy = false, -- CRITICAL: Must not be lazy-loaded for WezTerm integration!
+  lazy = false,
   opts = {
-    -- Integrate with WezTerm
-    multiplexer_integration = "wezterm",
+    -- Integrate with tmux
+    multiplexer_integration = "tmux",
     -- Don't wrap at edges - stop instead
     at_edge = "stop",
     -- Disable multiplexer navigation when pane is zoomed

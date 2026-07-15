@@ -32,7 +32,6 @@ packages:
     brews:
     # Coding Specific
       # General
-      - "acli"
       - "act"
       - "ada-url"
       - "adwaita-icon-theme"
@@ -48,7 +47,6 @@ packages:
       - "biome"
       - "bitrise"
       - "boost"
-      - "brew-file"
       - "brotli"
       - "btop"
       - "c-ares"
@@ -84,7 +82,6 @@ packages:
       - "fizz"
       - "flac"
       - "fmt"
-      - "fnm"
       - "folly"
       - "fontconfig"
       - "freetype"
@@ -103,6 +100,7 @@ packages:
       - "git-delta"
       - "git-filter-repo"
       - "git-lfs"
+      - "git-spice"
       - "glances"
       - "glib"
       - "glog"
@@ -115,13 +113,13 @@ packages:
       - "gpgme"
       - "gpgmepp"
       - "graphene"
-      - "graphite"
       - "graphite2"
       - "graphviz"
       - "gtk4"
       - "gts"
       - "harfbuzz"
       - "hdrhistogram_c"
+      - "herdr"
       - "hicolor-icon-theme"
       - "highway"
       - "htop"
@@ -138,6 +136,7 @@ packages:
       - "jq"
       - "krb5"
       - "lazygit"
+      - "lefthook"
       - "leptonica"
       - "libadwaita"
       - "libarchive"
@@ -152,6 +151,7 @@ packages:
       - "libdeflate"
       - "libepoxy"
       - "libevent"
+      - "libffi"
       - "libfyaml"
       - "libgcrypt"
       - "libgit2"
@@ -216,6 +216,7 @@ packages:
       - "mole"
       - "mpdecimal"
       - "mpg123"
+      - "mprocs"
       - "mvfst"
       - "nbytes"
       - "ncurses"
@@ -223,7 +224,6 @@ packages:
       - "neovim"
       - "netpbm"
       - "nettle"
-      - "node"
       - "npth"
       - "nspr"
       - "nss"
@@ -233,7 +233,6 @@ packages:
       - "openexr"
       - "openjpeg"
       - "openjph"
-      - "openssl@3"
       - "openssl@4"
       - "opus"
       - "p11-kit"
@@ -244,21 +243,22 @@ packages:
       - "pixman"
       - "pkgconf"
       - "poppler"
+      - "portless"
+      - "potrace"
+      - "pup"
       - "py3cairo"
       - "pycparser"
       - "pydantic"
       - "pyenv"
       - "pygobject3"
       - "python-packaging"
-      - "python@3.12"
-      - "python@3.13"
       - "python@3.14"
       - "rav1e"
       - "readline"
-      - "replibyte"
       - "ripgrep"
       - "ruby"
       - "sdl2"
+      - "sentry"
       - "sevenzip"
       - "shared-mime-info"
       - "simdjson"
@@ -278,7 +278,6 @@ packages:
       - "unbound"
       - "unibilium"
       - "utf8proc"
-      - "uv"
       - "uvwasi"
       - "wangle"
       - "watchman"
@@ -298,7 +297,6 @@ packages:
       - "zimg"
       - "zoxide"
       - "zsh"
-      - "zsh-abbr"
       - "zsh-autosuggestions"
       - "zsh-syntax-highlighting"
       - "zstd"
@@ -312,14 +310,16 @@ packages:
       - "chatgpt"
       - "chatgpt-atlas"
       - "claude"
-      - "claude-code"
       - "cleanshot"
       - "cmux"
+      - "codexbar"
       - "codiff"
       - "cursor"
       - "discord"
+      - "drawio"
       - "expo-orbit"
       - "figma"
+      - "finicky"
       - "firefox"
       - "font-cascadia-code"
       - "font-fira-code"
@@ -328,6 +328,7 @@ packages:
       - "font-meslo-lg-nerd-font"
       - "font-sf-pro"
       - "font-symbols-only-nerd-font"
+      - "gcloud-cli"
       - "ghostty"
       - "google-chrome"
       - "granola"
@@ -343,6 +344,7 @@ packages:
       - "notion"
       - "notion-calendar"
       - "obsidian"
+      - "openvpn-connect"
       - "orbstack"
       - "postman"
       - "proxyman"
@@ -351,9 +353,11 @@ packages:
       - "repobar"
       - "sf-symbols"
       - "slack"
+      - "snapzy"
       - "spotify"
       - "stravu-crystal"
       - "superhuman"
+      - "thaw"
       - "todoist-app"
       - "visual-studio-code"
       - "warp"
@@ -369,16 +373,15 @@ packages:
       - { id: 1319778037, name: "iStat Menus" }
       - { id: 1402042596, name: "AdBlock" }
       - { id: 1436522307, name: "Transmit" }
-      - { id: 1475387142, name: "Tailscale" }
       - { id: 1480068668, name: "Messenger" }
       - { id: 1480933944, name: "Vimari" }
       - { id: 1528890965, name: "TextSniper" }
       - { id: 1569813296, name: "1Password for Safari" }
       - { id: 302584613, name: "Amazon Kindle" }
       - { id: 310633997, name: "WhatsApp" }
-      - { id: 409183694, name: "Keynote" }
-      - { id: 409201541, name: "Pages" }
-      - { id: 409203825, name: "Numbers" }
+      - { id: 361285480, name: "Keynote" }
+      - { id: 361304891, name: "Numbers" }
+      - { id: 361309726, name: "Pages" }
       - { id: 442168834, name: "SiteSucker" }
       - { id: 470158793, name: "Keka" }
       - { id: 6714467650, name: "Perplexity" }
@@ -399,7 +402,58 @@ packages:
       - "homeassistant-cli"
       - "nicotine-plus"
       - "toilet"
-    casks: []
+    casks:
+      # Music production and DJ
+      - "ableton-live-suite"
+      - "anki"
+      - "bambu-studio"
+      - "backblaze"
+      - "bitwig-studio"
+      - "bluebubbles"
+      - "brave-browser"
+      - "dropbox"
+      - "djstudio"
+      - "forklift"
+      - "geekbench"
+      - "iina"
+      - "izotope-product-portal"
+      - "lexicon-dj"
+      - "mixed-in-key"
+      - "native-access"
+      - "paulxstretch"
+      - "rekordbox"
+      - "reflect"
+      - "ripx"
+      - "softube-central"
+      - "splice"
+      - "superwhisper"
+      - "synologyassistant"
+      - "synology-drive"
+      - "telegram"
+      - "topaz-photo-ai"
+      - "ua-connect"
+      - "whatsapp"
+      - "wispr-flow"
+      - "youlean-loudness-meter"
+      - "zoom"
+      # Personal productivity
+      - "conductor"
+      - "betterdisplay"
+      - "bruno"
+      - "helium"
+      - "legcord"
+      - "pritunl"
+      - "tableplus"
+      - "ultimate-vocal-remover"
+      - "vivaldi"
+      - "zoom"
+      - "hermes"
+    # Desired vendor-managed apps without a stable Homebrew cask.
+    # These are documented intent and require a vendor installer or updater.
+    vendor_apps:
+      - "Groof"
+      - "Willow Voice"
+      - "Raycast Beta"
     mas:
       - { id: 1006401965, name: "Samplism Lite" }
       - { id: 1087079310, name: "Switch Sound File Converter" }
@@ -427,3 +481,4 @@ packages:
       - { id: 682658836, name: "GarageBand" }
       - { id: 696977615, name: "Capo" }
       - { id: 967004861, name: "HP Easy Scan" }
+      - { id: 6761130782, name: "Studio Guru" }

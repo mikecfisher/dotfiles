@@ -28,8 +28,8 @@ fi
 echo "🧹 Starting weekly maintenance on $(date)..."
 echo "📝 Logging to $LOG_FILE"
 
-# Update Homebrew packages using brew-file
-echo "📦 Updating Homebrew with brew-file..."
+# Refresh Homebrew metadata; package intent remains managed by chezmoi.
+echo "📦 Updating Homebrew metadata..."
 if ! brew update; then
   echo "⚠️ Warning: brew file update failed, continuing anyway..."
 fi

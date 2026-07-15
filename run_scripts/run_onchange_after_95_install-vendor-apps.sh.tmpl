@@ -1,0 +1,45 @@
+#!/bin/bash
+set -euo pipefail
+
+{{ if and (eq .chezmoi.os "darwin") (eq .machine_type "personal") -}}
+
+# Installomator is used only for private labels that do not have stable
+# Homebrew casks. Keep the upstream release pinned and keep our labels in the
+# Chez Moi repository so the bootstrap remains reproducible.
+INSTALLomator_VERSION="v10.8"
+INSTALLomator_COMMIT="56e33843c8ea3fba77a09348d9651c88116e05fd"
+LABEL_DIR="{{ .chezmoi.sourceDir }}/installomator/labels"
+WORK_DIR="$(mktemp -d)"
+trap 'rm -rf "${WORK_DIR}"' EXIT
+
+curl -fsSL "https://github.com/Installomator/Installomator/archive/${INSTALLomator_COMMIT}.tar.gz" \
+  | tar -xz -C "${WORK_DIR}"
+
+INSTALLomator_DIR="${WORK_DIR}/Installomator-${INSTALLomator_COMMIT}"
+
+if [ ! -d "${LABEL_DIR}" ]; then
+  echo "error: private Installomator labels not found at ${LABEL_DIR}" >&2
+  exit 1
+fi
+
+echo "Installing/updating private vendor apps with Installomator ${INSTALLomator_VERSION}..."
+"${INSTALLomator_DIR}/assemble.sh" --labels "${LABEL_DIR}" groof DEBUG=0 NOTIFY=silent || \
+  echo "warning: Groof installation/update failed; continuing."
+"${INSTALLomator_DIR}/assemble.sh" --labels "${LABEL_DIR}" willowvoice DEBUG=0 NOTIFY=silent || \
+  echo "warning: Willow Voice installation/update failed; continuing."
+
+# IK Product Manager has an Installomator-maintained, signed direct download
+# and no Homebrew cask in the baseline manifest.
+"${INSTALLomator_DIR}/assemble.sh" --labels "${LABEL_DIR}" ikproductmanager DEBUG=0 NOTIFY=silent || \
+  echo "warning: IK Product Manager installation/update failed; continuing."
+
+echo "Output Hub requires its official account landing page; no stable public direct URL is available for a label."
+
+cat >&2 <<'EOF'
+Raycast Beta is intentionally not automated: its bundle does not expose a
+stable public update feed. Install or update it from the official beta channel.
+EOF
+
+{{ else -}}
+echo "Skipping private vendor apps: personal macOS machine required."
+{{ end -}}

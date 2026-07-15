@@ -1,0 +1,119 @@
+# Studio Mac application inventory
+
+- Host: `mikes-macbook.local`
+- macOS: 26.2 (build 25C56)
+- Source: `/Applications` over SSH
+- Inventory date: 2026-07-09
+
+This is an inventory of application bundles present on the Studio Mac. Names beginning with a dot are hidden updater/temporary bundles. The migration plan intentionally does not treat every bundle as a desired baseline: trials, helpers, duplicate versions, vendor managers, and one-off utilities need review.
+
+## Applications
+
+- .Karabiner-VirtualHIDDevice-Manager
+- 1Password
+- 1Password for Safari
+- ARC X
+- Ableton Live 12 Suite
+- AdBlock
+- AmpliTube 5
+- Anki
+- BA-1
+- BA-1 FX Strip
+- Backblaze
+- BackblazeRestore
+- BambuStudio
+- Beeper Desktop
+- BetterDisplay
+- Bitwig Studio
+- Blackmagic Disk Speed Test
+- BlueBubbles
+- Brave Browser
+- ChatGPT
+- Claude
+- Components
+- Conductor
+- Crystal
+- Crystalline
+- DJ.Studio
+- DaftCloud
+- Dropbox
+- Geekbench 6
+- Ghostty
+- Google Chrome
+- Granola
+- Hammerspoon
+- Harmony Bloom
+- Hermes
+- Insta360 Link Controller
+- KVR Studio Manager
+- Karabiner-Elements
+- Karabiner-EventViewer
+- Keka
+- Keyscape
+- Legcord
+- Lexicon
+- Logic Pro
+- Loom
+- Loopcloud
+- Mixed In Key 11
+- Model D
+- Native Access
+- Nicotine+
+- Notion
+- Notion Calendar
+- OXI App
+- OXI-Desktop
+- Obsidian
+- Omnisphere
+- OrbStack
+- Oszillos Mega Scope
+- Output Hub
+- PA-InstallationManager
+- PaulXStretch
+- Raycast
+- Raycast Beta
+- Rectangle
+- Reflect
+- RemoteFish
+- RipX
+- RipX DAW
+- Roland Cloud Manager
+- SEM
+- SSL 360
+- SSL Download Manager
+- Sample Scout
+- Samplism Lite
+- Serato DJ Lite
+- Serato Studio
+- Slack
+- Slate Digital Connect
+- Softube Central
+- Sononym
+- Splice
+- Spotify
+- Steven Slate Audio Center
+- Superhuman
+- Synology Drive Client
+- SynologyAssistant
+- T-1 Config
+- Tailscale
+- Telegram
+- Todoist
+- Topaz Photo AI
+- UA Connect
+- Ultimate Vocal Remover
+- WhatsApp
+- WiFiman Desktop
+- Willow Voice
+- Wispr Flow
+- XLN Online Installer
+- Youlean Loudness Meter 2
+- Zed
+- amm
+- balenaEtcher
+- cmux
+- djay Pro
+- iZotope Product Portal
+- superwhisper
+- zoom.us
+

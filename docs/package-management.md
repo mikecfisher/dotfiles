@@ -20,42 +20,27 @@ dot_config/
 └── packages.yaml        # Package definitions
 ```
 
-## Brewfile Management
+## Homebrew manifest management
 
-The setup uses a Brewfile to manage Homebrew packages, ensuring consistency across installations.
+The setup uses `.chezmoidata/packages.yaml` as the source of truth. Chezmoi generates temporary Brewfiles during apply; there is no checked-in Brewfile.
 
 ### How It Works
 
-1. **Location**: The Brewfile is stored in `dot_config/brewfile/Brewfile` in the Chezmoi source directory.
+1. **Location**: Package intent is stored in `.chezmoidata/packages.yaml`.
 
-2. **Installation Script**: When you apply the dotfiles, the `run_onchange_install-packages-homebrew.sh.tmpl` script installs packages from the Brewfile:
+2. **Installation Script**: `run_onchange_before_10_install-packages-homebrew.sh.tmpl` bootstraps Homebrew and the bootstrap set. `run_onchange_after_90_install-packages-homebrew.sh.tmpl` installs the common and machine-specific sets from generated temporary Brewfiles.
 
    ```bash
-   # Only run on macOS
-   {{ if eq .chezmoi.os "darwin" -}}
-
-   # Install Homebrew if not installed
-   if ! command -v brew &> /dev/null; then
-     echo "Installing Homebrew..."
-     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-   fi
-
-   # Update Homebrew
-   echo "Updating Homebrew..."
-   brew update
-
-   # Install from Brewfile in Chezmoi config
-   echo "Installing packages from Brewfile..."
-   brew bundle --no-lock --file="{{ .chezmoi.sourceDir }}/dot_config/brewfile/Brewfile"
-
-   {{ end -}}
+   chezmoi apply
    ```
 
-3. **Automatic Updates**: With `brew-wrap` enabled, the Brewfile is automatically updated whenever you:
+3. **Automatic Updates**: With `brew-wrap` enabled, package changes can be synchronized back into `.chezmoidata/packages.yaml` whenever you:
    - Install packages with `brew install`
    - Uninstall packages with `brew uninstall`
    - Install apps with `brew install --cask`
    - Install Mac App Store apps with `mas install`
+
+The bootstrap/common overlap is intentional: bootstrap packages are needed early so the shell and editor can start, while the common list is the complete desired set. Homebrew deduplicates them.
 
 ### Package Definitions
 

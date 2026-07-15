@@ -81,6 +81,25 @@ chezmoi apply --init
 
 ## Post-Installation
 
+### Music and DJ software
+
+The personal profile installs Apple-distributed apps such as Logic Pro,
+GarageBand, djay Pro, and Neural Mix Pro through the App Store. Many
+professional applications are distributed directly by their vendors and
+require licensing, account sign-in, hardware activation, or vendor installers.
+Install Rekordbox, Serato DJ, Traktor, Ableton Live, Bitwig, Native Access,
+controller drivers, and similar tools manually from their official sites.
+
+Install the audio-routing tool you use (for example BlackHole or Loopback)
+from its official source, then grant macOS audio permissions and verify it in
+Audio MIDI Setup. If a vendor later publishes a stable Homebrew cask, add only
+the cask name to the personal manifest; never commit installers, licenses, or
+activation credentials.
+
+The personal manifest also records vendor-managed apps without stable casks:
+Groof, Willow Voice, and Raycast Beta. These remain explicit provisioning
+checklist items until their vendors provide a supported package or updater.
+
 After installation, you may want to:
 
 1. Check that all dependencies were installed correctly:
