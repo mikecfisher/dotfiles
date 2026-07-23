@@ -1,0 +1,65 @@
+#!/bin/bash
+set -euo pipefail
+
+{{ if or (eq .chezmoi.os "darwin") (eq .chezmoi.os "linux") -}}
+# Re-run this script whenever the Fisher plugin manifest changes.
+# plugin-manifest-sha256: {{ include "dot_config/private_fish/fish_plugins" | sha256sum }}
+FISH_CONFIG_DIR="${XDG_CONFIG_HOME:-${HOME}/.config}/fish"
+PLUGIN_MANIFEST="${FISH_CONFIG_DIR}/fish_plugins"
+
+if ! command -v fish >/dev/null 2>&1; then
+  echo "error: fish must be installed before installing Fish plugins" >&2
+  exit 1
+fi
+
+if [ ! -r "${PLUGIN_MANIFEST}" ]; then
+  echo "error: missing Fisher plugin manifest ${PLUGIN_MANIFEST}" >&2
+  exit 1
+fi
+
+install_fisher() {
+  local installer
+  installer="$(mktemp "${TMPDIR:-/tmp}/fisher.XXXXXX.fish")"
+  trap 'rm -f "${installer}"' RETURN
+
+  if command -v curl >/dev/null 2>&1; then
+    curl -fsSL \
+      https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish \
+      -o "${installer}"
+  elif command -v wget >/dev/null 2>&1; then
+    wget -qO "${installer}" \
+      https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish
+  else
+    echo "error: curl or wget is required to install Fisher" >&2
+    exit 1
+  fi
+
+  # Load the normal Fish environment so Fisher's universal installation state
+  # persists across future shells.
+  fish -c 'source $argv[1]; fisher install jorgebucaran/fisher' "${installer}" </dev/null
+}
+
+if ! fish -c 'functions --query fisher' </dev/null; then
+  echo "Installing Fisher..."
+  install_fisher
+fi
+
+echo "Reconciling Fish plugins from ${PLUGIN_MANIFEST}..."
+fish -c 'fisher update' </dev/null
+
+installed_plugins="$(fish -c 'fisher list' </dev/null)"
+while IFS= read -r plugin; do
+  case "${plugin}" in
+    ''|'#'*) continue ;;
+  esac
+
+  if ! grep -Fqx -- "${plugin}" <<<"${installed_plugins}"; then
+    echo "error: Fisher did not install ${plugin}" >&2
+    exit 1
+  fi
+done <"${PLUGIN_MANIFEST}"
+
+fish -c 'fisher --version; fisher list' </dev/null
+{{ else -}}
+echo "Skipping Fish plugin install: unsupported OS {{ .chezmoi.os }}."
+{{ end -}}

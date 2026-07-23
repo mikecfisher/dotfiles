@@ -1,143 +1,82 @@
 # Package Management
 
-This document explains how Homebrew packages and applications are managed in this dotfiles setup.
+`.chezmoidata/packages.yaml` is the source of truth for package intent. The
+repository does not maintain or ingest a generated Brewfile: temporary
+Brewfiles are rendered only while `setup-mac` runs.
 
-## Overview
+## Manifest Structure
 
-This dotfiles repository uses a simplified package management approach based on Homebrew, with automatic Brewfile updates. `uv` is the exception: it is installed with Astral's standalone installer so `uv self update` works and Python/tool shims live in `~/.local/bin`. The system supports two machine types:
+Packages are grouped by behavior rather than by whatever happened to be
+installed on one machine:
 
-- **Default**: Common development tools and applications suitable for any machine
-- **Personal**: Includes everything in the default configuration plus additional tools for personal use
+- `bootstrap.brews` — minimal tools needed during the first apply;
+- `common.brews` and `personal.brews` — explicitly desired formulae;
+- `standard_casks` — ordinary drag-to-Applications packages;
+- `heavy_casks` — large downloads installed independently with retries;
+- `privileged_casks` — packages that invoke `sudo` or a macOS installer;
+- `mas` — App Store applications identified by numeric ID;
+- `vendor.automated` — apps handled by pinned, verified Installomator labels;
+- `vendor.manual` — documented intent that cannot be safely automated.
 
-## Directory Structure
+Bootstrap/common formula overlap is intentional. Transitive dependencies should
+not be added merely because `brew list` reports them; Homebrew resolves those.
 
-```
-dot_config/
-└── brewfile/
-    └── Brewfile         # Managed Homebrew packages
+## Adding or Removing Packages
 
-.chezmoidata/
-└── packages.yaml        # Package definitions
-```
-
-## Homebrew manifest management
-
-The setup uses `.chezmoidata/packages.yaml` as the source of truth. Chezmoi generates temporary Brewfiles during apply; there is no checked-in Brewfile.
-
-### How It Works
-
-1. **Location**: Package intent is stored in `.chezmoidata/packages.yaml`.
-
-2. **Installation Script**: `run_onchange_before_10_install-packages-homebrew.sh.tmpl` bootstraps Homebrew and the bootstrap set. `run_onchange_after_90_install-packages-homebrew.sh.tmpl` installs the common and machine-specific sets from generated temporary Brewfiles.
-
-   ```bash
-   chezmoi apply
-   ```
-
-3. **Automatic Updates**: With `brew-wrap` enabled, package changes can be synchronized back into `.chezmoidata/packages.yaml` whenever you:
-   - Install packages with `brew install`
-   - Uninstall packages with `brew uninstall`
-   - Install apps with `brew install --cask`
-   - Install Mac App Store apps with `mas install`
-
-The bootstrap/common overlap is intentional: bootstrap packages are needed early so the shell and editor can start, while the common list is the complete desired set. Homebrew deduplicates them.
-
-### Package Definitions
-
-Packages are defined in `.chezmoidata/packages.yaml`:
-
-```yaml
-packages:
-  taps:
-    - "homebrew/bundle"
-    - "homebrew/cask"
-    # ... other taps
-  common:
-    brews:
-      # Development tools
-      - "chezmoi"
-      - "fish"
-      - "fnm"
-      - "git"
-      - "gh"
-      # ... more packages
-    casks:
-      # Applications
-      - "visual-studio-code"
-      - "cursor"
-      # ... more applications
-```
-
-## Machine-Specific Packages
-
-When initializing the repository, you're prompted to choose a machine type:
-
-```toml
-# .chezmoi.toml.tmpl
-{{- $machineType := promptStringOnce . "machine_type" "Machine type (personal/default)" "default" -}}
-
-[data]
-    machine_type = "{{ $machineType }}"
-```
-
-The package installation script uses this information to install the appropriate set of packages.
-
-## Adding New Packages
-
-To add new packages:
-
-1. **Automatic Method**:
-   - Simply use `brew install <package>` and the Brewfile will be updated automatically via brew-wrap.
-
-2. **Manual Method**:
-   - Edit `.chezmoidata/packages.yaml` to add the package
-   - Run `chezmoi apply` to apply the changes
-
-## Updating Packages
-
-To update all installed packages:
+Edit `.chezmoidata/packages.yaml` directly and place the item in the phase that
+matches its behavior. Then validate and provision:
 
 ```bash
-brew update && brew upgrade
+~/bin/my-scripts/validate-dotfiles.sh
+chezmoi apply
+setup-mac
 ```
 
-The Brewfile will be automatically updated with any changes.
-
-## Cleaning Up
-
-To remove packages that are no longer in your Brewfile:
+For a faster targeted run:
 
 ```bash
-brew bundle cleanup --force
+setup-mac --phase core
+setup-mac --phase gui
+setup-mac --phase heavy
 ```
 
-## Integration with Shell
+Do not regenerate the manifest from `brew bundle dump`. That captures
+transitive dependencies and recreates a large, machine-specific snapshot.
 
-Both fish and zsh configurations include a brew-wrap integration that automatically updates the Brewfile when packages are installed or removed. In fish:
+## Updating Existing Packages
 
-```fish
-# Brew Wrapper
-if test -f (brew --prefix)/etc/brew-wrap.fish
-    source (brew --prefix)/etc/brew-wrap.fish
+Provisioning deliberately uses `--no-upgrade`; desired presence and routine
+upgrades are separate concerns. Upgrade installed packages explicitly:
 
-    function _post_brewfile_update
-        echo "Brewfile was updated!"
-        ~/.local/bin/my-scripts/update-packages-yaml.ts
-    end
-end
+```bash
+brew update
+brew upgrade
+mas upgrade
 ```
 
-And in zsh:
+Use `setup-mac --update` when provisioning should refresh Homebrew metadata
+first.
 
-```zsh
-# Brew Wrapper for auto-updating Brewfile
-if [ -f "$(brew --prefix)/etc/brew-wrap.sh" ]; then
-  source "$(brew --prefix)/etc/brew-wrap.sh"
+The bootstrap toolchain versions live in `.chezmoidata/toolchains.yaml`. Node,
+pnpm, Yarn, global npm packages, uv, Bun, `agent-browser`, and Pi are pinned so
+a fresh machine does not silently receive a different toolchain from the one
+validated in this repository. The uv and Bun bootstrap scripts replace an
+existing mismatched version and verify the exact result. Update pins
+deliberately and run the validator before applying.
 
-  # Call update script after Brewfile changes
-  _post_brewfile_update() {
-    echo "Updating packages.yaml..."
-    ~/.local/bin/my-scripts/update-packages-yaml.ts
-  }
-fi
+## Cleanup
+
+`setup-mac` does not uninstall packages absent from the manifest. Review cleanup
+before making destructive changes:
+
+```bash
+brew bundle cleanup --file=/path/to/reviewed/Brewfile
 ```
+
+The manifest validation command checks YAML, duplicate package intent, both
+profiles' rendered shell syntax, removed legacy behavior, and whitespace. The
+state-machine tests cover profile rejection, full-run deferral, post-install
+postconditions, marker drift, tap convergence, `--update`, and password-free
+converged phases. Toolchain tests exercise exact uv and Bun convergence. Set
+`VALIDATE_PACKAGES=1` to install the configured taps and resolve every Homebrew
+formula and cask on macOS; CI enables this fresh-runner package check.

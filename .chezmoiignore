@@ -2,6 +2,8 @@ README.md
 .install-1password-cli.sh
 docs/**
 .cursor/**
+.github/**
+tests/**
 .cursorrules
 .config/zed/prompts/prompts-library-db.0.mdb/
 .config/zed/prompts/prompts-library-db.0.mdb/**

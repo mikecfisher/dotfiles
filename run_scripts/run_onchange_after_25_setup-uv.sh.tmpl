@@ -12,6 +12,7 @@ export XDG_BIN_HOME XDG_CACHE_HOME XDG_DATA_HOME
 
 UV_INSTALL_DIR="${UV_INSTALL_DIR:-${XDG_BIN_HOME}}"
 UV_CACHE_DIR="${UV_CACHE_DIR:-${XDG_CACHE_HOME}/uv}"
+EXPECTED_UV_VERSION={{ .toolchains.uv.version | quote }}
 export UV_INSTALL_DIR UV_CACHE_DIR UV_NO_MODIFY_PATH=1
 export PATH="${UV_INSTALL_DIR}:${PATH}"
 
@@ -19,22 +20,26 @@ mkdir -p "${UV_INSTALL_DIR}" "${UV_CACHE_DIR}"
 
 install_uv() {
   if command -v curl >/dev/null 2>&1; then
-    curl -LsSf https://astral.sh/uv/install.sh | env UV_INSTALL_DIR="${UV_INSTALL_DIR}" UV_NO_MODIFY_PATH=1 sh
+    curl -LsSf https://astral.sh/uv/{{ .toolchains.uv.version }}/install.sh | env UV_INSTALL_DIR="${UV_INSTALL_DIR}" UV_NO_MODIFY_PATH=1 sh
   elif command -v wget >/dev/null 2>&1; then
-    wget -qO- https://astral.sh/uv/install.sh | env UV_INSTALL_DIR="${UV_INSTALL_DIR}" UV_NO_MODIFY_PATH=1 sh
+    wget -qO- https://astral.sh/uv/{{ .toolchains.uv.version }}/install.sh | env UV_INSTALL_DIR="${UV_INSTALL_DIR}" UV_NO_MODIFY_PATH=1 sh
   else
     echo "error: curl or wget is required to install uv" >&2
     exit 1
   fi
 }
 
-if [ -x "${UV_INSTALL_DIR}/uv" ] && \
+current_uv_version=""
+if [ -x "${UV_INSTALL_DIR}/uv" ]; then
+  current_uv_version="$("${UV_INSTALL_DIR}/uv" --version 2>/dev/null | awk '{print $2}')"
+fi
+
+if [ "${current_uv_version}" = "${EXPECTED_UV_VERSION}" ] && \
    [ -x "${UV_INSTALL_DIR}/uvx" ] && \
-   "${UV_INSTALL_DIR}/uv" --version >/dev/null 2>&1 && \
    "${UV_INSTALL_DIR}/uvx" --version >/dev/null 2>&1; then
-  echo "uv already installed at ${UV_INSTALL_DIR}/uv"
+  echo "Using pinned uv ${EXPECTED_UV_VERSION} at ${UV_INSTALL_DIR}/uv"
 else
-  echo "Installing uv to ${UV_INSTALL_DIR}..."
+  echo "Installing pinned uv ${EXPECTED_UV_VERSION} to ${UV_INSTALL_DIR}..."
   install_uv
 fi
 
@@ -47,6 +52,12 @@ fi
 
 if ! command -v uvx >/dev/null 2>&1; then
   echo "error: uvx is not available after installation" >&2
+  exit 1
+fi
+
+actual_uv_version="$(uv --version | awk '{print $2}')"
+if [ "${actual_uv_version}" != "${EXPECTED_UV_VERSION}" ]; then
+  echo "error: expected uv ${EXPECTED_UV_VERSION}, found ${actual_uv_version}" >&2
   exit 1
 fi
 

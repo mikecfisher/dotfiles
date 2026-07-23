@@ -1,0 +1,19 @@
+name: Validate dotfiles
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install validation tools
+        run: brew install chezmoi shellcheck yq
+      - name: Validate manifests and rendered scripts
+        run: VALIDATE_PACKAGES=1 ./bin/my-scripts/executable_validate-dotfiles.sh
+      - name: Test setup state transitions
+        run: |
+          ./tests/test-setup-mac.sh
+          ./tests/test-toolchain-convergence.sh

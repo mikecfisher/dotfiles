@@ -56,10 +56,46 @@ brew {{ . | quote }}
 EOF
 }
 
-ensure_homebrew
+trust_configured_taps() {
+  local tap
+  for tap in \
+{{- range .packages.taps }}
+    {{ . | quote }} \
+{{- end }}
+    ; do
+    brew trust --tap "${tap}"
+  done
+}
 
-echo "Updating Homebrew..."
-brew update
+maybe_update_homebrew() {
+  local state_dir="${XDG_STATE_HOME:-${HOME}/.local/state}/dotfiles"
+  local stamp="${state_dir}/homebrew-update"
+  local now modified age
+
+  mkdir -p "${state_dir}"
+  now="$(date +%s)"
+
+  if [ -f "${stamp}" ]; then
+    if modified="$(stat -f %m "${stamp}" 2>/dev/null)"; then
+      :
+    else
+      modified="$(stat -c %Y "${stamp}")"
+    fi
+    age=$((now - modified))
+    if [ "${age}" -lt 86400 ]; then
+      echo "Homebrew metadata was updated less than 24 hours ago; skipping brew update."
+      return
+    fi
+  fi
+
+  echo "Updating Homebrew metadata..."
+  brew update
+  touch "${stamp}"
+}
+
+ensure_homebrew
+trust_configured_taps
+maybe_update_homebrew
 
 BOOTSTRAP_BREWFILE="$(mktemp)"
 trap 'rm -f "${BOOTSTRAP_BREWFILE}"' EXIT
@@ -67,7 +103,11 @@ trap 'rm -f "${BOOTSTRAP_BREWFILE}"' EXIT
 write_bootstrap_brewfile "${BOOTSTRAP_BREWFILE}"
 
 echo "Installing bootstrap Homebrew formulae..."
-brew bundle install --no-upgrade --file="${BOOTSTRAP_BREWFILE}"
+if brew bundle check --file="${BOOTSTRAP_BREWFILE}" >/dev/null 2>&1; then
+  echo "Bootstrap Homebrew formulae already satisfy the manifest."
+else
+  brew bundle install --no-upgrade --file="${BOOTSTRAP_BREWFILE}"
+fi
 {{ else -}}
 echo "Skipping Homebrew bootstrap: unsupported OS {{ .chezmoi.os }}."
 {{ end -}}

@@ -1,8 +1,13 @@
 {{- $machineType := promptStringOnce . "machine_type" "Machine type (personal/default)" "default" -}}
+{{- if not (has $machineType (list "default" "personal")) -}}
+{{-   fail (printf "invalid machine_type %q: expected default or personal" $machineType) -}}
+{{- end -}}
 {{- $isWork := promptBoolOnce . "is_work_machine" "Is this a work machine" false -}}
 {{- $use1Password := promptBoolOnce . "use_1password" "Use 1Password secrets in templates" false -}}
 {{- $gitName := promptStringOnce . "git_name" "Git user name" "Mike Fisher" -}}
 {{- $gitEmail := promptStringOnce . "git_email" "Git email" "mikefisher84@gmail.com" -}}
+
+sourceDir = {{ .chezmoi.sourceDir | quote }}
 
 [data.vscode]
    app = "vscode"

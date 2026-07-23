@@ -1,116 +1,114 @@
 # Installation Guide
 
-This guide walks you through installing and setting up the dotfiles using chezmoi.
+This repository separates dotfile convergence from full workstation
+provisioning. `chezmoi apply` is safe to run frequently; `setup-mac` is the
+explicit, resumable installer for applications and machine-level packages.
 
-## Prerequisites
+## Fresh Mac
 
-- [chezmoi](https://www.chezmoi.io/install/) (dotfile manager)
-- [1Password CLI](https://1password.com/downloads/command-line/) (optional, for secrets)
-- macOS (primary target platform)
-- Git
-
-## One-Line Setup (Recommended)
-
-This will install everything you need in one command:
+Install the dotfiles and bootstrap tools:
 
 ```bash
 sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply https://github.com/mikecfisher/dotfiles.git
 ```
 
-## Manual Setup
+Initialization prompts for:
 
-If you prefer a step-by-step approach:
+- machine type: `default` or `personal`;
+- whether the Mac is a work machine;
+- whether 1Password-backed templates are enabled;
+- Git name and email.
 
-1. Install chezmoi:
-   ```bash
-   sh -c "$(curl -fsLS get.chezmoi.io)" -- -b $HOME/.local/bin
-   ```
+The first apply installs Homebrew when necessary, installs and trusts the configured taps,
+and installs only the small bootstrap formula set required by shell/editor
+setup. It also provisions the pinned Node, pnpm, Yarn, uv, and Bun toolchains;
+global development CLIs; Chrome for Testing for `agent-browser`; Pi; and the
+LazyVim starter. Homebrew metadata is refreshed at most once every 24 hours.
+This makes the first apply intentionally more substantial than routine applies.
 
-2. Initialize with this repo:
-   ```bash
-   chezmoi init https://github.com/mikecfisher/dotfiles.git
-   ```
+## Provision the Workstation
 
-3. Preview changes:
-   ```bash
-   chezmoi diff
-   ```
+Run the complete installer from an interactive terminal:
 
-4. Apply the dotfiles:
-   ```bash
-   chezmoi apply
-   ```
+```bash
+setup-mac
+```
 
-## Updating Existing Installation
+Phases run in this order:
 
-To update your dotfiles after changes have been made to the repository:
+1. `preflight` — verify macOS, Command Line Tools, Homebrew, disk space, and taps;
+2. `core` — install common and profile-specific formulae;
+3. `gui` — install standard nonprivileged casks;
+4. `heavy` — install large applications independently with retries;
+5. `privileged` — install casks that invoke administrator installers;
+6. `mas` — install only missing Mac App Store IDs;
+7. `vendor` — install verified vendor apps through pinned Installomator labels;
+8. `verify` — report any missing automated item and run `chezmoi verify`.
+
+Successful phase hints are stored under
+`~/.local/state/dotfiles/setup-mac/<profile>/`. They automatically invalidate
+when the rendered setup command or package manifest changes. A hint is never
+trusted on its own: each rerun checks the current Homebrew receipt, application
+bundle, App Store ID, or vendor application before skipping a phase. Verification
+removes the relevant hint when it finds drift so the next run repairs it.
+Mutating phases refresh their inventory after the installer exits and write a
+completion hint only when the resulting machine state satisfies the manifest.
+
+Useful commands:
+
+```bash
+setup-mac                         # Resume incomplete work
+setup-mac --phase heavy           # Run one phase
+setup-mac --phase verify          # Audit without installing
+setup-mac --force                 # Re-evaluate completed phases
+setup-mac --reset                 # Clear phase state
+setup-mac --update                # Refresh Homebrew before provisioning
+setup-mac --non-interactive       # Defer admin/App Store/vendor phases
+```
+
+Logs are appended to `~/.local/state/dotfiles/setup-mac/setup-mac.log`.
+The final summary separates completed, verified/skipped, deferred, pending, and
+failed work. Verification reports items belonging to a phase deferred in the
+same run as pending rather than reclassifying them as failures. A fully
+converged run exits `0`, deferred interactive work exits `20`, and an actual
+independent failure exits `1`.
+
+## Administrator and App Store Behavior
+
+Normal `chezmoi apply` never attempts privileged casks or App Store installs.
+The explicit installer inventories each phase before requesting administrator
+access, so a converged rerun does not prompt for a password. Homebrew casks are
+checked for both their receipt and their application bundle where applicable.
+App Store apps are checked by numeric ID and only missing apps are attempted.
+
+The TestFlight ID has a targeted repair for the partial-copy/no-receipt state
+observed with `mas` 7. The installer does not install Rosetta. Intel-only apps
+must be explicitly approved and added to the manifest.
+
+## Vendor and Manual Applications
+
+Groof, Willow Voice, and IK Product Manager are automated using a pinned
+Installomator commit, a checked archive checksum, and verified labels in this
+repository.
+
+Output Hub and Raycast Beta remain manual because they do not expose stable,
+public installer feeds suitable for unattended provisioning. Music and backup
+applications still require their own account sign-ins, license activation, or
+macOS privacy permissions after installation.
+
+## Routine Updates
+
+Apply repository changes without reprovisioning the workstation:
 
 ```bash
 chezmoi update
 ```
 
-## Init Prompts
-
-When initializing chezmoi, you'll be prompted for machine-specific data:
-
-- **Machine type**: `default` or `personal`
-  - `default`: common development tools and applications
-  - `personal`: default plus music/personal packages
-- **Work machine**: enables work-specific editor/MCP configuration
-- **Use 1Password secrets**: only say yes after `op` is installed/signed in, or expect blank secret values until you re-apply
-- **Git name/email**: rendered into `~/.gitconfig`
-
-## Fresh Mac Notes
-
-The first apply bootstraps Homebrew before package installation and supports both Apple Silicon (`/opt/homebrew`) and Intel (`/usr/local`) prefixes.
-
-`uv` is installed with Astral's standalone installer into `~/.local/bin` with shell-profile modification disabled; chezmoi manages the PATH and completions for zsh, fish, and bash.
-
-Mac App Store apps are skipped unless you're signed in. After signing in, re-run:
+When package intent changes, run:
 
 ```bash
-chezmoi apply
+setup-mac
 ```
 
-If 1Password secrets were skipped on first apply, install/sign in to 1Password CLI and re-run:
-
-```bash
-op signin
-chezmoi apply --init
-```
-
-## Post-Installation
-
-### Music and DJ software
-
-The personal profile installs Apple-distributed apps such as Logic Pro,
-GarageBand, djay Pro, and Neural Mix Pro through the App Store. Many
-professional applications are distributed directly by their vendors and
-require licensing, account sign-in, hardware activation, or vendor installers.
-Install Rekordbox, Serato DJ, Traktor, Ableton Live, Bitwig, Native Access,
-controller drivers, and similar tools manually from their official sites.
-
-Install the audio-routing tool you use (for example BlackHole or Loopback)
-from its official source, then grant macOS audio permissions and verify it in
-Audio MIDI Setup. If a vendor later publishes a stable Homebrew cask, add only
-the cask name to the personal manifest; never commit installers, licenses, or
-activation credentials.
-
-The personal manifest also records vendor-managed apps without stable casks:
-Groof, Willow Voice, and Raycast Beta. These remain explicit provisioning
-checklist items until their vendors provide a supported package or updater.
-
-After installation, you may want to:
-
-1. Check that all dependencies were installed correctly:
-   ```bash
-   ~/bin/my-scripts/audit-chezmoi.sh ~/.local/share/chezmoi
-   ```
-2. Set up the fish shell as your default shell:
-   ```bash
-   BREW_PREFIX="$(brew --prefix)"
-   echo "$BREW_PREFIX/bin/fish" | sudo tee -a /etc/shells
-   chsh -s "$BREW_PREFIX/bin/fish"
-   ```
-
-3. Set up/sign in to 1Password CLI integration if you use secret-backed templates
+If 1Password was disabled during first initialization, sign in and reinitialize
+template data before applying secret-backed templates.

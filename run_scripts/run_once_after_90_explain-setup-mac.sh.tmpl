@@ -1,0 +1,12 @@
+#!/bin/bash
+set -euo pipefail
+
+{{ if eq .chezmoi.os "darwin" -}}
+cat <<'EOF'
+Dotfiles and bootstrap tools are applied.
+Run `setup-mac` from an interactive terminal to provision the complete machine.
+Use `setup-mac --help` for resumable phases and non-interactive options.
+EOF
+{{ else -}}
+echo "Full workstation provisioning is available on macOS only."
+{{ end -}}

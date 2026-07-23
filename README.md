@@ -33,6 +33,16 @@ This repository contains my dotfiles and configurations managed with chezmoi. It
 sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply https://github.com/mikecfisher/dotfiles.git
 ```
 
+The first apply installs dotfiles and a small bootstrap toolset. Provision the
+complete machine from an interactive terminal:
+
+```bash
+setup-mac
+```
+
+`setup-mac` is phased and resumable; run `setup-mac --help` for targeted or
+non-interactive operation.
+
 ### Update Existing Installation
 
 ```bash
@@ -47,7 +57,7 @@ chezmoi update
 - Secure credential management via 1Password integration
 - Machine-specific customizations based on needs
 - Comprehensive Vim keybindings for editors
-- Automatic Homebrew package management
+- Resumable, profile-aware Mac provisioning
 
 ## Directory Structure
 
@@ -55,9 +65,9 @@ chezmoi update
 .
 ├── .chezmoitemplates/           # Shared templates
 ├── dot_config/                  # Configuration files (~/.config)
-│   ├── private_fish/            # Fish shell configuration
-│   └── brewfile/                # Homebrew Brewfile
-├── .chezmoidata/               # Data used in templates
+│   └── private_fish/            # Fish shell configuration
+├── .chezmoidata/               # Package and toolchain intent
+├── dot_local/bin/              # setup-mac and local commands
 ├── docs/                       # Documentation
 └── run_scripts/                # Scripts run on apply
 ```

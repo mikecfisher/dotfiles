@@ -1,0 +1,45 @@
+#!/bin/bash
+set -euo pipefail
+
+BOOTSTRAP_LIB="${HOME}/.local/lib/dotfiles/bootstrap-shell.sh"
+[ -r "${BOOTSTRAP_LIB}" ] || { echo "error: missing ${BOOTSTRAP_LIB}" >&2; exit 1; }
+# shellcheck source=/dev/null
+source "${BOOTSTRAP_LIB}"
+
+dotfiles_load_homebrew
+dotfiles_add_fnm_to_path
+
+if ! command -v fnm >/dev/null 2>&1; then
+  echo "Installing fnm without modifying shell profiles..."
+  curl -fsSL https://fnm.vercel.app/install | bash -s -- --skip-shell
+  dotfiles_add_fnm_to_path
+fi
+
+dotfiles_load_node {{ .toolchains.node.version | quote }}
+
+export PNPM_HOME="${PNPM_HOME:-${HOME}/.local/share/pnpm}"
+mkdir -p "${PNPM_HOME}/bin"
+export PATH="${PNPM_HOME}/bin:${PNPM_HOME}:${PATH}"
+
+echo "Activating Corepack-managed pnpm and Yarn..."
+corepack enable
+corepack prepare pnpm@{{ .toolchains.node.pnpm }} --activate
+corepack prepare yarn@{{ .toolchains.node.yarn }} --activate
+hash -r
+
+if command -v brew >/dev/null 2>&1 && brew list --formula pnpm >/dev/null 2>&1; then
+  echo "Uninstalling Homebrew pnpm to avoid Corepack conflicts..."
+  brew uninstall pnpm
+fi
+
+echo "Installing global Node packages with pnpm..."
+NODE_GLOBALS=(
+{{- range .toolchains.node.globals }}
+  {{ . | quote }}
+{{- end }}
+)
+pnpm add -g --allow-build=@anthropic-ai/claude-code "${NODE_GLOBALS[@]}"
+
+claude --version >/dev/null
+pnpm --version
+yarn --version

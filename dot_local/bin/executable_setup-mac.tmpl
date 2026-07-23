@@ -1,0 +1,829 @@
+#!/bin/bash
+set -uo pipefail
+
+PROFILE={{ .machine_type | quote }}
+SOURCE_DIR={{ .chezmoi.sourceDir | quote }}
+
+case "${PROFILE}" in
+  default|personal) ;;
+  *) echo "error: invalid profile '${PROFILE}'; expected default or personal" >&2; exit 2 ;;
+esac
+
+STATE_HOME="${XDG_STATE_HOME:-${HOME}/.local/state}/dotfiles/setup-mac"
+STATE_DIR="${STATE_HOME}/${PROFILE}"
+LOG_FILE="${STATE_HOME}/setup-mac.log"
+FORCE=0
+UPDATE_HOMEBREW=0
+NON_INTERACTIVE=0
+SELECTED_PHASE=""
+INTERACTIVE_SESSION=0
+
+if [ -t 0 ] && [ -t 1 ]; then
+  INTERACTIVE_SESSION=1
+fi
+
+PHASES=(preflight core gui heavy privileged mas vendor verify)
+COMPLETED_PHASES=()
+SKIPPED_PHASES=()
+DEFERRED_PHASES=()
+FAILED_PHASES=()
+PENDING_ITEMS=()
+INSTALLED_FORMULAE=""
+INSTALLED_CASKS=""
+CASK_APP_PATHS=""
+
+TAPS=(
+{{- range .packages.taps }}
+  {{ . | quote }}
+{{- end }}
+)
+
+COMMON_BREWS=(
+{{- range .packages.common.brews }}
+  {{ . | quote }}
+{{- end }}
+)
+
+PERSONAL_BREWS=(
+  ""
+{{- if eq .machine_type "personal" }}
+{{- range .packages.personal.brews }}
+  {{ . | quote }}
+{{- end }}
+{{- end }}
+)
+
+STANDARD_CASKS=(
+{{- range .packages.common.standard_casks }}
+  {{ . | quote }}
+{{- end }}
+{{- if eq .machine_type "personal" }}
+{{- range .packages.personal.standard_casks }}
+  {{ . | quote }}
+{{- end }}
+{{- end }}
+)
+
+HEAVY_CASKS=(
+{{- range .packages.common.heavy_casks }}
+  {{ . | quote }}
+{{- end }}
+{{- if eq .machine_type "personal" }}
+{{- range .packages.personal.heavy_casks }}
+  {{ . | quote }}
+{{- end }}
+{{- end }}
+)
+
+PRIVILEGED_CASKS=(
+{{- range .packages.common.privileged_casks }}
+  {{ . | quote }}
+{{- end }}
+{{- if eq .machine_type "personal" }}
+{{- range .packages.personal.privileged_casks }}
+  {{ . | quote }}
+{{- end }}
+{{- end }}
+)
+
+MAS_APPS=(
+{{- range .packages.common.mas }}
+  {{ printf "%v|%s" .id .name | quote }}
+{{- end }}
+{{- if eq .machine_type "personal" }}
+{{- range .packages.personal.mas }}
+  {{ printf "%v|%s" .id .name | quote }}
+{{- end }}
+{{- end }}
+)
+
+VENDOR_APPS=(
+  ""
+{{- if eq .machine_type "personal" }}
+{{- range .packages.personal.vendor.automated }}
+  {{ printf "%s|%s" .id .name | quote }}
+{{- end }}
+{{- end }}
+)
+
+MANUAL_APPS=(
+  ""
+{{- if eq .machine_type "personal" }}
+{{- range .packages.personal.vendor.manual }}
+  {{ printf "%s|%s" .name .reason | quote }}
+{{- end }}
+{{- end }}
+)
+
+usage() {
+  cat <<'EOF'
+Usage: setup-mac [options]
+
+Provision a Mac from the rendered chezmoi package manifest. Completed phases
+are resumable and invalidate automatically when this script or manifest changes.
+
+Options:
+  --phase NAME          Run one phase: preflight, core, gui, heavy,
+                        privileged, mas, vendor, or verify
+  --force               Re-run completed phases (installed items still skip)
+  --reset               Clear saved phase state before running
+  --update              Run brew update before package phases
+  --non-interactive     Skip phases that require administrator interaction
+  -h, --help            Show this help
+EOF
+}
+
+reset_state=0
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    --phase)
+      [ "$#" -ge 2 ] || { echo "error: --phase requires a name" >&2; exit 2; }
+      SELECTED_PHASE="$2"
+      shift 2
+      ;;
+    --force) FORCE=1; shift ;;
+    --reset) reset_state=1; shift ;;
+    --update) UPDATE_HOMEBREW=1; shift ;;
+    --non-interactive) NON_INTERACTIVE=1; shift ;;
+    -h|--help) usage; exit 0 ;;
+    *) echo "error: unknown option: $1" >&2; usage >&2; exit 2 ;;
+  esac
+done
+
+if [ -n "${SELECTED_PHASE}" ]; then
+  valid=0
+  for phase in "${PHASES[@]}"; do
+    [ "${phase}" = "${SELECTED_PHASE}" ] && valid=1
+  done
+  [ "${valid}" -eq 1 ] || { echo "error: unknown phase: ${SELECTED_PHASE}" >&2; exit 2; }
+fi
+
+mkdir -p "${STATE_DIR}"
+[ "${reset_state}" -eq 0 ] || rm -f "${STATE_DIR}"/*.done
+touch "${LOG_FILE}"
+exec > >(tee -a "${LOG_FILE}") 2>&1
+
+if command -v shasum >/dev/null 2>&1; then
+  SCRIPT_HASH="$(shasum -a 256 "$0" | awk '{print $1}')"
+else
+  SCRIPT_HASH="$(sha256sum "$0" | awk '{print $1}')"
+fi
+
+timestamp() { date '+%Y-%m-%d %H:%M:%S'; }
+
+load_homebrew() {
+  if command -v brew >/dev/null 2>&1; then
+    eval "$(brew shellenv)"
+  elif [ -x /opt/homebrew/bin/brew ]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+  elif [ -x /usr/local/bin/brew ]; then
+    eval "$(/usr/local/bin/brew shellenv)"
+  else
+    echo "error: Homebrew is not installed; run chezmoi apply first" >&2
+    return 1
+  fi
+}
+
+is_interactive() {
+  [ "${NON_INTERACTIVE}" -eq 0 ] && [ "${INTERACTIVE_SESSION}" -eq 1 ]
+}
+
+require_interactive() {
+  if is_interactive; then
+    return 0
+  fi
+  echo "Deferred: this phase requires an interactive terminal."
+  return 20
+}
+
+ensure_admin() {
+  require_interactive || return $?
+  echo "Administrator access is required for this phase."
+  sudo -v
+}
+
+phase_complete() {
+  local marker="${STATE_DIR}/$1.done"
+  [ "${FORCE}" -eq 0 ] && [ -f "${marker}" ] && [ "$(cat "${marker}")" = "${SCRIPT_HASH}" ]
+}
+
+mark_complete() {
+  printf '%s\n' "${SCRIPT_HASH}" >"${STATE_DIR}/$1.done"
+}
+
+invalidate_phase() {
+  rm -f "${STATE_DIR}/$1.done"
+}
+
+prepare_homebrew_inventory() {
+  local inventory="$1"
+  INSTALLED_FORMULAE="$(jq -r '.formulae[]? | .name, .aliases[]?' <<<"${inventory}")"
+  INSTALLED_CASKS="$(jq -r '.casks[]?.token' <<<"${inventory}")"
+  CASK_APP_PATHS="$(jq -r '
+    .casks[]? | .token as $token |
+    ([.artifacts[]? | .. | strings |
+      select(startswith("/Applications/") and endswith(".app") and (contains("*") | not))]
+      | unique[]?) as $path |
+    [$token, $path] | @tsv
+  ' <<<"${inventory}")"
+}
+
+line_present() {
+  local lines="$1"
+  local needle="$2"
+  case $'\n'"${lines}"$'\n' in
+    *$'\n'"${needle}"$'\n'*) return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
+taps_satisfied() {
+  local installed_taps tap
+  installed_taps="$(brew tap 2>/dev/null)" || return 1
+  for tap in "${TAPS[@]}"; do
+    line_present "${installed_taps}" "${tap}" || return 1
+  done
+}
+
+formulae_satisfied() {
+  shift
+  local item
+  for item in "$@"; do
+    [ -n "${item}" ] || continue
+    line_present "${INSTALLED_FORMULAE}" "${item}" || return 1
+  done
+}
+
+cask_receipt_present() {
+  local cask="$1"
+  line_present "${INSTALLED_CASKS}" "${cask}"
+}
+
+cask_expected_application() {
+  # Installer-based casks do not always publish their application path in
+  # Homebrew's JSON. Keep the exceptions explicit so a stale receipt cannot
+  # hide a deleted application bundle.
+  case "$1" in
+    backblaze) printf '%s\n' '/Applications/Backblaze.app' ;;
+    karabiner-elements) printf '%s\n' '/Applications/Karabiner-Elements.app' ;;
+    paulxstretch) printf '%s\n' '/Applications/PaulXStretch.app' ;;
+    rekordbox) printf '%s\n' '/Applications/rekordbox 7/rekordbox.app' ;;
+    ripx) printf '%s\n' '/Applications/RipX DAW.app' ;;
+    sf-symbols) printf '%s\n' '/Applications/SF Symbols.app' ;;
+    softube-central) printf '%s\n' '/Applications/Softube Central.app' ;;
+    topaz-photo-ai) printf '%s\n' '/Applications/Topaz Photo AI.app' ;;
+    youlean-loudness-meter) printf '%s\n' '/Applications/Youlean Loudness Meter 2.app' ;;
+    *) return 1 ;;
+  esac
+}
+
+cask_satisfied() {
+  local cask="$1"
+  local candidates path token expected_application
+
+  cask_receipt_present "${cask}" || return 1
+
+  if expected_application="$(cask_expected_application "${cask}")"; then
+    [ -d "${expected_application}" ]
+    return $?
+  fi
+
+  # Homebrew app artifacts expose an absolute target. Installer casks often
+  # expose application paths in their uninstall metadata. If either exists,
+  # require at least one real application bundle as well as the receipt.
+  candidates=""
+  while IFS=$'\t' read -r token path; do
+    if [ "${token}" = "${cask}" ]; then
+      candidates="${candidates}${candidates:+$'\n'}${path}"
+    fi
+  done <<<"${CASK_APP_PATHS}"
+
+  [ -n "${candidates}" ] || return 0
+  while IFS= read -r path; do
+    [ -d "${path}" ] && return 0
+  done <<<"${candidates}"
+  return 1
+}
+
+casks_satisfied() {
+  local inventory="$1"
+  shift
+  local item
+  for item in "$@"; do
+    cask_satisfied "${item}" "${inventory}" || return 1
+  done
+}
+
+mas_satisfied() {
+  local installed_ids entry app_id
+  command -v mas >/dev/null 2>&1 || return 1
+  installed_ids="$(mas list 2>/dev/null | awk '{print $1}')"
+  for entry in "${MAS_APPS[@]}"; do
+    app_id="${entry%%|*}"
+    line_present "${installed_ids}" "${app_id}" || return 1
+  done
+}
+
+vendor_satisfied() {
+  local entry
+  for entry in "${VENDOR_APPS[@]}"; do
+    [ -n "${entry}" ] || continue
+    [ -d "/Applications/${entry#*|}.app" ] || return 1
+  done
+}
+
+phase_state_satisfied() {
+  local phase="$1"
+  local inventory
+
+  case "${phase}" in
+    core)
+      load_homebrew >/dev/null 2>&1 || return 1
+      taps_satisfied || return 1
+      inventory="$(brew info --json=v2 --installed)" || return 1
+      prepare_homebrew_inventory "${inventory}"
+      formulae_satisfied "${inventory}" "${COMMON_BREWS[@]}" "${PERSONAL_BREWS[@]}"
+      ;;
+    gui)
+      load_homebrew >/dev/null 2>&1 || return 1
+      inventory="$(brew info --json=v2 --installed)" || return 1
+      prepare_homebrew_inventory "${inventory}"
+      casks_satisfied "${inventory}" "${STANDARD_CASKS[@]}"
+      ;;
+    heavy)
+      load_homebrew >/dev/null 2>&1 || return 1
+      inventory="$(brew info --json=v2 --installed)" || return 1
+      prepare_homebrew_inventory "${inventory}"
+      casks_satisfied "${inventory}" "${HEAVY_CASKS[@]}"
+      ;;
+    privileged)
+      load_homebrew >/dev/null 2>&1 || return 1
+      inventory="$(brew info --json=v2 --installed)" || return 1
+      prepare_homebrew_inventory "${inventory}"
+      casks_satisfied "${inventory}" "${PRIVILEGED_CASKS[@]}"
+      ;;
+    mas) mas_satisfied ;;
+    vendor) vendor_satisfied ;;
+    *) return 1 ;;
+  esac
+}
+
+run_phase() {
+  local phase="$1"
+  local fn="phase_${phase}"
+  local status
+
+  if [ -n "${SELECTED_PHASE}" ] && [ "${SELECTED_PHASE}" != "${phase}" ]; then
+    return 0
+  fi
+
+  # Preflight and verification always run. Other markers are only hints: the
+  # current machine state must still satisfy the phase before it can be skipped.
+  if [ "${phase}" != "preflight" ] && [ "${phase}" != "verify" ] && phase_complete "${phase}"; then
+    if phase_state_satisfied "${phase}"; then
+      echo "[$(timestamp)] ${phase}: already complete and state verified"
+      SKIPPED_PHASES+=("${phase}")
+      return 0
+    fi
+    echo "[$(timestamp)] ${phase}: saved state drifted; scheduling repair"
+    invalidate_phase "${phase}"
+  fi
+
+  echo
+  echo "[$(timestamp)] === ${phase} ==="
+  "${fn}"
+  status=$?
+
+  if [ "${status}" -eq 0 ]; then
+    if [ "${phase}" != "preflight" ] && [ "${phase}" != "verify" ] && \
+       ! phase_state_satisfied "${phase}"; then
+      echo "[$(timestamp)] ${phase}: post-install state verification failed" >&2
+      invalidate_phase "${phase}"
+      FAILED_PHASES+=("${phase}:postcondition")
+      return 1
+    fi
+    [ "${phase}" = "verify" ] || mark_complete "${phase}"
+    echo "[$(timestamp)] ${phase}: complete"
+    COMPLETED_PHASES+=("${phase}")
+    return 0
+  fi
+
+  if [ "${status}" -eq 20 ]; then
+    echo "[$(timestamp)] ${phase}: deferred"
+    DEFERRED_PHASES+=("${phase}")
+    return 20
+  fi
+
+  echo "[$(timestamp)] ${phase}: failed (status ${status}); re-run setup-mac to resume" >&2
+  FAILED_PHASES+=("${phase}:${status}")
+  return "${status}"
+}
+
+write_brewfile() {
+  local path="$1"
+  local kind="$2"
+  local item
+
+  : >"${path}"
+  for item in "${TAPS[@]}"; do printf 'tap "%s"\n' "${item}" >>"${path}"; done
+
+  case "${kind}" in
+    core)
+      for item in "${COMMON_BREWS[@]}" "${PERSONAL_BREWS[@]}"; do
+        [ -n "${item}" ] && printf 'brew "%s"\n' "${item}" >>"${path}"
+      done
+      ;;
+    gui)
+      for item in "${STANDARD_CASKS[@]}"; do printf 'cask "%s"\n' "${item}" >>"${path}"; done
+      ;;
+  esac
+}
+
+install_brewfile() {
+  local kind="$1"
+  local brewfile
+  local inventory satisfied
+  local attempt
+  brewfile="$(mktemp)"
+  write_brewfile "${brewfile}" "${kind}"
+
+  inventory="$(brew info --json=v2 --installed)"
+  prepare_homebrew_inventory "${inventory}"
+  satisfied=1
+  if [ "${kind}" = "core" ]; then
+    taps_satisfied || satisfied=0
+    formulae_satisfied "${inventory}" "${COMMON_BREWS[@]}" "${PERSONAL_BREWS[@]}" || satisfied=0
+  else
+    casks_satisfied "${inventory}" "${STANDARD_CASKS[@]}" || satisfied=0
+  fi
+
+  if [ "${satisfied}" -eq 1 ]; then
+    echo "Homebrew ${kind} packages already satisfy the manifest."
+    rm -f "${brewfile}"
+    return 0
+  fi
+
+  for attempt in 1 2 3; do
+    if brew bundle install --no-upgrade --file="${brewfile}"; then
+      rm -f "${brewfile}"
+      return 0
+    fi
+    echo "Homebrew ${kind} attempt ${attempt} failed; retrying with lower download concurrency..." >&2
+    export HOMEBREW_DOWNLOAD_CONCURRENCY=1
+  done
+
+  rm -f "${brewfile}"
+  return 1
+}
+
+install_cask_list() {
+  local retries="$1"
+  shift
+  local cask attempt success action inventory
+  local failures=()
+
+  inventory="$(brew info --json=v2 --installed)" || return 1
+  prepare_homebrew_inventory "${inventory}"
+  for cask in "$@"; do
+    if cask_satisfied "${cask}" "${inventory}"; then
+      echo "Using ${cask}"
+      continue
+    fi
+
+    action=install
+    if cask_receipt_present "${cask}" "${inventory}"; then
+      action=reinstall
+      echo "Repairing ${cask}: Homebrew receipt exists but its application is missing."
+    fi
+
+    success=0
+    for ((attempt = 1; attempt <= retries; attempt++)); do
+      if brew "${action}" --cask "${cask}"; then
+        success=1
+        break
+      fi
+      echo "${cask}: attempt ${attempt}/${retries} failed" >&2
+      export HOMEBREW_DOWNLOAD_CONCURRENCY=1
+    done
+
+    [ "${success}" -eq 1 ] || failures+=("${cask}")
+  done
+
+  if [ "${#failures[@]}" -gt 0 ]; then
+    printf 'Failed casks: %s\n' "${failures[*]}" >&2
+    return 1
+  fi
+}
+
+phase_preflight() {
+  local installed_taps tap
+
+  [ "$(uname -s)" = "Darwin" ] || { echo "error: setup-mac only supports macOS" >&2; return 1; }
+  load_homebrew || return 1
+
+  echo "Profile: ${PROFILE}"
+  echo "Architecture: $(uname -m)"
+  echo "macOS: $(sw_vers -productVersion)"
+  echo "Homebrew: $(brew --version | head -1)"
+
+  if ! xcode-select -p >/dev/null 2>&1; then
+    echo "error: Apple Command Line Tools are required" >&2
+    return 1
+  fi
+
+  available_kb="$(df -k / | awk 'NR == 2 {print $4}')"
+  if [ "${available_kb}" -lt 31457280 ]; then
+    echo "warning: less than 30 GB is available; studio applications may not fit" >&2
+  fi
+
+  installed_taps="$(brew tap)" || return 1
+  for tap in "${TAPS[@]}"; do
+    if ! line_present "${installed_taps}" "${tap}"; then
+      echo "Tapping ${tap}..."
+      brew tap "${tap}" || return 1
+      installed_taps="${installed_taps}${installed_taps:+$'\n'}${tap}"
+    fi
+    brew trust --tap "${tap}" || return 1
+  done
+
+  if [ "${UPDATE_HOMEBREW}" -eq 1 ]; then
+    brew update
+  fi
+}
+
+phase_core() {
+  load_homebrew || return 1
+  install_brewfile core
+}
+
+phase_gui() {
+  load_homebrew || return 1
+  install_cask_list 3 "${STANDARD_CASKS[@]}"
+}
+
+phase_heavy() {
+  load_homebrew || return 1
+  export HOMEBREW_DOWNLOAD_CONCURRENCY="${HOMEBREW_DOWNLOAD_CONCURRENCY:-2}"
+  install_cask_list 3 "${HEAVY_CASKS[@]}"
+}
+
+phase_privileged() {
+  local inventory cask
+  local missing=()
+
+  load_homebrew || return 1
+  inventory="$(brew info --json=v2 --installed)" || return 1
+  prepare_homebrew_inventory "${inventory}"
+  for cask in "${PRIVILEGED_CASKS[@]}"; do
+    cask_satisfied "${cask}" "${inventory}" || missing+=("${cask}")
+  done
+  if [ "${#missing[@]}" -eq 0 ]; then
+    echo "Privileged casks already satisfy the manifest; administrator access is not needed."
+    return 0
+  fi
+  ensure_admin || return $?
+  install_cask_list 2 "${missing[@]}"
+}
+
+phase_mas() {
+  local entry app_id app_name installed_ids
+  local missing=()
+  local failures=()
+
+  load_homebrew || return 1
+  command -v mas >/dev/null 2>&1 || { echo "error: mas is not installed" >&2; return 1; }
+  installed_ids="$(mas list 2>/dev/null | awk '{print $1}')"
+
+  for entry in "${MAS_APPS[@]}"; do
+    app_id="${entry%%|*}"
+    if line_present "${installed_ids}" "${app_id}"; then
+      echo "Using ${entry#*|} (${app_id})"
+      continue
+    fi
+    missing+=("${entry}")
+  done
+
+  if [ "${#missing[@]}" -eq 0 ]; then
+    echo "App Store apps already satisfy the manifest; administrator access is not needed."
+    return 0
+  fi
+  ensure_admin || return $?
+
+  for entry in "${missing[@]}"; do
+    app_id="${entry%%|*}"
+    app_name="${entry#*|}"
+
+    # mas 7 can leave TestFlight without a receipt after a permissions error.
+    if [ "${app_id}" = "899247664" ] && [ -d "/Applications/TestFlight.app" ] && \
+       [ ! -f "/Applications/TestFlight.app/Contents/_MASReceipt/receipt" ]; then
+      echo "Removing partial TestFlight copy before receipt repair..."
+      sudo rm -rf "/Applications/TestFlight.app"
+    fi
+
+    echo "Installing ${app_name} (${app_id})..."
+    mas install "${app_id}" || failures+=("${app_name}:${app_id}")
+  done
+
+  if [ "${#failures[@]}" -gt 0 ]; then
+    printf 'Failed App Store items: %s\n' "${failures[*]}" >&2
+    return 1
+  fi
+}
+
+phase_vendor() {
+  local installomator_commit="56e33843c8ea3fba77a09348d9651c88116e05fd"
+  local installomator_sha256="2bcb65d27de43ebf77b7ab310e100d58ea23c32690f90996a9f4bd8fab102e4a"
+  local work_dir archive installomator_dir label_dir entry label name
+  local vendor_count=0
+  local missing=()
+  local failures=()
+
+  for entry in "${VENDOR_APPS[@]}"; do
+    [ -n "${entry}" ] || continue
+    vendor_count=$((vendor_count + 1))
+    if [ -d "/Applications/${entry#*|}.app" ]; then
+      echo "Using ${entry#*|}"
+    else
+      missing+=("${entry}")
+    fi
+  done
+
+  [ "${vendor_count}" -gt 0 ] || { echo "No automated vendor apps for ${PROFILE}."; return 0; }
+
+  if [ "${#missing[@]}" -eq 0 ]; then
+    echo "Vendor apps already satisfy the manifest; administrator access is not needed."
+    for entry in "${MANUAL_APPS[@]}"; do
+      [ -n "${entry}" ] || continue
+      echo "Manual: ${entry%%|*} — ${entry#*|}"
+    done
+    return 0
+  fi
+  ensure_admin || return $?
+
+  work_dir="$(mktemp -d)"
+  archive="${work_dir}/installomator.tar.gz"
+  label_dir="${SOURCE_DIR}/installomator/labels"
+  trap 'rm -rf "${work_dir}"' RETURN
+
+  curl -fsSL "https://github.com/Installomator/Installomator/archive/${installomator_commit}.tar.gz" \
+    -o "${archive}"
+  printf '%s  %s\n' "${installomator_sha256}" "${archive}" | shasum -a 256 -c - || {
+    echo "error: Installomator archive checksum did not match" >&2
+    return 1
+  }
+  tar -xzf "${archive}" -C "${work_dir}"
+  installomator_dir="${work_dir}/Installomator-${installomator_commit}"
+
+  for entry in "${missing[@]}"; do
+    label="${entry%%|*}"
+    name="${entry#*|}"
+    sudo "${installomator_dir}/assemble.sh" --labels "${label_dir}" "${label}" DEBUG=0 NOTIFY=silent \
+      || failures+=("${name}")
+  done
+
+  for entry in "${MANUAL_APPS[@]}"; do
+    [ -n "${entry}" ] || continue
+    echo "Manual: ${entry%%|*} — ${entry#*|}"
+  done
+
+  rm -rf "${work_dir}"
+  trap - RETURN
+
+  if [ "${#failures[@]}" -gt 0 ]; then
+    printf 'Failed vendor apps: %s\n' "${failures[*]}" >&2
+    return 1
+  fi
+}
+
+array_contains() {
+  local needle="$1"
+  shift
+  local value
+  for value in "$@"; do
+    [ "${value}" = "${needle}" ] && return 0
+  done
+  return 1
+}
+
+phase_was_deferred() {
+  local deferred_phase
+  for deferred_phase in ${DEFERRED_PHASES[@]+"${DEFERRED_PHASES[@]}"}; do
+    [ "${deferred_phase}" = "$1" ] && return 0
+  done
+  return 1
+}
+
+phase_verify() {
+  local item entry app_id item_phase tap
+  local failures=()
+  local inventory installed_mas installed_taps
+
+  load_homebrew || return 1
+  inventory="$(brew info --json=v2 --installed)" || return 1
+  prepare_homebrew_inventory "${inventory}"
+  installed_mas="$(mas list 2>/dev/null | awk '{print $1}')"
+  installed_taps="$(brew tap 2>/dev/null)"
+
+  for tap in "${TAPS[@]}"; do
+    if ! line_present "${installed_taps}" "${tap}"; then
+      failures+=("tap:${tap}")
+      invalidate_phase core
+    fi
+  done
+
+  for item in "${COMMON_BREWS[@]}" "${PERSONAL_BREWS[@]}"; do
+    [ -n "${item}" ] || continue
+    if ! formulae_satisfied "${inventory}" "${item}"; then
+      failures+=("brew:${item}")
+      invalidate_phase core
+    fi
+  done
+  for item in "${STANDARD_CASKS[@]}" "${HEAVY_CASKS[@]}" "${PRIVILEGED_CASKS[@]}"; do
+    if ! cask_satisfied "${item}" "${inventory}"; then
+      if array_contains "${item}" "${STANDARD_CASKS[@]}"; then
+        item_phase=gui
+      elif array_contains "${item}" "${HEAVY_CASKS[@]}"; then
+        item_phase=heavy
+      else
+        item_phase=privileged
+      fi
+      invalidate_phase "${item_phase}"
+      if phase_was_deferred "${item_phase}"; then
+        PENDING_ITEMS+=("cask:${item}")
+      else
+        failures+=("cask:${item}")
+      fi
+    fi
+  done
+  for entry in "${MAS_APPS[@]}"; do
+    app_id="${entry%%|*}"
+    if ! line_present "${installed_mas}" "${app_id}"; then
+      invalidate_phase mas
+      if phase_was_deferred mas; then
+        PENDING_ITEMS+=("mas:${entry}")
+      else
+        failures+=("mas:${entry}")
+      fi
+    fi
+  done
+  for entry in "${VENDOR_APPS[@]}"; do
+    [ -n "${entry}" ] || continue
+    if [ ! -d "/Applications/${entry#*|}.app" ]; then
+      invalidate_phase vendor
+      if phase_was_deferred vendor; then
+        PENDING_ITEMS+=("vendor:${entry#*|}")
+      else
+        failures+=("vendor:${entry#*|}")
+      fi
+    fi
+  done
+
+  if command -v chezmoi >/dev/null 2>&1; then
+    chezmoi verify --source "${SOURCE_DIR}" || failures+=("chezmoi:verify")
+  fi
+
+  if [ "${#failures[@]}" -gt 0 ]; then
+    printf 'Verification failures: %s\n' "${failures[*]}" >&2
+    return 1
+  fi
+
+  if [ "${#PENDING_ITEMS[@]}" -gt 0 ]; then
+    printf 'Verification pending deferred items: %s\n' "${PENDING_ITEMS[*]}"
+    return 20
+  fi
+
+  echo "All automated ${PROFILE} profile items are present."
+  for entry in "${MANUAL_APPS[@]}"; do
+    [ -n "${entry}" ] || continue
+    echo "Manual follow-up: ${entry%%|*} — ${entry#*|}"
+  done
+}
+
+echo "[$(timestamp)] setup-mac start (profile=${PROFILE})"
+overall_status=0
+for phase in "${PHASES[@]}"; do
+  run_phase "${phase}"
+  status=$?
+  if [ "${status}" -eq 20 ]; then
+    [ "${overall_status}" -ne 0 ] || overall_status=20
+  elif [ "${status}" -ne 0 ]; then
+    overall_status=1
+  fi
+done
+echo
+echo "[$(timestamp)] setup-mac summary"
+[ "${#COMPLETED_PHASES[@]}" -eq 0 ] || printf '  completed: %s\n' "${COMPLETED_PHASES[*]}"
+[ "${#SKIPPED_PHASES[@]}" -eq 0 ] || printf '  verified/skipped: %s\n' "${SKIPPED_PHASES[*]}"
+[ "${#DEFERRED_PHASES[@]}" -eq 0 ] || printf '  deferred: %s\n' "${DEFERRED_PHASES[*]}"
+[ "${#PENDING_ITEMS[@]}" -eq 0 ] || printf '  pending items: %s\n' "${PENDING_ITEMS[*]}"
+[ "${#FAILED_PHASES[@]}" -eq 0 ] || printf '  failed: %s\n' "${FAILED_PHASES[*]}"
+
+if [ "${overall_status}" -eq 1 ]; then
+  echo "[$(timestamp)] setup-mac incomplete: one or more phases failed" >&2
+  exit 1
+fi
+if [ "${overall_status}" -eq 20 ]; then
+  echo "[$(timestamp)] setup-mac partial: deferred phases require an interactive rerun"
+  exit 20
+fi
+echo "[$(timestamp)] setup-mac complete"

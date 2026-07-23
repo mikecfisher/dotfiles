@@ -27,17 +27,12 @@ The following plugins are used to enhance the Fish shell experience:
 
 ```
 jorgebucaran/fisher            # Package manager for Fish
-patrickf1/fzf.fish             # Fuzzy finder integration
-jethrokuan/z                   # Directory jumping (like zoxide)
-ilancosman/tide@v6             # Modern prompt
-franciscolourenco/done         # Notification when commands complete
-jorgebucaran/autopair.fish     # Auto-pair brackets and quotes
-nickeb96/puffer-fish           # Additional abbreviations
-lewisacidic/fish-git-abbr      # Git abbreviations
-halostatue/fish-chezmoi@v1     # Chezmoi integration
-gazorby/fish-abbreviation-tips # Abbreviation usage tips
-plttn/fish-eza                 # Eza (ls replacement) integration
+jhillyerd/plugin-git           # Oh My Zsh-style Git abbreviations
+eth-p/fish-plugin-better-cd    # More convenient directory navigation
 ```
+
+Chezmoi's `run_onchange_after_28_setup-fish-plugins.sh.tmpl` bootstraps
+Fisher when needed and reconciles the installed plugins with `fish_plugins`.
 
 ### Environment Variables
 

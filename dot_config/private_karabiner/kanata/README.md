@@ -110,7 +110,7 @@ Press `.` and `/` together (chord) to enter leader mode.
 | `p` | Perplexity |
 | `r` | Reflect |
 | `s` | Slack |
-| `t` | Ghostty |
+| `t` | cmux |
 | `v` | VS Code |
 | `z` | Cursor |
 

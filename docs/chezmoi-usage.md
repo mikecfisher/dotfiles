@@ -18,10 +18,10 @@ This document provides guidance on using chezmoi with this dotfiles repository.
 │       ├── private_Cursor/User/  # Cursor settings
 │       └── private_Code/User/    # VS Code settings
 ├── dot_config/                  # Configuration files (~/.config)
-│   ├── private_fish/            # Fish shell configuration
-│   └── brewfile/                # Homebrew Brewfile
+│   └── private_fish/            # Fish shell configuration
 ├── .chezmoidata/               # Data used in templates
 │   └── packages.yaml           # Package definitions
+├── dot_local/bin/              # setup-mac and local commands
 ├── .chezmoi.toml.tmpl         # Chezmoi configuration template
 └── .chezmoiexternal.toml      # External resource definitions
 ```
@@ -40,6 +40,9 @@ chezmoi diff
 # Apply changes
 chezmoi apply
 ```
+
+`chezmoi apply` converges configuration and bootstrap tools. Use `setup-mac`
+for resumable application and workstation provisioning.
 
 ### Managing Files
 

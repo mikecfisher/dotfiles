@@ -107,21 +107,10 @@ if status is-interactive
     if test -x "$HOME/.claude/local/claude"
         alias claude="$HOME/.claude/local/claude"
     end
+    alias codexd="codex --dangerously-bypass-approvals-and-sandbox"
+    alias ccd="claude --dangerously-skip-permissions"
     alias oc="opencode"
     fish_vi_key_bindings
-end
-
-# Brew Wrapper
-if command -q brew
-    set -l brew_prefix (brew --prefix)
-    if test -f "$brew_prefix/etc/brew-wrap.fish"
-        source "$brew_prefix/etc/brew-wrap.fish"
-
-        function _post_brewfile_update
-            echo "Brewfile was updated!"
-            ~/.local/bin/my-scripts/update-packages-yaml.ts
-        end
-    end
 end
 
 # # Basic prompt structure

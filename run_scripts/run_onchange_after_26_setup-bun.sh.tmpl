@@ -7,6 +7,7 @@ set -euo pipefail
 # BUN_INSTALL and add ~/.bun/bin to PATH. Prepending the install bin dir here
 # also makes the installer skip appending duplicate shell config after install.
 BUN_INSTALL="${BUN_INSTALL:-${HOME}/.bun}"
+EXPECTED_BUN_VERSION={{ .toolchains.bun.version | quote }}
 export BUN_INSTALL
 export PATH="${BUN_INSTALL}/bin:${PATH}"
 
@@ -15,17 +16,28 @@ if ! command -v unzip >/dev/null 2>&1; then
   exit 1
 fi
 
-if [ ! -x "${BUN_INSTALL}/bin/bun" ]; then
-  echo "Installing Bun to ${BUN_INSTALL}..."
-  curl -fsSL https://bun.sh/install | bash
+current_bun_version=""
+if [ -x "${BUN_INSTALL}/bin/bun" ]; then
+  current_bun_version="$("${BUN_INSTALL}/bin/bun" --version 2>/dev/null || true)"
+fi
+
+if [ "${current_bun_version}" != "${EXPECTED_BUN_VERSION}" ]; then
+  echo "Installing pinned Bun ${EXPECTED_BUN_VERSION} to ${BUN_INSTALL}..."
+  curl -fsSL https://bun.sh/install | bash -s -- "bun-v{{ .toolchains.bun.version }}"
 else
-  echo "Bun already installed at ${BUN_INSTALL}/bin/bun"
+  echo "Using pinned Bun ${EXPECTED_BUN_VERSION} at ${BUN_INSTALL}/bin/bun"
 fi
 
 hash -r
 
 if ! command -v bun >/dev/null 2>&1; then
   echo "error: bun is not available after installation" >&2
+  exit 1
+fi
+
+actual_bun_version="$(bun --version)"
+if [ "${actual_bun_version}" != "${EXPECTED_BUN_VERSION}" ]; then
+  echo "error: expected Bun ${EXPECTED_BUN_VERSION}, found ${actual_bun_version}" >&2
   exit 1
 fi
 

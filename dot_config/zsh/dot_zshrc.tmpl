@@ -159,6 +159,8 @@ alias expo='nocorrect expo' # Prevent zsh from trying to correct expo command
 alias gcam='git commit -am'
 alias grbm='git rebase $(git_default_branch)'
 alias v='nvim'
+alias codexd='codex --dangerously-bypass-approvals-and-sandbox'
+alias ccd='claude --dangerously-skip-permissions'
 
 # ===== CUSTOM FUNCTIONS AND LAZY-LOADING =====
 # Copy file contents to clipboard
@@ -206,12 +208,6 @@ function cleanup-remote-branches() {
 
   echo "Remote branches for $username cleaned up!"
 }
-
-  # Call update script after Brewfile changes
-  _post_brewfile_update() {
-    echo "Updating packages.yaml..."
-    ~/.local/bin/my-scripts/update-packages-yaml.ts
-  }
 
 # ===== GIT WORKTREE AUTOMATION =====
 # Load wt function for git worktree management
@@ -383,6 +379,9 @@ if [ -d "$FNM_PATH" ]; then
   export PATH="$FNM_PATH:$PATH"
   eval "$(fnm env)"
 fi
+
+# Bun completions. The standalone installer creates this file on first install.
+[ -s "${BUN_INSTALL:-${HOME}/.bun}/_bun" ] && source "${BUN_INSTALL:-${HOME}/.bun}/_bun"
 
 # Amazon Q post block. Keep at the bottom of this file.
 [[ -f "${HOME}/Library/Application Support/amazon-q/shell/zshrc.post.zsh" ]] && builtin source "${HOME}/Library/Application Support/amazon-q/shell/zshrc.post.zsh"
